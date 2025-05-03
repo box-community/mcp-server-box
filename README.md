@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/box-community-mcp-server-box-badge.png)](https://mseep.ai/app/box-community-mcp-server-box)
+
 # MCP Server Box
 
 ## Description
