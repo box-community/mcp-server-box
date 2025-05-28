@@ -888,6 +888,11 @@ def _serialize(obj):
         # If all else fails, convert to string
         return str(obj)
 
-if __name__ == "__main__":
+
+def main():
     # Initialize and run the server
     mcp.run(transport="stdio")
+
+
+if __name__ == "__main__":
+    main()
