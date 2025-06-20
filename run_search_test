@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# Box Search Test Runner
+# Usage: ./run_search_test "search query"
+
+# Check if query is provided
+if [ $# -eq 0 ]; then
+    echo "Usage: ./run_search_test \"search query\""
+    echo "Example: ./run_search_test \"find me estates with death certificates\""
+    echo "Example: ./run_search_test \"find me the death certificate on the patrick estate\""
+    exit 1
+fi
+
+# Get the directory where this script is located
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Change to the project directory
+cd "$SCRIPT_DIR"
+
+# Check if .env file exists
+if [ ! -f ".env" ]; then
+    echo "❌ Error: .env file not found!"
+    echo "Please create a .env file with your Box API credentials:"
+    echo "BOX_CLIENT_ID=your_client_id"
+    echo "BOX_CLIENT_SECRET=your_client_secret"
+    exit 1
+fi
+
+# Run the Python script using uv
+echo "🚀 Running Box search test..."
+uv run run_search_test.py "$1" 

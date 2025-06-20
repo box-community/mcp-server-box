@@ -5,10 +5,14 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "box-ai-agents-toolkit>=0.0.42",
-    "box-sdk-gen>=1.13.0",
-    "mcp[cli]>=1.6.0",
-    "python-dotenv>=1.1.0",
+    "box-ai-agents-toolkit",
+    "cryptography>=45.0.4",
+    "fastmcp",
+    "langchain",
+    "langchain-openai",
+    "pydantic",
+    "pyjwt>=2.10.1",
+    "python-dotenv",
 ]
 
 [dependency-groups]
