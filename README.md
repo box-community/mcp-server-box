@@ -242,6 +242,40 @@ List all Doc Gen jobs that used a specific template.
   - `limit` (int | None, optional): Maximum number of jobs to list.
 - **Returns:** Job details for the template as a JSON string.
 
+### Box Share Link Tools
+
+#### box_create_share_link_tool
+Create a shared link for a Box file with customizable access controls.
+
+**Parameters:**
+- `file_id` (str, required): The ID of the file to share
+- `access` (str, optional): Access level - 'open', 'company', or 'collaborators' (default: "open")
+- `password` (str, optional): Password to protect the link
+- `unshared_at` (str, optional): Expiration date in ISO-8601 format
+- `vanity_name` (str, optional): Custom vanity name for the shared link
+- `can_download` (bool, optional): Whether the file can be downloaded (default: True)
+
+**Returns:**
+JSON string containing the share link details including URL, download URL, and access information.
+
+#### box_get_shared_link_tool
+Retrieve an existing shared link for a Box file.
+
+**Parameters:**
+- `file_id` (str, required): The ID of the file
+
+**Returns:**
+JSON string with existing share link information or a message if no link exists.
+
+#### box_remove_shared_link_tool
+Remove a shared link from a Box file.
+
+**Parameters:**
+- `file_id` (str, required): The ID of the file
+
+**Returns:**
+JSON string with confirmation message.
+
 ## Requirements
 
 - Python 3.13 or higher
