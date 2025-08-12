@@ -54,6 +54,11 @@ from box_tools_metadata import (
     box_metadata_update_instance_on_file_tool,
 )
 from box_tools_search import box_search_folder_by_name_tool, box_search_tool
+from box_tools_share_links import (
+    box_create_share_link_tool,
+    box_get_shared_link_tool,
+    box_remove_shared_link_tool
+)
 from server_context import box_lifespan
 
 # Disable all logging
@@ -128,6 +133,11 @@ def register_tools(mcp: FastMCP):
     # Folder Tools
     mcp.tool()(box_list_folder_content_by_folder_id)
     mcp.tool()(box_manage_folder_tool)
+    
+    # Share Link Tools
+    mcp.tool()(box_create_share_link_tool)
+    mcp.tool()(box_get_shared_link_tool)
+    mcp.tool()(box_remove_shared_link_tool)
 
     # Metadata Template Tools
     mcp.tool()(box_metadata_template_get_by_name_tool)
