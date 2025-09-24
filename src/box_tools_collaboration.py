@@ -1,15 +1,54 @@
 from datetime import datetime
 from box_ai_agents_toolkit import (
-    box_collaboration_file_group_by_group_id,
+    box_collaborations_list_by_file,
+    box_collaborations_list_by_folder,
     box_collaboration_file_user_by_user_id,
     box_collaboration_file_user_by_user_login,
-    box_collaboration_folder_group_by_group_id,
     box_collaboration_folder_user_by_user_id,
     box_collaboration_folder_user_by_user_login,
+    box_collaboration_file_group_by_group_id,
+    box_collaboration_folder_group_by_group_id,
+    box_collaboration_delete,
 )
 from mcp.server.fastmcp import Context
 
 from box_tools_generic import get_box_client
+
+
+async def box_collaboration_list_by_file_tool(ctx: Context, file_id: str) -> dict:
+    """List all collaborations on a specific file.
+    Args:
+        ctx (Context): The MCP context.
+        file_id (str): The ID of the file to list collaborations for.
+    Returns:
+        dict: A dictionary containing the list of collaborations or an error message.
+    """
+    client = get_box_client(ctx)
+    return box_collaborations_list_by_file(client, file_id)
+
+
+async def box_collaboration_list_by_folder_tool(ctx: Context, folder_id: str) -> dict:
+    """List all collaborations on a specific folder.
+    Args:
+        ctx (Context): The MCP context.
+        folder_id (str): The ID of the folder to list collaborations for.
+    Returns:
+        dict: A dictionary containing the list of collaborations or an error message.
+    """
+    client = get_box_client(ctx)
+    return box_collaborations_list_by_folder(client, folder_id)
+
+
+async def box_collaboration_delete_tool(ctx: Context, collaboration_id: str) -> dict:
+    """Delete a specific collaboration.
+    Args:
+        ctx (Context): The MCP context.
+        collaboration_id (str): The ID of the collaboration to delete.
+    Returns:
+        dict: A dictionary containing the result of the deletion or an error message.
+    """
+    client = get_box_client(ctx)
+    return box_collaboration_delete(client, collaboration_id)
 
 
 async def box_collaboration_file_group_by_group_id_tool(
