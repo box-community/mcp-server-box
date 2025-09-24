@@ -1,0 +1,198 @@
+from datetime import datetime
+from box_ai_agents_toolkit import (
+    box_collaboration_file_group_by_group_id,
+    box_collaboration_file_user_by_user_id,
+    box_collaboration_file_user_by_user_login,
+    box_collaboration_folder_group_by_group_id,
+    box_collaboration_folder_user_by_user_id,
+    box_collaboration_folder_user_by_user_login,
+)
+from mcp.server.fastmcp import Context
+
+from box_tools_generic import get_box_client
+
+
+async def box_collaboration_file_group_by_group_id_tool(
+    ctx: Context,
+    file_id: str,
+    group_id: str,
+    role: str = "editor",
+    is_access_only: bool | None = None,
+    expires_at: datetime | None = None,
+    notify: bool | None = None,
+) -> dict:
+    """Create a collaboration on a file with a group specified by group ID.
+    Args:
+        client (BoxClient): Authenticated Box client.
+        file_id (str): The ID of the file to collaborate on.
+        group_id (str): The ID of the group to collaborate with.
+        role (str): The role to assign to the collaborator. Default is "editor". Available roles are editor, viewer, previewer, uploader, viewer_uploader, co-owner.
+        is_access_only (Optional[bool]): If set to true, collaborators have access to shared items, but such items won't be visible in the All Files list. Additionally, collaborators won't see the path to the root folder for the shared item.
+        expires_at (Optional[DateTime]): The expiration date of the collaboration.
+        notify (Optional[bool]): Whether to notify the collaborator via email.
+    Returns:
+        Dict[str, Any]: Dictionary containing collaboration details or error message.
+    """
+    client = get_box_client(ctx)
+    return box_collaboration_file_group_by_group_id(
+        client, file_id, group_id, role, is_access_only, expires_at, notify
+    )
+
+
+async def box_collaboration_file_user_by_user_id_tool(
+    ctx: Context,
+    file_id: str,
+    user_id: str,
+    role: str = "editor",
+    is_access_only: bool | None = None,
+    expires_at: datetime | None = None,
+    notify: bool | None = None,
+) -> dict:
+    """Create a collaboration on a file with a user specified by user ID.
+    Args:
+        client (BoxClient): Authenticated Box client.
+        file_id (str): The ID of the file to collaborate on.
+        user_id (str): The ID of the user to collaborate with.
+        role (str): The role to assign to the collaborator. Default is "editor". Available roles are editor, viewer, previewer, uploader, viewer_uploader, co-owner.
+        is_access_only (Optional[bool]): If set to true, collaborators have access to shared items, but such items won't be visible in the All Files list. Additionally, collaborators won't see the path to the root folder for the shared item.
+        expires_at (Optional[DateTime]): The expiration date of the collaboration.
+        notify (Optional[bool]): Whether to notify the collaborator via email.
+    Returns:
+        Dict[str, Any]: Dictionary containing collaboration details or error message.
+    """
+    client = get_box_client(ctx)
+    return box_collaboration_file_user_by_user_id(
+        client, file_id, user_id, role, is_access_only, expires_at, notify
+    )
+
+
+async def box_collaboration_file_user_by_user_login_tool(
+    ctx: Context,
+    file_id: str,
+    user_login: str,
+    role: str = "editor",
+    is_access_only: bool | None = None,
+    expires_at: datetime | None = None,
+    notify: bool | None = None,
+) -> dict:
+    """Create a collaboration on a file with a user specified by user login (email).
+    Args:
+        client (BoxClient): Authenticated Box client.
+        file_id (str): The ID of the file to collaborate on.
+        user_login (str): The login (email) of the user to collaborate with.
+        role (str): The role to assign to the collaborator. Default is "editor". Available roles are editor, viewer, previewer, uploader, viewer_uploader, co-owner.
+        is_access_only (Optional[bool]): If set to true, collaborators have access to shared items, but such items won't be visible in the All Files list. Additionally, collaborators won't see the path to the root folder for the shared item.
+        expires_at (Optional[DateTime]): The expiration date of the collaboration.
+        notify (Optional[bool]): Whether to notify the collaborator via email.
+    Returns:
+        Dict[str, Any]: Dictionary containing collaboration details or error message.
+    """
+    client = get_box_client(ctx)
+    return box_collaboration_file_user_by_user_login(
+        client, file_id, user_login, role, is_access_only, expires_at, notify
+    )
+
+
+async def box_collaboration_folder_group_by_group_id_tool(
+    ctx: Context,
+    folder_id: str,
+    group_id: str,
+    role: str = "editor",
+    is_access_only: bool | None = None,
+    can_view_path: bool | None = None,
+    expires_at: datetime | None = None,
+    notify: bool | None = None,
+) -> dict:
+    """Create a collaboration on a folder with a group specified by group ID.
+    Args:
+        client (BoxClient): Authenticated Box client.
+        folder_id (str): The ID of the folder to collaborate on.
+        group_id (str): The ID of the group to collaborate with.
+        role (str): The role to assign to the collaborator. Default is "editor". Available roles are editor, viewer, previewer, uploader, viewer_uploader, co-owner.
+        is_access_only (Optional[bool]): If set to true, collaborators have access to shared items, but such items won't be visible in the All Files list. Additionally, collaborators won't see the path to the root folder for the shared item.
+        expires_at (Optional[DateTime]): The expiration date of the collaboration.
+        notify (Optional[bool]): Whether to notify the collaborator via email.
+    Returns:
+        Dict[str, Any]: Dictionary containing collaboration details or error message.
+    """
+    client = get_box_client(ctx)
+    return box_collaboration_folder_group_by_group_id(
+        client,
+        folder_id,
+        group_id,
+        role,
+        is_access_only,
+        can_view_path,
+        expires_at,
+        notify,
+    )
+
+
+async def box_collaboration_folder_user_by_user_id_tool(
+    ctx: Context,
+    folder_id: str,
+    user_id: str,
+    role: str = "editor",
+    is_access_only: bool | None = None,
+    can_view_path: bool | None = None,
+    expires_at: datetime | None = None,
+    notify: bool | None = None,
+) -> dict:
+    """Create a collaboration on a folder with a user specified by user ID.
+    Args:
+        client (BoxClient): Authenticated Box client.
+        folder_id (str): The ID of the folder to collaborate on.
+        user_id (str): The ID of the user to collaborate with.
+        role (str): The role to assign to the collaborator. Default is "editor". Available roles are editor, viewer, previewer, uploader, viewer_uploader, co-owner.
+        is_access_only (Optional[bool]): If set to true, collaborators have access to shared items, but such items won't be visible in the All Files list. Additionally, collaborators won't see the path to the root folder for the shared item.
+        expires_at (Optional[DateTime]): The expiration date of the collaboration.
+        notify (Optional[bool]): Whether to notify the collaborator via email.
+    Returns:
+        Dict[str, Any]: Dictionary containing collaboration details or error message.
+    """
+    client = get_box_client(ctx)
+    return box_collaboration_folder_user_by_user_id(
+        client,
+        folder_id,
+        user_id,
+        role,
+        is_access_only,
+        can_view_path,
+        expires_at,
+        notify,
+    )
+
+
+async def box_collaboration_folder_user_by_user_login_tool(
+    ctx: Context,
+    folder_id: str,
+    user_login: str,
+    role: str = "editor",
+    is_access_only: bool | None = None,
+    can_view_path: bool | None = None,
+    expires_at: datetime | None = None,
+    notify: bool | None = None,
+) -> dict:
+    """Create a collaboration on a folder with a user specified by user login (email).
+    Args:
+        client (BoxClient): Authenticated Box client.
+        folder_id (str): The ID of the folder to collaborate on.
+        user_login (str): The login (email) of the user to collaborate with.
+        role (str): The role to assign to the collaborator. Default is "editor". Available roles are editor, viewer, previewer, uploader, viewer_uploader, co-owner.
+        is_access_only (Optional[bool]): If set to true, collaborators have access to shared items, but such items won't be visible in the All Files list. Additionally, collaborators won't see the path to the root folder for the shared item.
+        expires_at (Optional[DateTime]): The expiration date of the collaboration.
+        notify (Optional[bool]): Whether to notify the collaborator via email.
+    Returns:
+        Dict[str, Any]: Dictionary containing collaboration details or error message.
+    """
+    client = get_box_client(ctx)
+    return box_collaboration_folder_user_by_user_login(
+        client,
+        folder_id,
+        user_login,
+        role,
+        is_access_only,
+        can_view_path,
+        expires_at,
+        notify,
+    )
