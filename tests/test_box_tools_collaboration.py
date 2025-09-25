@@ -11,6 +11,7 @@ from src.box_tools_collaboration import (
     box_collaboration_folder_group_by_group_id_tool,
     box_collaboration_folder_user_by_user_id_tool,
     box_collaboration_folder_user_by_user_login_tool,
+    box_collaboration_update_tool,
 )
 
 from mcp.server.fastmcp import Context
@@ -182,3 +183,24 @@ async def test_box_collaboration_folder_group_by_group_id_tool():
         )
         assert isinstance(result, dict)
         assert result["name"] == "Test Group"
+
+
+@pytest.mark.asyncio
+async def test_box_collaboration_update_tool():
+    ctx = MagicMock(spec=Context)
+    collaboration_id = "12345"
+    role = "viewer"
+    status = "accepted"
+    expires_at = None  # You can set a specific datetime if needed
+    can_view_path = True
+    with (
+        patch("src.box_tools_collaboration.box_collaboration_update") as mock_update,
+        patch("src.box_tools_collaboration.get_box_client") as mock_get_client,
+    ):
+        mock_get_client.return_value = "client"
+        mock_update.return_value = {"id": "1", "type": "user", "name": "Test User"}
+        result = await box_collaboration_update_tool(
+            ctx, collaboration_id, role, status, expires_at, can_view_path
+        )
+        assert isinstance(result, dict)
+        assert result["name"] == "Test User"

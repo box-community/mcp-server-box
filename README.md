@@ -144,7 +144,105 @@ List all groups that a specific user belongs to.
   - `user_id` (str): The ID of the user whose groups are to be listed.
 - **Returns:** List of groups the user belongs to.
 
-### Box File Tools
+
+### Box Collaboration Tools
+
+#### `box_collaboration_list_by_file_tool`
+List all collaborations on a specific file.
+- **Parameters:**
+  - `file_id` (str): The ID of the file to list collaborations for.
+- **Returns:** Dictionary containing the list of collaborations or an error message.
+
+#### `box_collaboration_list_by_folder_tool`
+List all collaborations on a specific folder.
+- **Parameters:**
+  - `folder_id` (str): The ID of the folder to list collaborations for.
+- **Returns:** Dictionary containing the list of collaborations or an error message.
+
+#### `box_collaboration_delete_tool`
+Delete a specific collaboration.
+- **Parameters:**
+  - `collaboration_id` (str): The ID of the collaboration to delete.
+- **Returns:** Dictionary containing the result of the deletion or an error message.
+
+#### `box_collaboration_file_group_by_group_id_tool`
+Create a collaboration on a file with a group specified by group ID.
+- **Parameters:**
+  - `file_id` (str): The ID of the file to collaborate on.
+  - `group_id` (str): The ID of the group to collaborate with.
+  - `role` (str, optional): The role to assign (default: "editor").
+  - `is_access_only` (bool, optional): Access-only flag.
+  - `expires_at` (datetime, optional): Expiration date.
+  - `notify` (bool, optional): Whether to notify the collaborator.
+- **Returns:** Dictionary containing collaboration details or error message.
+
+#### `box_collaboration_file_user_by_user_id_tool`
+Create a collaboration on a file with a user specified by user ID.
+- **Parameters:**
+  - `file_id` (str): The ID of the file to collaborate on.
+  - `user_id` (str): The ID of the user to collaborate with.
+  - `role` (str, optional): The role to assign (default: "editor").
+  - `is_access_only` (bool, optional): Access-only flag.
+  - `expires_at` (datetime, optional): Expiration date.
+  - `notify` (bool, optional): Whether to notify the collaborator.
+- **Returns:** Dictionary containing collaboration details or error message.
+
+#### `box_collaboration_file_user_by_user_login_tool`
+Create a collaboration on a file with a user specified by user login (email).
+- **Parameters:**
+  - `file_id` (str): The ID of the file to collaborate on.
+  - `user_login` (str): The login (email) of the user to collaborate with.
+  - `role` (str, optional): The role to assign (default: "editor").
+  - `is_access_only` (bool, optional): Access-only flag.
+  - `expires_at` (datetime, optional): Expiration date.
+  - `notify` (bool, optional): Whether to notify the collaborator.
+- **Returns:** Dictionary containing collaboration details or error message.
+
+#### `box_collaboration_folder_group_by_group_id_tool`
+Create a collaboration on a folder with a group specified by group ID.
+- **Parameters:**
+  - `folder_id` (str): The ID of the folder to collaborate on.
+  - `group_id` (str): The ID of the group to collaborate with.
+  - `role` (str, optional): The role to assign (default: "editor").
+  - `is_access_only` (bool, optional): Access-only flag.
+  - `can_view_path` (bool, optional): Can view path flag.
+  - `expires_at` (datetime, optional): Expiration date.
+  - `notify` (bool, optional): Whether to notify the collaborator.
+- **Returns:** Dictionary containing collaboration details or error message.
+
+#### `box_collaboration_folder_user_by_user_id_tool`
+Create a collaboration on a folder with a user specified by user ID.
+- **Parameters:**
+  - `folder_id` (str): The ID of the folder to collaborate on.
+  - `user_id` (str): The ID of the user to collaborate with.
+  - `role` (str, optional): The role to assign (default: "editor").
+  - `is_access_only` (bool, optional): Access-only flag.
+  - `can_view_path` (bool, optional): Can view path flag.
+  - `expires_at` (datetime, optional): Expiration date.
+  - `notify` (bool, optional): Whether to notify the collaborator.
+- **Returns:** Dictionary containing collaboration details or error message.
+
+#### `box_collaboration_folder_user_by_user_login_tool`
+Create a collaboration on a folder with a user specified by user login (email).
+- **Parameters:**
+  - `folder_id` (str): The ID of the folder to collaborate on.
+  - `user_login` (str): The login (email) of the user to collaborate with.
+  - `role` (str, optional): The role to assign (default: "editor").
+  - `is_access_only` (bool, optional): Access-only flag.
+  - `can_view_path` (bool, optional): Can view path flag.
+  - `expires_at` (datetime, optional): Expiration date.
+  - `notify` (bool, optional): Whether to notify the collaborator.
+- **Returns:** Dictionary containing collaboration details or error message.
+
+#### `box_collaboration_update_tool`
+Update a specific collaboration's role, status, expiration, or path visibility.
+- **Parameters:**
+  - `collaboration_id` (str): The ID of the collaboration to update.
+  - `role` (str, optional): The new role to assign (default: "editor").
+  - `status` (str, optional): The new status ("accepted" or "rejected").
+  - `expires_at` (datetime, optional): The new expiration date.
+  - `can_view_path` (bool, optional): Whether the collaborator can view the path to the root folder.
+- **Returns:** Dictionary containing the updated collaboration details or an error message.
 
 #### `box_read_tool`
 Read the text content of a Box file.
