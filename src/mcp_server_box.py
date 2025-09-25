@@ -69,9 +69,12 @@ from box_tools_groups import (
 )
 
 from box_tools_collaboration import (
+<<<<<<< HEAD
     box_collaboration_list_by_file_tool,
     box_collaboration_list_by_folder_tool,
     box_collaboration_delete_tool,
+=======
+>>>>>>> dcc9062 ([WIP] collaborations basic tools)
     box_collaboration_file_group_by_group_id_tool,
     box_collaboration_file_user_by_user_id_tool,
     box_collaboration_file_user_by_user_login_tool,
@@ -183,6 +186,7 @@ def register_tools(mcp: FastMCP):
     mcp.tool()(box_groups_list_by_user_tool)
 
     # Collaboration Tools
+<<<<<<< HEAD
     mcp.tool()(box_collaboration_list_by_file_tool)
     mcp.tool()(box_collaboration_list_by_folder_tool)
     mcp.tool()(box_collaboration_delete_tool)

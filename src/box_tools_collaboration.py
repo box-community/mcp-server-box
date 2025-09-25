@@ -1,6 +1,7 @@
 from datetime import datetime
 from typing import Optional
 from box_ai_agents_toolkit import (
+<<<<<<< HEAD
     box_collaborations_list_by_file,
     box_collaborations_list_by_folder,
     box_collaboration_file_user_by_user_id,
@@ -17,6 +18,7 @@ from mcp.server.fastmcp import Context
 from box_tools_generic import get_box_client
 
 
+<<<<<<< HEAD
 async def box_collaboration_list_by_file_tool(ctx: Context, file_id: str) -> dict:
     """List all collaborations on a specific file.
     Args:
@@ -53,6 +55,8 @@ async def box_collaboration_delete_tool(ctx: Context, collaboration_id: str) -> 
     return box_collaboration_delete(client, collaboration_id)
 
 
+=======
+>>>>>>> dcc9062 ([WIP] collaborations basic tools)
 async def box_collaboration_file_group_by_group_id_tool(
     ctx: Context,
     file_id: str,

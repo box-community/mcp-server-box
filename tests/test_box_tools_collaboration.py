@@ -2,9 +2,12 @@ import pytest
 from unittest.mock import MagicMock, patch
 
 from src.box_tools_collaboration import (
+<<<<<<< HEAD
     box_collaboration_list_by_file_tool,
     box_collaboration_list_by_folder_tool,
     box_collaboration_delete_tool,
+=======
+>>>>>>> dcc9062 ([WIP] collaborations basic tools)
     box_collaboration_file_group_by_group_id_tool,
     box_collaboration_file_user_by_user_id_tool,
     box_collaboration_file_user_by_user_login_tool,
@@ -18,6 +21,7 @@ from mcp.server.fastmcp import Context
 
 
 @pytest.mark.asyncio
+<<<<<<< HEAD
 async def test_box_collaboration_list_by_file_tool():
     ctx = MagicMock(spec=Context)
     file_id = "12345"
