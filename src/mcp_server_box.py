@@ -78,6 +78,7 @@ from box_tools_collaboration import (
     box_collaboration_folder_group_by_group_id_tool,
     box_collaboration_folder_user_by_user_id_tool,
     box_collaboration_folder_user_by_user_login_tool,
+    box_collaboration_update_tool,
 )
 
 
@@ -191,6 +192,7 @@ def register_tools(mcp: FastMCP):
     mcp.tool()(box_collaboration_folder_user_by_user_login_tool)
     mcp.tool()(box_collaboration_file_group_by_group_id_tool)
     mcp.tool()(box_collaboration_folder_group_by_group_id_tool)
+    mcp.tool()(box_collaboration_update_tool)
 
 
 if __name__ == "__main__":
