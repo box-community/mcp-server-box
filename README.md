@@ -99,6 +99,106 @@ Extract structured data from files using AI with enhanced processing and a templ
   - `ai_agent_id` (str, optional): The ID of the AI agent to use.
 - **Returns:** Enhanced extracted structured data in JSON format.
 
+
+### Box Collaboration Tools
+
+#### `box_collaboration_list_by_file_tool`
+List all collaborations on a specific file.
+- **Parameters:**
+  - `file_id` (str): The ID of the file to list collaborations for.
+- **Returns:** Dictionary with the list of collaborations or error message.
+
+#### `box_collaboration_list_by_folder_tool`
+List all collaborations on a specific folder.
+- **Parameters:**
+  - `folder_id` (str): The ID of the folder to list collaborations for.
+- **Returns:** Dictionary with the list of collaborations or error message.
+
+#### `box_collaboration_delete_tool`
+Delete a specific collaboration.
+- **Parameters:**
+  - `collaboration_id` (str): The ID of the collaboration to delete.
+- **Returns:** Result of the deletion or error message.
+
+#### `box_collaboration_file_group_by_group_id_tool`
+Create a collaboration on a file with a group specified by group ID.
+- **Parameters:**
+  - `file_id` (str): The ID of the file.
+  - `group_id` (str): The ID of the group.
+  - `role` (str, optional): Role to assign (default: "editor").
+  - `is_access_only` (bool, optional): Access-only flag.
+  - `expires_at` (datetime, optional): Expiration date.
+  - `notify` (bool, optional): Notify collaborator via email.
+- **Returns:** Collaboration details or error message.
+
+#### `box_collaboration_file_user_by_user_id_tool`
+Create a collaboration on a file with a user specified by user ID.
+- **Parameters:**
+  - `file_id` (str): The ID of the file.
+  - `user_id` (str): The ID of the user.
+  - `role` (str, optional): Role to assign (default: "editor").
+  - `is_access_only` (bool, optional): Access-only flag.
+  - `expires_at` (datetime, optional): Expiration date.
+  - `notify` (bool, optional): Notify collaborator via email.
+- **Returns:** Collaboration details or error message.
+
+#### `box_collaboration_file_user_by_user_login_tool`
+Create a collaboration on a file with a user specified by user login (email).
+- **Parameters:**
+  - `file_id` (str): The ID of the file.
+  - `user_login` (str): The login (email) of the user.
+  - `role` (str, optional): Role to assign (default: "editor").
+  - `is_access_only` (bool, optional): Access-only flag.
+  - `expires_at` (datetime, optional): Expiration date.
+  - `notify` (bool, optional): Notify collaborator via email.
+- **Returns:** Collaboration details or error message.
+
+#### `box_collaboration_folder_group_by_group_id_tool`
+Create a collaboration on a folder with a group specified by group ID.
+- **Parameters:**
+  - `folder_id` (str): The ID of the folder.
+  - `group_id` (str): The ID of the group.
+  - `role` (str, optional): Role to assign (default: "editor").
+  - `is_access_only` (bool, optional): Access-only flag.
+  - `can_view_path` (bool, optional): Can view path flag.
+  - `expires_at` (datetime, optional): Expiration date.
+  - `notify` (bool, optional): Notify collaborator via email.
+- **Returns:** Collaboration details or error message.
+
+#### `box_collaboration_folder_user_by_user_id_tool`
+Create a collaboration on a folder with a user specified by user ID.
+- **Parameters:**
+  - `folder_id` (str): The ID of the folder.
+  - `user_id` (str): The ID of the user.
+  - `role` (str, optional): Role to assign (default: "editor").
+  - `is_access_only` (bool, optional): Access-only flag.
+  - `can_view_path` (bool, optional): Can view path flag.
+  - `expires_at` (datetime, optional): Expiration date.
+  - `notify` (bool, optional): Notify collaborator via email.
+- **Returns:** Collaboration details or error message.
+
+#### `box_collaboration_folder_user_by_user_login_tool`
+Create a collaboration on a folder with a user specified by user login (email).
+- **Parameters:**
+  - `folder_id` (str): The ID of the folder.
+  - `user_login` (str): The login (email) of the user.
+  - `role` (str, optional): Role to assign (default: "editor").
+  - `is_access_only` (bool, optional): Access-only flag.
+  - `can_view_path` (bool, optional): Can view path flag.
+  - `expires_at` (datetime, optional): Expiration date.
+  - `notify` (bool, optional): Notify collaborator via email.
+- **Returns:** Collaboration details or error message.
+
+#### `box_collaboration_update_tool`
+Update a specific collaboration's role or status.
+- **Parameters:**
+  - `collaboration_id` (str): The ID of the collaboration to update.
+  - `role` (str, optional): New role to assign (default: "editor").
+  - `status` (str, optional): Status of the collaboration (e.g., 'accepted', 'rejected').
+  - `expires_at` (datetime, optional): New expiration date.
+  - `can_view_path` (bool, optional): Can view path flag.
+- **Returns:** Updated collaboration details or error message.
+
 ### Box User Tools
 
 #### `box_users_list_tool`
