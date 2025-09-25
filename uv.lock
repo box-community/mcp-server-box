@@ -34,15 +34,15 @@ wheels = [
 
 [[package]]
 name = "box-ai-agents-toolkit"
-version = "0.0.52"
+version = "0.0.53"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "box-sdk-gen" },
     { name = "python-dotenv" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/fd/b3/cce4516af71b2eca63406d2cffe915d29061ac433ada9fda09023702ee98/box_ai_agents_toolkit-0.0.52.tar.gz", hash = "sha256:4889002bc7530978f3f50238af4ee17d19fbe7451b6e15badafbd54be9ede52a", size = 26486080 }
+sdist = { url = "https://files.pythonhosted.org/packages/63/ae/31d1b3c1da2ac68f930128094c5cb01355c610d2542e53e4219c10ab2feb/box_ai_agents_toolkit-0.0.53.tar.gz", hash = "sha256:d8482ac3219a4fc0851984ba07ed2647f7cb8dbd2601e11eb0f79821a3e91d26", size = 26488581 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/27/f1/0904d34c2535aa7bc87cc6d20fb65122b98b422cff65f0ec787c759c2800/box_ai_agents_toolkit-0.0.52-py3-none-any.whl", hash = "sha256:ff795c9606216ac45b63c533e0c3e04d60a07d39eb621ab54af77f0ccea91e9d", size = 29927 },
+    { url = "https://files.pythonhosted.org/packages/cf/7e/6cd2db685e46e5bdf742ff08a5e07b42179985378303fdea3273bf1531f0/box_ai_agents_toolkit-0.0.53-py3-none-any.whl", hash = "sha256:14bf8496c3cd1acd132c848b41b6b154fe644324f35d5901d801076a7eac8363", size = 30299 },
 ]
 
 [[package]]
@@ -269,7 +269,7 @@ wheels = [
 
 [[package]]
 name = "mcp"
-version = "1.14.1"
+version = "1.15.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "anyio" },
@@ -284,9 +284,9 @@ dependencies = [
     { name = "starlette" },
     { name = "uvicorn", marker = "sys_platform != 'emscripten'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/48/e9/242096400d702924b49f8d202c6ded7efb8841cacba826b5d2e6183aef7b/mcp-1.14.1.tar.gz", hash = "sha256:31c4406182ba15e8f30a513042719c3f0a38c615e76188ee5a736aaa89e20134", size = 454944 }
+sdist = { url = "https://files.pythonhosted.org/packages/0c/9e/e65114795f359f314d7061f4fcb50dfe60026b01b52ad0b986b4631bf8bb/mcp-1.15.0.tar.gz", hash = "sha256:5bda1f4d383cf539d3c035b3505a3de94b20dbd7e4e8b4bd071e14634eeb2d72", size = 469622 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/8e/11/d334fbb7c2aeddd2e762b86d7a619acffae012643a5738e698f975a2a9e2/mcp-1.14.1-py3-none-any.whl", hash = "sha256:3b7a479e8e5cbf5361bdc1da8bc6d500d795dc3aff44b44077a363a7f7e945a4", size = 163809 },
+    { url = "https://files.pythonhosted.org/packages/c9/82/4d0df23d5ff5bb982a59ad597bc7cb9920f2650278ccefb8e0d85c5ce3d4/mcp-1.15.0-py3-none-any.whl", hash = "sha256:314614c8addc67b663d6c3e4054db0a5c3dedc416c24ef8ce954e203fdc2333d", size = 166963 },
 ]
 
 [package.optional-dependencies]
@@ -315,9 +315,9 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "box-ai-agents-toolkit", specifier = ">=0.0.52" },
+    { name = "box-ai-agents-toolkit", specifier = ">=0.0.53" },
     { name = "fastapi", specifier = ">=0.117.1" },
-    { name = "mcp", extras = ["cli"], specifier = ">=1.14.1" },
+    { name = "mcp", extras = ["cli"], specifier = ">=1.15.0" },
     { name = "python-dotenv", specifier = ">=1.1.1" },
 ]
 
