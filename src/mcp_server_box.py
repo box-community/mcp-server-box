@@ -196,7 +196,17 @@ def register_tools(mcp: FastMCP):
     mcp.tool()(box_collaboration_folder_user_by_user_login_tool)
     mcp.tool()(box_collaboration_file_group_by_group_id_tool)
     mcp.tool()(box_collaboration_folder_group_by_group_id_tool)
+<<<<<<< HEAD
     mcp.tool()(box_collaboration_update_tool)
+=======
+=======
+    mcp.tool()(box_collaboration_file_group_by_group_id_tool)
+    mcp.tool()(box_collaboration_file_user_by_user_id_tool)
+    mcp.tool()(box_collaboration_file_user_by_user_login_tool)
+    mcp.tool()(box_collaboration_folder_user_by_user_id_tool)
+    mcp.tool()(box_collaboration_folder_user_by_user_login_tool)
+>>>>>>> dcc9062 ([WIP] collaborations basic tools)
+>>>>>>> c196e7f (merge stuff)
 
 
 if __name__ == "__main__":
