@@ -100,7 +100,139 @@ Extract structured data from files using AI with enhanced processing and a templ
 - **Returns:** Enhanced extracted structured data in JSON format.
 
 
-### Box Collaboration Tools
+
+
+### Box Shared Link Tools
+
+#### File Shared Link Tools
+
+##### `box_shared_link_file_get_tool`
+Get a shared link for a file.
+- **Parameters:**
+  - `file_id` (str): The ID of the file.
+- **Returns:** Shared link details from the Box API.
+
+##### `box_shared_link_file_create_or_update_tool`
+Create or update a shared link for a file.
+- **Parameters:**
+  - `file_id` (str): The ID of the file.
+  - `access` (str, optional): Access level (default: "company").
+  - `can_download` (bool, optional): Allow download (default: True).
+  - `can_preview` (bool, optional): Allow preview (default: True).
+  - `can_edit` (bool, optional): Allow edit (default: False).
+  - `password` (str, optional): Password for the link.
+  - `vanity_name` (str, optional): Vanity name for the link.
+  - `unshared_at` (datetime, optional): Expiration date.
+- **Returns:** Response from the Box API after creating or updating the shared link.
+
+##### `box_shared_link_file_remove_tool`
+Remove a shared link from a file.
+- **Parameters:**
+  - `file_id` (str): The ID of the file.
+- **Returns:** Response from the Box API after removing the shared link.
+
+##### `box_shared_link_file_find_by_shared_link_url_tool`
+Find a file by its shared link URL.
+- **Parameters:**
+  - `shared_link_url` (str): The shared link URL.
+  - `password` (str, optional): Password for the link.
+- **Returns:** File details from the Box API.
+
+#### Folder Shared Link Tools
+
+##### `box_shared_link_folder_get_tool`
+Get a shared link for a folder.
+- **Parameters:**
+  - `folder_id` (str): The ID of the folder.
+- **Returns:** Shared link details from the Box API.
+
+##### `box_shared_link_folder_create_or_update_tool`
+Create or update a shared link for a folder.
+- **Parameters:**
+  - `folder_id` (str): The ID of the folder.
+  - `access` (str, optional): Access level (default: "company").
+  - `can_download` (bool, optional): Allow download (default: True).
+  - `can_preview` (bool, optional): Allow preview (default: True).
+  - `can_edit` (bool, optional): Allow edit (default: False).
+  - `password` (str, optional): Password for the link.
+  - `vanity_name` (str, optional): Vanity name for the link.
+  - `unshared_at` (datetime, optional): Expiration date.
+- **Returns:** Response from the Box API after creating or updating the shared link.
+
+##### `box_shared_link_folder_remove_tool`
+Remove a shared link from a folder.
+- **Parameters:**
+  - `folder_id` (str): The ID of the folder.
+- **Returns:** Response from the Box API after removing the shared link.
+
+##### `box_shared_link_folder_find_by_shared_link_url_tool`
+Find a folder by its shared link URL.
+- **Parameters:**
+  - `shared_link_url` (str): The shared link URL.
+  - `password` (str, optional): Password for the link.
+- **Returns:** Folder details from the Box API.
+
+#### Web Link Shared Link Tools
+
+##### `box_shared_link_web_link_create_or_update_tool`
+Create or update a shared link for a web link.
+- **Parameters:**
+  - `web_link_id` (str): The ID of the web link.
+  - `access` (str, optional): Access level (default: "company").
+  - `password` (str, optional): Password for the link.
+  - `vanity_name` (str, optional): Vanity name for the link.
+  - `unshared_at` (datetime, optional): Expiration date.
+- **Returns:** Response from the Box API after creating or updating the shared link.
+
+##### `box_shared_link_web_link_get_tool`
+Get a shared link for a web link.
+- **Parameters:**
+  - `web_link_id` (str): The ID of the web link.
+- **Returns:** Shared link details from the Box API.
+
+##### `box_shared_link_web_link_remove_tool`
+Remove a shared link from a web link.
+- **Parameters:**
+  - `web_link_id` (str): The ID of the web link.
+- **Returns:** Response from the Box API after removing the shared link.
+
+##### `box_shared_link_web_link_find_by_shared_link_url_tool`
+Find a web link by its shared link URL.
+- **Parameters:**
+  - `shared_link_url` (str): The shared link URL.
+  - `password` (str, optional): Password for the link.
+- **Returns:** Web link details from the Box API.
+
+#### `box_web_link_create_tool`
+Create a Box web link.
+- **Parameters:**
+  - `url` (str): The URL of the web link.
+  - `parent_folder_id` (str): The ID of the parent folder for the web link.
+  - `name` (str, optional): The name of the web link.
+  - `description` (str, optional): The description of the web link.
+- **Returns:** Response from the Box API after creating the web link.
+
+#### `box_web_link_get_by_id_tool`
+Get a Box web link by its ID.
+- **Parameters:**
+  - `web_link_id` (str): The ID of the web link to retrieve.
+- **Returns:** Response from the Box API containing the web link details.
+
+#### `box_web_link_update_by_id_tool`
+Update a Box web link by its ID.
+- **Parameters:**
+  - `web_link_id` (str): The ID of the web link to update.
+  - `url` (str): The new URL of the web link.
+  - `parent_folder_id` (str): The ID of the parent folder for the web link.
+  - `name` (str, optional): The new name of the web link.
+  - `description` (str, optional): The new description of the web link.
+- **Returns:** Response from the Box API after updating the web link.
+
+#### `box_web_link_delete_by_id_tool`
+Delete a Box web link by its ID.
+- **Parameters:**
+  - `web_link_id` (str): The ID of the web link to delete.
+- **Returns:** Response from the Box API after deleting the web link.
 
 #### `box_collaboration_list_by_file_tool`
 List all collaborations on a specific file.
