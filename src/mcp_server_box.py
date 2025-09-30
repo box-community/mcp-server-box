@@ -88,6 +88,21 @@ from box_tools_web_link import (
     box_web_link_delete_by_id_tool,
 )
 
+from box_tools_shared_links import (
+    box_shared_link_file_get_tool,
+    box_shared_link_file_create_or_update_tool,
+    box_shared_link_file_remove_tool,
+    box_shared_link_file_find_by_shared_link_url_tool,
+    box_shared_link_folder_get_tool,
+    box_shared_link_folder_create_or_update_tool,
+    box_shared_link_folder_remove_tool,
+    box_shared_link_folder_find_by_shared_link_url_tool,
+    box_shared_link_web_link_get_tool,
+    box_shared_link_web_link_create_or_update_tool,
+    box_shared_link_web_link_remove_tool,
+    box_shared_link_web_link_find_by_shared_link_url_tool,
+)
+
 
 from server_context import box_lifespan_ccg, box_lifespan_oauth
 
@@ -206,6 +221,24 @@ def register_tools(mcp: FastMCP):
     mcp.tool()(box_web_link_get_by_id_tool)
     mcp.tool()(box_web_link_update_by_id_tool)
     mcp.tool()(box_web_link_delete_by_id_tool)
+
+    # Shared Link Tools - Files
+    mcp.tool()(box_shared_link_file_get_tool)
+    mcp.tool()(box_shared_link_file_create_or_update_tool)
+    mcp.tool()(box_shared_link_file_remove_tool)
+    mcp.tool()(box_shared_link_file_find_by_shared_link_url_tool)
+
+    # Shared Link Tools - Folders
+    mcp.tool()(box_shared_link_folder_get_tool)
+    mcp.tool()(box_shared_link_folder_create_or_update_tool)
+    mcp.tool()(box_shared_link_folder_remove_tool)
+    mcp.tool()(box_shared_link_folder_find_by_shared_link_url_tool)
+
+    # Shared Link Tools - WebLinks
+    mcp.tool()(box_shared_link_web_link_get_tool)
+    mcp.tool()(box_shared_link_web_link_create_or_update_tool)
+    mcp.tool()(box_shared_link_web_link_remove_tool)
+    mcp.tool()(box_shared_link_web_link_find_by_shared_link_url_tool)
 
 
 if __name__ == "__main__":
