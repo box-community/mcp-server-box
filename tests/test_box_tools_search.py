@@ -2,7 +2,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from box_tools_search import (
+from tools.box_tools_search import (
     box_search_folder_by_name_tool,
     box_search_tool,
 )
@@ -58,8 +58,8 @@ def sample_folder_results():
 
 
 @pytest.mark.asyncio
-@patch("box_tools_search.get_box_client")
-@patch("box_tools_search.box_search")
+@patch("tools.box_tools_search.get_box_client")
+@patch("tools.box_tools_search.box_search")
 async def test_box_search_tool_basic(
     mock_search, mock_get_client, mock_ctx, mock_box_client, sample_search_results
 ):
@@ -87,8 +87,8 @@ async def test_box_search_tool_basic(
 
 
 @pytest.mark.asyncio
-@patch("box_tools_search.get_box_client")
-@patch("box_tools_search.box_search")
+@patch("tools.box_tools_search.get_box_client")
+@patch("tools.box_tools_search.box_search")
 async def test_box_search_tool_with_file_extensions(
     mock_search, mock_get_client, mock_ctx, mock_box_client, sample_search_results
 ):
@@ -107,8 +107,8 @@ async def test_box_search_tool_with_file_extensions(
 
 
 @pytest.mark.asyncio
-@patch("box_tools_search.get_box_client")
-@patch("box_tools_search.box_search")
+@patch("tools.box_tools_search.get_box_client")
+@patch("tools.box_tools_search.box_search")
 async def test_box_search_tool_with_content_types(
     mock_search, mock_get_client, mock_ctx, mock_box_client, sample_search_results
 ):
@@ -132,8 +132,8 @@ async def test_box_search_tool_with_content_types(
 
 
 @pytest.mark.asyncio
-@patch("box_tools_search.get_box_client")
-@patch("box_tools_search.box_search")
+@patch("tools.box_tools_search.get_box_client")
+@patch("tools.box_tools_search.box_search")
 async def test_box_search_tool_with_ancestor_folders(
     mock_search, mock_get_client, mock_ctx, mock_box_client, sample_search_results
 ):
@@ -154,8 +154,8 @@ async def test_box_search_tool_with_ancestor_folders(
 
 
 @pytest.mark.asyncio
-@patch("box_tools_search.get_box_client")
-@patch("box_tools_search.box_search")
+@patch("tools.box_tools_search.get_box_client")
+@patch("tools.box_tools_search.box_search")
 async def test_box_search_tool_all_parameters(
     mock_search, mock_get_client, mock_ctx, mock_box_client, sample_search_results
 ):
@@ -184,8 +184,8 @@ async def test_box_search_tool_all_parameters(
 
 
 @pytest.mark.asyncio
-@patch("box_tools_search.get_box_client")
-@patch("box_tools_search.box_locate_folder_by_name")
+@patch("tools.box_tools_search.get_box_client")
+@patch("tools.box_tools_search.box_locate_folder_by_name")
 async def test_box_search_folder_by_name_tool(
     mock_locate_folder,
     mock_get_client,
@@ -213,8 +213,8 @@ async def test_box_search_folder_by_name_tool(
 
 
 @pytest.mark.asyncio
-@patch("box_tools_search.get_box_client")
-@patch("box_tools_search.box_search")
+@patch("tools.box_tools_search.get_box_client")
+@patch("tools.box_tools_search.box_search")
 async def test_box_search_tool_empty_results(
     mock_search, mock_get_client, mock_ctx, mock_box_client
 ):
@@ -230,8 +230,8 @@ async def test_box_search_tool_empty_results(
 
 
 @pytest.mark.asyncio
-@patch("box_tools_search.get_box_client")
-@patch("box_tools_search.box_locate_folder_by_name")
+@patch("tools.box_tools_search.get_box_client")
+@patch("tools.box_tools_search.box_locate_folder_by_name")
 async def test_box_search_folder_by_name_tool_empty_results(
     mock_locate_folder, mock_get_client, mock_ctx, mock_box_client
 ):
@@ -249,8 +249,8 @@ async def test_box_search_folder_by_name_tool_empty_results(
 
 
 @pytest.mark.asyncio
-@patch("box_tools_search.get_box_client")
-@patch("box_tools_search.box_search")
+@patch("tools.box_tools_search.get_box_client")
+@patch("tools.box_tools_search.box_search")
 async def test_box_search_tool_exception_handling(
     mock_search, mock_get_client, mock_ctx, mock_box_client
 ):
@@ -265,8 +265,8 @@ async def test_box_search_tool_exception_handling(
 
 
 @pytest.mark.asyncio
-@patch("box_tools_search.get_box_client")
-@patch("box_tools_search.box_locate_folder_by_name")
+@patch("tools.box_tools_search.get_box_client")
+@patch("tools.box_tools_search.box_locate_folder_by_name")
 async def test_box_search_folder_by_name_tool_exception_handling(
     mock_locate_folder, mock_get_client, mock_ctx, mock_box_client
 ):
@@ -281,8 +281,8 @@ async def test_box_search_folder_by_name_tool_exception_handling(
 
 
 @pytest.mark.asyncio
-@patch("box_tools_search.get_box_client")
-@patch("box_tools_search.box_search")
+@patch("tools.box_tools_search.get_box_client")
+@patch("tools.box_tools_search.box_search")
 async def test_box_search_tool_single_content_type(
     mock_search, mock_get_client, mock_ctx, mock_box_client, sample_search_results
 ):
@@ -301,8 +301,8 @@ async def test_box_search_tool_single_content_type(
 
 
 @pytest.mark.asyncio
-@patch("box_tools_search.get_box_client")
-@patch("box_tools_search.box_search")
+@patch("tools.box_tools_search.get_box_client")
+@patch("tools.box_tools_search.box_search")
 async def test_box_search_tool_empty_string_query(
     mock_search, mock_get_client, mock_ctx, mock_box_client, sample_search_results
 ):
@@ -317,8 +317,8 @@ async def test_box_search_tool_empty_string_query(
 
 
 @pytest.mark.asyncio
-@patch("box_tools_search.get_box_client")
-@patch("box_tools_search.box_search")
+@patch("tools.box_tools_search.get_box_client")
+@patch("tools.box_tools_search.box_search")
 async def test_box_search_tool_special_characters_query(
     mock_search, mock_get_client, mock_ctx, mock_box_client, sample_search_results
 ):
@@ -334,8 +334,8 @@ async def test_box_search_tool_special_characters_query(
 
 
 @pytest.mark.asyncio
-@patch("box_tools_search.get_box_client")
-@patch("box_tools_search.box_locate_folder_by_name")
+@patch("tools.box_tools_search.get_box_client")
+@patch("tools.box_tools_search.box_locate_folder_by_name")
 async def test_box_search_folder_by_name_tool_special_characters(
     mock_locate_folder,
     mock_get_client,

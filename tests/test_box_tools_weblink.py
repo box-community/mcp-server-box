@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import MagicMock, patch
 
-from src.box_tools_web_link import (
+from tools.box_tools_web_link import (
     box_web_link_create_tool,
     box_web_link_get_by_id_tool,
     box_web_link_update_by_id_tool,
@@ -19,8 +19,8 @@ async def test_box_web_link_create_tool():
     name = "Example Link"
     description = "An example web link"
     with (
-        patch("src.box_tools_web_link.box_web_link_create") as mock_create,
-        patch("src.box_tools_web_link.get_box_client") as mock_get_client,
+        patch("tools.box_tools_web_link.box_web_link_create") as mock_create,
+        patch("tools.box_tools_web_link.get_box_client") as mock_get_client,
     ):
         mock_get_client.return_value = "client"
         mock_create.return_value = {"id": "1", "type": "web_link", "name": name}
@@ -36,8 +36,8 @@ async def test_box_web_link_get_by_id_tool():
     ctx = MagicMock(spec=Context)
     web_link_id = "1"
     with (
-        patch("src.box_tools_web_link.box_web_link_get_by_id") as mock_get,
-        patch("src.box_tools_web_link.get_box_client") as mock_get_client,
+        patch("tools.box_tools_web_link.box_web_link_get_by_id") as mock_get,
+        patch("tools.box_tools_web_link.get_box_client") as mock_get_client,
     ):
         mock_get_client.return_value = "client"
         mock_get.return_value = {
@@ -59,8 +59,8 @@ async def test_box_web_link_update_by_id_tool():
     name = "Updated Example Link"
     description = "An updated example web link"
     with (
-        patch("src.box_tools_web_link.box_web_link_update_by_id") as mock_update,
-        patch("src.box_tools_web_link.get_box_client") as mock_get_client,
+        patch("tools.box_tools_web_link.box_web_link_update_by_id") as mock_update,
+        patch("tools.box_tools_web_link.get_box_client") as mock_get_client,
     ):
         mock_get_client.return_value = "client"
         mock_update.return_value = {
@@ -84,8 +84,8 @@ async def test_box_web_link_delete_by_id_tool():
     ctx = MagicMock(spec=Context)
     web_link_id = "1"
     with (
-        patch("src.box_tools_web_link.box_web_link_delete_by_id") as mock_delete,
-        patch("src.box_tools_web_link.get_box_client") as mock_get_client,
+        patch("tools.box_tools_web_link.box_web_link_delete_by_id") as mock_delete,
+        patch("tools.box_tools_web_link.get_box_client") as mock_get_client,
     ):
         mock_get_client.return_value = "client"
         mock_delete.return_value = {"status": "deleted"}

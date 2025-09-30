@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import MagicMock, patch
 
-from src.box_tools_collaboration import (
+from tools.box_tools_collaboration import (
     box_collaboration_list_by_file_tool,
     box_collaboration_list_by_folder_tool,
     box_collaboration_delete_tool,
@@ -23,9 +23,9 @@ async def test_box_collaboration_list_by_file_tool():
     file_id = "12345"
     with (
         patch(
-            "src.box_tools_collaboration.box_collaborations_list_by_file"
+            "tools.box_tools_collaboration.box_collaborations_list_by_file"
         ) as mock_list,
-        patch("src.box_tools_collaboration.get_box_client") as mock_get_client,
+        patch("tools.box_tools_collaboration.get_box_client") as mock_get_client,
     ):
         mock_get_client.return_value = "client"
         mock_list.return_value = [{"id": "1", "type": "user", "name": "Test User"}]
@@ -40,9 +40,9 @@ async def test_box_collaboration_list_by_folder_tool():
     folder_id = "67890"
     with (
         patch(
-            "src.box_tools_collaboration.box_collaborations_list_by_folder"
+            "tools.box_tools_collaboration.box_collaborations_list_by_folder"
         ) as mock_list,
-        patch("src.box_tools_collaboration.get_box_client") as mock_get_client,
+        patch("tools.box_tools_collaboration.get_box_client") as mock_get_client,
     ):
         mock_get_client.return_value = "client"
         mock_list.return_value = [{"id": "1", "type": "group", "name": "Test Group"}]
@@ -56,8 +56,8 @@ async def test_box_collaboration_delete_tool():
     ctx = MagicMock(spec=Context)
     collaboration_id = "54321"
     with (
-        patch("src.box_tools_collaboration.box_collaboration_delete") as mock_delete,
-        patch("src.box_tools_collaboration.get_box_client") as mock_get_client,
+        patch("tools.box_tools_collaboration.box_collaboration_delete") as mock_delete,
+        patch("tools.box_tools_collaboration.get_box_client") as mock_get_client,
     ):
         mock_get_client.return_value = "client"
         mock_delete.return_value = None  # Deletion typically returns nothing
@@ -72,9 +72,9 @@ async def test_box_collaboration_file_user_by_user_id_tool():
     user_id = "67890"
     with (
         patch(
-            "src.box_tools_collaboration.box_collaboration_file_user_by_user_id"
+            "tools.box_tools_collaboration.box_collaboration_file_user_by_user_id"
         ) as mock_create,
-        patch("src.box_tools_collaboration.get_box_client") as mock_get_client,
+        patch("tools.box_tools_collaboration.get_box_client") as mock_get_client,
     ):
         mock_get_client.return_value = "client"
         mock_create.return_value = {"id": "1", "type": "user", "name": "Test User"}
@@ -92,9 +92,9 @@ async def test_box_collaboration_file_user_by_user_login_tool():
     user_login = "testuser"
     with (
         patch(
-            "src.box_tools_collaboration.box_collaboration_file_user_by_user_login"
+            "tools.box_tools_collaboration.box_collaboration_file_user_by_user_login"
         ) as mock_create,
-        patch("src.box_tools_collaboration.get_box_client") as mock_get_client,
+        patch("tools.box_tools_collaboration.get_box_client") as mock_get_client,
     ):
         mock_get_client.return_value = "client"
         mock_create.return_value = {"id": "1", "type": "user", "name": "Test User"}
@@ -112,9 +112,9 @@ async def test_box_collaboration_file_group_by_group_id_tool():
     group_id = "67890"
     with (
         patch(
-            "src.box_tools_collaboration.box_collaboration_file_group_by_group_id"
+            "tools.box_tools_collaboration.box_collaboration_file_group_by_group_id"
         ) as mock_create,
-        patch("src.box_tools_collaboration.get_box_client") as mock_get_client,
+        patch("tools.box_tools_collaboration.get_box_client") as mock_get_client,
     ):
         mock_get_client.return_value = "client"
         mock_create.return_value = {"id": "1", "type": "group", "name": "Test Group"}
@@ -132,9 +132,9 @@ async def test_box_collaboration_folder_user_by_user_id_tool():
     user_id = "67890"
     with (
         patch(
-            "src.box_tools_collaboration.box_collaboration_folder_user_by_user_id"
+            "tools.box_tools_collaboration.box_collaboration_folder_user_by_user_id"
         ) as mock_create,
-        patch("src.box_tools_collaboration.get_box_client") as mock_get_client,
+        patch("tools.box_tools_collaboration.get_box_client") as mock_get_client,
     ):
         mock_get_client.return_value = "client"
         mock_create.return_value = {"id": "1", "type": "user", "name": "Test User"}
@@ -152,9 +152,9 @@ async def test_box_collaboration_folder_user_by_user_login_tool():
     user_login = "testuser"
     with (
         patch(
-            "src.box_tools_collaboration.box_collaboration_folder_user_by_user_login"
+            "tools.box_tools_collaboration.box_collaboration_folder_user_by_user_login"
         ) as mock_create,
-        patch("src.box_tools_collaboration.get_box_client") as mock_get_client,
+        patch("tools.box_tools_collaboration.get_box_client") as mock_get_client,
     ):
         mock_get_client.return_value = "client"
         mock_create.return_value = {"id": "1", "type": "user", "name": "Test User"}
@@ -172,9 +172,9 @@ async def test_box_collaboration_folder_group_by_group_id_tool():
     group_id = "67890"
     with (
         patch(
-            "src.box_tools_collaboration.box_collaboration_folder_group_by_group_id"
+            "tools.box_tools_collaboration.box_collaboration_folder_group_by_group_id"
         ) as mock_create,
-        patch("src.box_tools_collaboration.get_box_client") as mock_get_client,
+        patch("tools.box_tools_collaboration.get_box_client") as mock_get_client,
     ):
         mock_get_client.return_value = "client"
         mock_create.return_value = {"id": "1", "type": "group", "name": "Test Group"}
@@ -191,8 +191,8 @@ async def test_box_collaboration_update_tool():
     collaboration_id = "54321"
     new_role = "viewer"
     with (
-        patch("src.box_tools_collaboration.box_collaboration_update") as mock_update,
-        patch("src.box_tools_collaboration.get_box_client") as mock_get_client,
+        patch("tools.box_tools_collaboration.box_collaboration_update") as mock_update,
+        patch("tools.box_tools_collaboration.get_box_client") as mock_get_client,
     ):
         mock_get_client.return_value = "client"
         mock_update.return_value = {

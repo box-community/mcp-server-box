@@ -2,7 +2,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from box_tools_ai import (
+from tools.box_tools_ai import (
     box_ai_ask_file_multi_tool,
     box_ai_ask_file_single_tool,
     box_ai_ask_hub_tool,
@@ -57,8 +57,8 @@ def sample_fields():
 
 
 @pytest.mark.asyncio
-@patch("box_tools_ai.get_box_client")
-@patch("box_tools_ai.box_ai_ask_file_single")
+@patch("tools.box_tools_ai.get_box_client")
+@patch("tools.box_tools_ai.box_ai_ask_file_single")
 async def test_box_ai_ask_file_single_tool(
     mock_ask_single, mock_get_client, mock_ctx, mock_box_client, sample_ai_response
 ):
@@ -84,8 +84,8 @@ async def test_box_ai_ask_file_single_tool(
 
 
 @pytest.mark.asyncio
-@patch("box_tools_ai.get_box_client")
-@patch("box_tools_ai.box_ai_ask_file_single")
+@patch("tools.box_tools_ai.get_box_client")
+@patch("tools.box_tools_ai.box_ai_ask_file_single")
 async def test_box_ai_ask_file_single_tool_no_agent(
     mock_ask_single, mock_get_client, mock_ctx, mock_box_client, sample_ai_response
 ):
@@ -107,8 +107,8 @@ async def test_box_ai_ask_file_single_tool_no_agent(
 
 
 @pytest.mark.asyncio
-@patch("box_tools_ai.get_box_client")
-@patch("box_tools_ai.box_ai_ask_file_multi")
+@patch("tools.box_tools_ai.get_box_client")
+@patch("tools.box_tools_ai.box_ai_ask_file_multi")
 async def test_box_ai_ask_file_multi_tool(
     mock_ask_multi, mock_get_client, mock_ctx, mock_box_client, sample_ai_response
 ):
@@ -135,8 +135,8 @@ async def test_box_ai_ask_file_multi_tool(
 
 
 @pytest.mark.asyncio
-@patch("box_tools_ai.get_box_client")
-@patch("box_tools_ai.box_ai_ask_hub")
+@patch("tools.box_tools_ai.get_box_client")
+@patch("tools.box_tools_ai.box_ai_ask_hub")
 async def test_box_ai_ask_hub_tool(
     mock_ask_hub, mock_get_client, mock_ctx, mock_box_client, sample_ai_response
 ):
@@ -162,8 +162,8 @@ async def test_box_ai_ask_hub_tool(
 
 
 @pytest.mark.asyncio
-@patch("box_tools_ai.get_box_client")
-@patch("box_tools_ai.box_ai_ask_hub")
+@patch("tools.box_tools_ai.get_box_client")
+@patch("tools.box_tools_ai.box_ai_ask_hub")
 async def test_box_ai_ask_hub_tool_int_id(
     mock_ask_hub, mock_get_client, mock_ctx, mock_box_client, sample_ai_response
 ):
@@ -182,8 +182,8 @@ async def test_box_ai_ask_hub_tool_int_id(
 
 
 @pytest.mark.asyncio
-@patch("box_tools_ai.get_box_client")
-@patch("box_tools_ai.box_ai_extract_freeform")
+@patch("tools.box_tools_ai.get_box_client")
+@patch("tools.box_tools_ai.box_ai_extract_freeform")
 async def test_box_ai_extract_freeform_tool(
     mock_extract_freeform, mock_get_client, mock_ctx, mock_box_client
 ):
@@ -211,8 +211,8 @@ async def test_box_ai_extract_freeform_tool(
 
 
 @pytest.mark.asyncio
-@patch("box_tools_ai.get_box_client")
-@patch("box_tools_ai.box_ai_extract_structured_using_fields")
+@patch("tools.box_tools_ai.get_box_client")
+@patch("tools.box_tools_ai.box_ai_extract_structured_using_fields")
 async def test_box_ai_extract_structured_using_fields_tool(
     mock_extract_fields, mock_get_client, mock_ctx, mock_box_client, sample_fields
 ):
@@ -234,8 +234,8 @@ async def test_box_ai_extract_structured_using_fields_tool(
 
 
 @pytest.mark.asyncio
-@patch("box_tools_ai.get_box_client")
-@patch("box_tools_ai.box_ai_extract_structured_using_template")
+@patch("tools.box_tools_ai.get_box_client")
+@patch("tools.box_tools_ai.box_ai_extract_structured_using_template")
 async def test_box_ai_extract_structured_using_template_tool(
     mock_extract_template, mock_get_client, mock_ctx, mock_box_client
 ):
@@ -260,8 +260,8 @@ async def test_box_ai_extract_structured_using_template_tool(
 
 
 @pytest.mark.asyncio
-@patch("box_tools_ai.get_box_client")
-@patch("box_tools_ai.box_ai_extract_structured_enhanced_using_fields")
+@patch("tools.box_tools_ai.get_box_client")
+@patch("tools.box_tools_ai.box_ai_extract_structured_enhanced_using_fields")
 async def test_box_ai_extract_structured_enhanced_using_fields_tool(
     mock_extract_enhanced_fields,
     mock_get_client,
@@ -287,8 +287,8 @@ async def test_box_ai_extract_structured_enhanced_using_fields_tool(
 
 
 @pytest.mark.asyncio
-@patch("box_tools_ai.get_box_client")
-@patch("box_tools_ai.box_ai_extract_structured_enhanced_using_template")
+@patch("tools.box_tools_ai.get_box_client")
+@patch("tools.box_tools_ai.box_ai_extract_structured_enhanced_using_template")
 async def test_box_ai_extract_structured_enhanced_using_template_tool(
     mock_extract_enhanced_template, mock_get_client, mock_ctx, mock_box_client
 ):
@@ -310,8 +310,8 @@ async def test_box_ai_extract_structured_enhanced_using_template_tool(
 
 
 @pytest.mark.asyncio
-@patch("box_tools_ai.get_box_client")
-@patch("box_tools_ai.box_ai_ask_file_single")
+@patch("tools.box_tools_ai.get_box_client")
+@patch("tools.box_tools_ai.box_ai_ask_file_single")
 async def test_box_ai_ask_file_single_tool_exception_handling(
     mock_ask_single, mock_get_client, mock_ctx, mock_box_client
 ):
@@ -328,8 +328,8 @@ async def test_box_ai_ask_file_single_tool_exception_handling(
 
 
 @pytest.mark.asyncio
-@patch("box_tools_ai.get_box_client")
-@patch("box_tools_ai.box_ai_extract_freeform")
+@patch("tools.box_tools_ai.get_box_client")
+@patch("tools.box_tools_ai.box_ai_extract_freeform")
 async def test_box_ai_extract_freeform_tool_empty_file_list(
     mock_extract_freeform, mock_get_client, mock_ctx, mock_box_client
 ):
@@ -349,8 +349,8 @@ async def test_box_ai_extract_freeform_tool_empty_file_list(
 
 
 @pytest.mark.asyncio
-@patch("box_tools_ai.get_box_client")
-@patch("box_tools_ai.box_ai_extract_structured_using_fields")
+@patch("tools.box_tools_ai.get_box_client")
+@patch("tools.box_tools_ai.box_ai_extract_structured_using_fields")
 async def test_box_ai_extract_structured_using_fields_tool_empty_fields(
     mock_extract_fields, mock_get_client, mock_ctx, mock_box_client
 ):

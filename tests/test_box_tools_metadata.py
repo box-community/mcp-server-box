@@ -2,7 +2,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from box_tools_metadata import (
+from tools.box_tools_metadata import (
     box_metadata_delete_instance_on_file_tool,
     box_metadata_get_instance_on_file_tool,
     box_metadata_set_instance_on_file_tool,
@@ -85,8 +85,8 @@ def sample_metadata_instance_response():
 
 
 @pytest.mark.asyncio
-@patch("box_tools_metadata.get_box_client")
-@patch("box_tools_metadata.box_metadata_template_create")
+@patch("tools.box_tools_metadata.get_box_client")
+@patch("tools.box_tools_metadata.box_metadata_template_create")
 async def test_box_metadata_template_create_tool(
     mock_create,
     mock_get_client,
@@ -117,8 +117,8 @@ async def test_box_metadata_template_create_tool(
 
 
 @pytest.mark.asyncio
-@patch("box_tools_metadata.get_box_client")
-@patch("box_tools_metadata.box_metadata_template_create")
+@patch("tools.box_tools_metadata.get_box_client")
+@patch("tools.box_tools_metadata.box_metadata_template_create")
 async def test_box_metadata_template_create_tool_no_key(
     mock_create,
     mock_get_client,
@@ -142,8 +142,8 @@ async def test_box_metadata_template_create_tool_no_key(
 
 
 @pytest.mark.asyncio
-@patch("box_tools_metadata.get_box_client")
-@patch("box_tools_metadata.box_metadata_template_get_by_key")
+@patch("tools.box_tools_metadata.get_box_client")
+@patch("tools.box_tools_metadata.box_metadata_template_get_by_key")
 async def test_box_metadata_template_get_by_key_tool(
     mock_get_by_key,
     mock_get_client,
@@ -165,8 +165,8 @@ async def test_box_metadata_template_get_by_key_tool(
 
 
 @pytest.mark.asyncio
-@patch("box_tools_metadata.get_box_client")
-@patch("box_tools_metadata.box_metadata_template_get_by_name")
+@patch("tools.box_tools_metadata.get_box_client")
+@patch("tools.box_tools_metadata.box_metadata_template_get_by_name")
 async def test_box_metadata_template_get_by_name_tool(
     mock_get_by_name,
     mock_get_client,
@@ -188,8 +188,8 @@ async def test_box_metadata_template_get_by_name_tool(
 
 
 @pytest.mark.asyncio
-@patch("box_tools_metadata.get_box_client")
-@patch("box_tools_metadata.box_metadata_set_instance_on_file")
+@patch("tools.box_tools_metadata.get_box_client")
+@patch("tools.box_tools_metadata.box_metadata_set_instance_on_file")
 async def test_box_metadata_set_instance_on_file_tool(
     mock_set_instance,
     mock_get_client,
@@ -217,8 +217,8 @@ async def test_box_metadata_set_instance_on_file_tool(
 
 
 @pytest.mark.asyncio
-@patch("box_tools_metadata.get_box_client")
-@patch("box_tools_metadata.box_metadata_get_instance_on_file")
+@patch("tools.box_tools_metadata.get_box_client")
+@patch("tools.box_tools_metadata.box_metadata_get_instance_on_file")
 async def test_box_metadata_get_instance_on_file_tool(
     mock_get_instance,
     mock_get_client,
@@ -242,8 +242,8 @@ async def test_box_metadata_get_instance_on_file_tool(
 
 
 @pytest.mark.asyncio
-@patch("box_tools_metadata.get_box_client")
-@patch("box_tools_metadata.box_metadata_update_instance_on_file")
+@patch("tools.box_tools_metadata.get_box_client")
+@patch("tools.box_tools_metadata.box_metadata_update_instance_on_file")
 async def test_box_metadata_update_instance_on_file_tool(
     mock_update_instance,
     mock_get_client,
@@ -276,8 +276,8 @@ async def test_box_metadata_update_instance_on_file_tool(
 
 
 @pytest.mark.asyncio
-@patch("box_tools_metadata.get_box_client")
-@patch("box_tools_metadata.box_metadata_update_instance_on_file")
+@patch("tools.box_tools_metadata.get_box_client")
+@patch("tools.box_tools_metadata.box_metadata_update_instance_on_file")
 async def test_box_metadata_update_instance_on_file_tool_default_remove(
     mock_update_instance,
     mock_get_client,
@@ -308,8 +308,8 @@ async def test_box_metadata_update_instance_on_file_tool_default_remove(
 
 
 @pytest.mark.asyncio
-@patch("box_tools_metadata.get_box_client")
-@patch("box_tools_metadata.box_metadata_delete_instance_on_file")
+@patch("tools.box_tools_metadata.get_box_client")
+@patch("tools.box_tools_metadata.box_metadata_delete_instance_on_file")
 async def test_box_metadata_delete_instance_on_file_tool(
     mock_delete_instance, mock_get_client, mock_ctx, mock_box_client
 ):
@@ -330,8 +330,8 @@ async def test_box_metadata_delete_instance_on_file_tool(
 
 
 @pytest.mark.asyncio
-@patch("box_tools_metadata.get_box_client")
-@patch("box_tools_metadata.box_metadata_template_create")
+@patch("tools.box_tools_metadata.get_box_client")
+@patch("tools.box_tools_metadata.box_metadata_template_create")
 async def test_box_metadata_template_create_tool_empty_fields(
     mock_create, mock_get_client, mock_ctx, mock_box_client
 ):
@@ -351,8 +351,8 @@ async def test_box_metadata_template_create_tool_empty_fields(
 
 
 @pytest.mark.asyncio
-@patch("box_tools_metadata.get_box_client")
-@patch("box_tools_metadata.box_metadata_set_instance_on_file")
+@patch("tools.box_tools_metadata.get_box_client")
+@patch("tools.box_tools_metadata.box_metadata_set_instance_on_file")
 async def test_box_metadata_set_instance_on_file_tool_empty_metadata(
     mock_set_instance, mock_get_client, mock_ctx, mock_box_client
 ):
@@ -376,8 +376,8 @@ async def test_box_metadata_set_instance_on_file_tool_empty_metadata(
 
 
 @pytest.mark.asyncio
-@patch("box_tools_metadata.get_box_client")
-@patch("box_tools_metadata.box_metadata_template_get_by_key")
+@patch("tools.box_tools_metadata.get_box_client")
+@patch("tools.box_tools_metadata.box_metadata_template_get_by_key")
 async def test_box_metadata_template_get_by_key_tool_not_found(
     mock_get_by_key, mock_get_client, mock_ctx, mock_box_client
 ):
@@ -395,8 +395,8 @@ async def test_box_metadata_template_get_by_key_tool_not_found(
 
 
 @pytest.mark.asyncio
-@patch("box_tools_metadata.get_box_client")
-@patch("box_tools_metadata.box_metadata_get_instance_on_file")
+@patch("tools.box_tools_metadata.get_box_client")
+@patch("tools.box_tools_metadata.box_metadata_get_instance_on_file")
 async def test_box_metadata_get_instance_on_file_tool_not_found(
     mock_get_instance, mock_get_client, mock_ctx, mock_box_client
 ):
@@ -416,8 +416,8 @@ async def test_box_metadata_get_instance_on_file_tool_not_found(
 
 
 @pytest.mark.asyncio
-@patch("box_tools_metadata.get_box_client")
-@patch("box_tools_metadata.box_metadata_template_create")
+@patch("tools.box_tools_metadata.get_box_client")
+@patch("tools.box_tools_metadata.box_metadata_template_create")
 async def test_box_metadata_template_create_tool_exception_handling(
     mock_create, mock_get_client, mock_ctx, mock_box_client, sample_template_fields
 ):
@@ -434,8 +434,8 @@ async def test_box_metadata_template_create_tool_exception_handling(
 
 
 @pytest.mark.asyncio
-@patch("box_tools_metadata.get_box_client")
-@patch("box_tools_metadata.box_metadata_template_create")
+@patch("tools.box_tools_metadata.get_box_client")
+@patch("tools.box_tools_metadata.box_metadata_template_create")
 async def test_box_metadata_template_create_tool_complex_fields(
     mock_create, mock_get_client, mock_ctx, mock_box_client
 ):

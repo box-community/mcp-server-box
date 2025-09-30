@@ -2,7 +2,7 @@ from unittest.mock import Mock, patch
 
 import pytest
 
-from box_tools_docgen import (
+from tools.box_tools_docgen import (
     box_docgen_create_batch_tool,
     box_docgen_create_single_file_from_user_input_tool,
     box_docgen_get_job_by_id_tool,
@@ -86,8 +86,8 @@ def sample_document_generation_data(sample_user_input):
 
 
 @pytest.mark.asyncio
-@patch("box_tools_docgen.box_docgen_template_create")
-@patch("box_tools_docgen.get_box_client")
+@patch("tools.box_tools_docgen.box_docgen_template_create")
+@patch("tools.box_tools_docgen.get_box_client")
 async def test_box_docgen_template_create_tool(
     mock_get_client, mock_create, ctx, sample_template_data
 ):
@@ -103,8 +103,8 @@ async def test_box_docgen_template_create_tool(
 
 
 @pytest.mark.asyncio
-@patch("box_tools_docgen.box_docgen_template_list")
-@patch("box_tools_docgen.get_box_client")
+@patch("tools.box_tools_docgen.box_docgen_template_list")
+@patch("tools.box_tools_docgen.get_box_client")
 async def test_box_docgen_template_list_tool(mock_get_client, mock_list, ctx):
     """Test listing DocGen templates."""
     mock_get_client.return_value = Mock()
@@ -120,8 +120,8 @@ async def test_box_docgen_template_list_tool(mock_get_client, mock_list, ctx):
 
 
 @pytest.mark.asyncio
-@patch("box_tools_docgen.box_docgen_template_list")
-@patch("box_tools_docgen.get_box_client")
+@patch("tools.box_tools_docgen.box_docgen_template_list")
+@patch("tools.box_tools_docgen.get_box_client")
 async def test_box_docgen_template_list_tool_with_pagination(
     mock_get_client, mock_list, ctx
 ):
@@ -138,8 +138,8 @@ async def test_box_docgen_template_list_tool_with_pagination(
 
 
 @pytest.mark.asyncio
-@patch("box_tools_docgen.box_docgen_template_get_by_id")
-@patch("box_tools_docgen.get_box_client")
+@patch("tools.box_tools_docgen.box_docgen_template_get_by_id")
+@patch("tools.box_tools_docgen.get_box_client")
 async def test_box_docgen_template_get_by_id_tool(
     mock_get_client, mock_get_by_id, ctx, sample_template_data
 ):
@@ -155,8 +155,8 @@ async def test_box_docgen_template_get_by_id_tool(
 
 
 @pytest.mark.asyncio
-@patch("box_tools_docgen.box_docgen_template_get_by_name")
-@patch("box_tools_docgen.get_box_client")
+@patch("tools.box_tools_docgen.box_docgen_template_get_by_name")
+@patch("tools.box_tools_docgen.get_box_client")
 async def test_box_docgen_template_get_by_name_tool(
     mock_get_client, mock_get_by_name, ctx, sample_template_data
 ):
@@ -174,8 +174,8 @@ async def test_box_docgen_template_get_by_name_tool(
 
 
 @pytest.mark.asyncio
-@patch("box_tools_docgen.box_docgen_template_delete")
-@patch("box_tools_docgen.get_box_client")
+@patch("tools.box_tools_docgen.box_docgen_template_delete")
+@patch("tools.box_tools_docgen.get_box_client")
 async def test_box_docgen_template_delete_tool(mock_get_client, mock_delete, ctx):
     """Test deleting a DocGen template."""
     mock_get_client.return_value = Mock()
@@ -189,8 +189,8 @@ async def test_box_docgen_template_delete_tool(mock_get_client, mock_delete, ctx
 
 
 @pytest.mark.asyncio
-@patch("box_tools_docgen.box_docgen_template_list_tags")
-@patch("box_tools_docgen.get_box_client")
+@patch("tools.box_tools_docgen.box_docgen_template_list_tags")
+@patch("tools.box_tools_docgen.get_box_client")
 async def test_box_docgen_template_list_tags_tool(mock_get_client, mock_list_tags, ctx):
     """Test listing tags for a DocGen template."""
     mock_get_client.return_value = Mock()
@@ -211,8 +211,8 @@ async def test_box_docgen_template_list_tags_tool(mock_get_client, mock_list_tag
 
 
 @pytest.mark.asyncio
-@patch("box_tools_docgen.box_docgen_template_list_tags")
-@patch("box_tools_docgen.get_box_client")
+@patch("tools.box_tools_docgen.box_docgen_template_list_tags")
+@patch("tools.box_tools_docgen.get_box_client")
 async def test_box_docgen_template_list_tags_tool_with_params(
     mock_get_client, mock_list_tags, ctx
 ):
@@ -235,8 +235,8 @@ async def test_box_docgen_template_list_tags_tool_with_params(
 
 
 @pytest.mark.asyncio
-@patch("box_tools_docgen.box_docgen_template_list_jobs")
-@patch("box_tools_docgen.get_box_client")
+@patch("tools.box_tools_docgen.box_docgen_template_list_jobs")
+@patch("tools.box_tools_docgen.get_box_client")
 async def test_box_docgen_template_list_jobs_tool(mock_get_client, mock_list_jobs, ctx):
     """Test listing jobs for a DocGen template."""
     mock_get_client.return_value = Mock()
@@ -258,8 +258,8 @@ async def test_box_docgen_template_list_jobs_tool(mock_get_client, mock_list_job
 
 
 @pytest.mark.asyncio
-@patch("box_tools_docgen.box_docgen_create_batch")
-@patch("box_tools_docgen.get_box_client")
+@patch("tools.box_tools_docgen.box_docgen_create_batch")
+@patch("tools.box_tools_docgen.get_box_client")
 async def test_box_docgen_create_batch_tool(
     mock_get_client, mock_create_batch, ctx, sample_document_generation_data
 ):
@@ -286,8 +286,8 @@ async def test_box_docgen_create_batch_tool(
 
 
 @pytest.mark.asyncio
-@patch("box_tools_docgen.box_docgen_create_batch")
-@patch("box_tools_docgen.get_box_client")
+@patch("tools.box_tools_docgen.box_docgen_create_batch")
+@patch("tools.box_tools_docgen.get_box_client")
 async def test_box_docgen_create_batch_tool_with_docx_output(
     mock_get_client, mock_create_batch, ctx, sample_document_generation_data
 ):
@@ -314,8 +314,8 @@ async def test_box_docgen_create_batch_tool_with_docx_output(
 
 
 @pytest.mark.asyncio
-@patch("box_tools_docgen.box_docgen_create_single_file_from_user_input")
-@patch("box_tools_docgen.get_box_client")
+@patch("tools.box_tools_docgen.box_docgen_create_single_file_from_user_input")
+@patch("tools.box_tools_docgen.get_box_client")
 async def test_box_docgen_create_single_file_from_user_input_tool(
     mock_get_client, mock_create_single, ctx, sample_user_input
 ):
@@ -343,8 +343,8 @@ async def test_box_docgen_create_single_file_from_user_input_tool(
 
 
 @pytest.mark.asyncio
-@patch("box_tools_docgen.box_docgen_create_single_file_from_user_input")
-@patch("box_tools_docgen.get_box_client")
+@patch("tools.box_tools_docgen.box_docgen_create_single_file_from_user_input")
+@patch("tools.box_tools_docgen.get_box_client")
 async def test_box_docgen_create_single_file_from_user_input_tool_with_name(
     mock_get_client, mock_create_single, ctx, sample_user_input
 ):
@@ -373,8 +373,8 @@ async def test_box_docgen_create_single_file_from_user_input_tool_with_name(
 
 
 @pytest.mark.asyncio
-@patch("box_tools_docgen.box_docgen_list_jobs_by_batch")
-@patch("box_tools_docgen.get_box_client")
+@patch("tools.box_tools_docgen.box_docgen_list_jobs_by_batch")
+@patch("tools.box_tools_docgen.get_box_client")
 async def test_box_docgen_list_jobs_by_batch_tool(mock_get_client, mock_list_jobs, ctx):
     """Test listing jobs in a batch."""
     mock_get_client.return_value = Mock()
@@ -390,8 +390,8 @@ async def test_box_docgen_list_jobs_by_batch_tool(mock_get_client, mock_list_job
 
 
 @pytest.mark.asyncio
-@patch("box_tools_docgen.box_docgen_list_jobs_by_batch")
-@patch("box_tools_docgen.get_box_client")
+@patch("tools.box_tools_docgen.box_docgen_list_jobs_by_batch")
+@patch("tools.box_tools_docgen.get_box_client")
 async def test_box_docgen_list_jobs_by_batch_tool_with_pagination(
     mock_get_client, mock_list_jobs, ctx
 ):
@@ -413,8 +413,8 @@ async def test_box_docgen_list_jobs_by_batch_tool_with_pagination(
 
 
 @pytest.mark.asyncio
-@patch("box_tools_docgen.box_docgen_get_job_by_id")
-@patch("box_tools_docgen.get_box_client")
+@patch("tools.box_tools_docgen.box_docgen_get_job_by_id")
+@patch("tools.box_tools_docgen.get_box_client")
 async def test_box_docgen_get_job_by_id_tool(
     mock_get_client, mock_get_job, ctx, sample_job_data
 ):
@@ -430,8 +430,8 @@ async def test_box_docgen_get_job_by_id_tool(
 
 
 @pytest.mark.asyncio
-@patch("box_tools_docgen.box_docgen_list_jobs")
-@patch("box_tools_docgen.get_box_client")
+@patch("tools.box_tools_docgen.box_docgen_list_jobs")
+@patch("tools.box_tools_docgen.get_box_client")
 async def test_box_docgen_list_jobs_tool(mock_get_client, mock_list_jobs, ctx):
     """Test listing all jobs for the current user."""
     mock_get_client.return_value = Mock()
@@ -447,8 +447,8 @@ async def test_box_docgen_list_jobs_tool(mock_get_client, mock_list_jobs, ctx):
 
 
 @pytest.mark.asyncio
-@patch("box_tools_docgen.box_docgen_list_jobs")
-@patch("box_tools_docgen.get_box_client")
+@patch("tools.box_tools_docgen.box_docgen_list_jobs")
+@patch("tools.box_tools_docgen.get_box_client")
 async def test_box_docgen_list_jobs_tool_with_pagination(
     mock_get_client, mock_list_jobs, ctx
 ):
@@ -468,8 +468,8 @@ async def test_box_docgen_list_jobs_tool_with_pagination(
 
 
 @pytest.mark.asyncio
-@patch("box_tools_docgen.box_docgen_template_get_by_id")
-@patch("box_tools_docgen.get_box_client")
+@patch("tools.box_tools_docgen.box_docgen_template_get_by_id")
+@patch("tools.box_tools_docgen.get_box_client")
 async def test_box_docgen_template_get_by_id_tool_error(
     mock_get_client, mock_get_by_id, ctx
 ):
@@ -484,8 +484,8 @@ async def test_box_docgen_template_get_by_id_tool_error(
 
 
 @pytest.mark.asyncio
-@patch("box_tools_docgen.box_docgen_create_batch")
-@patch("box_tools_docgen.get_box_client")
+@patch("tools.box_tools_docgen.box_docgen_create_batch")
+@patch("tools.box_tools_docgen.get_box_client")
 async def test_box_docgen_create_batch_tool_error(
     mock_get_client, mock_create_batch, ctx, sample_document_generation_data
 ):
@@ -505,8 +505,8 @@ async def test_box_docgen_create_batch_tool_error(
 
 
 @pytest.mark.asyncio
-@patch("box_tools_docgen.box_docgen_get_job_by_id")
-@patch("box_tools_docgen.get_box_client")
+@patch("tools.box_tools_docgen.box_docgen_get_job_by_id")
+@patch("tools.box_tools_docgen.get_box_client")
 async def test_box_docgen_get_job_by_id_tool_error(mock_get_client, mock_get_job, ctx):
     """Test handling errors when getting a job by ID."""
     mock_get_client.return_value = Mock()

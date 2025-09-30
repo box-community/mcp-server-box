@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import MagicMock, patch
 
-from src.box_tools_groups import (
+from tools.box_tools_groups import (
     box_groups_search_tool,
     box_groups_list_members_tool,
     box_groups_list_by_user_tool,
@@ -14,8 +14,8 @@ async def test_box_groups_search_tool():
     ctx = MagicMock(spec=Context)
     query = "Test Group"
     with (
-        patch("src.box_tools_groups.box_groups_search") as mock_search,
-        patch("src.box_tools_groups.get_box_client") as mock_get_client,
+        patch("tools.box_tools_groups.box_groups_search") as mock_search,
+        patch("tools.box_tools_groups.get_box_client") as mock_get_client,
     ):
         mock_get_client.return_value = "client"
         mock_search.return_value = [{"id": "1", "name": query}]
@@ -29,8 +29,8 @@ async def test_box_groups_list_members_tool():
     ctx = MagicMock(spec=Context)
     group_id = "12345"
     with (
-        patch("src.box_tools_groups.box_groups_list_members") as mock_list,
-        patch("src.box_tools_groups.get_box_client") as mock_get_client,
+        patch("tools.box_tools_groups.box_groups_list_members") as mock_list,
+        patch("tools.box_tools_groups.get_box_client") as mock_get_client,
     ):
         mock_get_client.return_value = "client"
         mock_list.return_value = [{"id": "1", "name": "Member User"}]
@@ -44,8 +44,8 @@ async def test_box_groups_list_by_user_tool():
     ctx = MagicMock(spec=Context)
     user_id = "67890"
     with (
-        patch("src.box_tools_groups.box_groups_list_by_user") as mock_list,
-        patch("src.box_tools_groups.get_box_client") as mock_get_client,
+        patch("tools.box_tools_groups.box_groups_list_by_user") as mock_list,
+        patch("tools.box_tools_groups.get_box_client") as mock_get_client,
     ):
         mock_get_client.return_value = "client"
         mock_list.return_value = [{"id": "1", "name": "User Group"}]

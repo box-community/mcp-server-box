@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import MagicMock, patch
 
-from src.box_tools_shared_links import (
+from tools.box_tools_shared_links import (
     box_shared_link_file_get_tool,
     box_shared_link_file_create_or_update_tool,
     box_shared_link_file_remove_tool,
@@ -24,8 +24,8 @@ async def test_box_shared_link_file_get_tool():
     ctx = MagicMock(spec=Context)
     file_id = "12345"
     with (
-        patch("src.box_tools_shared_links.box_shared_link_file_get") as mock_get,
-        patch("src.box_tools_shared_links.get_box_client") as mock_get_client,
+        patch("tools.box_tools_shared_links.box_shared_link_file_get") as mock_get,
+        patch("tools.box_tools_shared_links.get_box_client") as mock_get_client,
     ):
         mock_get_client.return_value = "client"
         mock_get.return_value = {"id": "12345", "type": "file", "shared_link": {}}
@@ -40,9 +40,9 @@ async def test_box_shared_link_file_create_or_update_tool():
     file_id = "12345"
     with (
         patch(
-            "src.box_tools_shared_links.box_shared_link_file_create_or_update"
+            "tools.box_tools_shared_links.box_shared_link_file_create_or_update"
         ) as mock_create_or_update,
-        patch("src.box_tools_shared_links.get_box_client") as mock_get_client,
+        patch("tools.box_tools_shared_links.get_box_client") as mock_get_client,
     ):
         mock_get_client.return_value = "client"
         mock_create_or_update.return_value = {
@@ -60,8 +60,10 @@ async def test_box_shared_link_file_remove_tool():
     ctx = MagicMock(spec=Context)
     file_id = "12345"
     with (
-        patch("src.box_tools_shared_links.box_shared_link_file_remove") as mock_remove,
-        patch("src.box_tools_shared_links.get_box_client") as mock_get_client,
+        patch(
+            "tools.box_tools_shared_links.box_shared_link_file_remove"
+        ) as mock_remove,
+        patch("tools.box_tools_shared_links.get_box_client") as mock_get_client,
     ):
         mock_get_client.return_value = "client"
         mock_remove.return_value = {"id": "12345", "type": "file", "shared_link": None}
@@ -77,9 +79,9 @@ async def test_box_shared_link_file_find_by_shared_link_url_tool():
     shared_link_url = "https://box.com/s/abcd1234"
     with (
         patch(
-            "src.box_tools_shared_links.box_shared_link_file_find_by_shared_link_url"
+            "tools.box_tools_shared_links.box_shared_link_file_find_by_shared_link_url"
         ) as mock_find,
-        patch("src.box_tools_shared_links.get_box_client") as mock_get_client,
+        patch("tools.box_tools_shared_links.get_box_client") as mock_get_client,
     ):
         mock_get_client.return_value = "client"
         mock_find.return_value = {"id": "12345", "type": "file", "shared_link": {}}
@@ -96,8 +98,8 @@ async def test_box_shared_link_folder_get_tool():
     ctx = MagicMock(spec=Context)
     folder_id = "12345"
     with (
-        patch("src.box_tools_shared_links.box_shared_link_folder_get") as mock_get,
-        patch("src.box_tools_shared_links.get_box_client") as mock_get_client,
+        patch("tools.box_tools_shared_links.box_shared_link_folder_get") as mock_get,
+        patch("tools.box_tools_shared_links.get_box_client") as mock_get_client,
     ):
         mock_get_client.return_value = "client"
         mock_get.return_value = {"id": "12345", "type": "folder", "shared_link": {}}
@@ -112,9 +114,9 @@ async def test_box_shared_link_folder_create_or_update_tool():
     folder_id = "12345"
     with (
         patch(
-            "src.box_tools_shared_links.box_shared_link_folder_create_or_update"
+            "tools.box_tools_shared_links.box_shared_link_folder_create_or_update"
         ) as mock_create_or_update,
-        patch("src.box_tools_shared_links.get_box_client") as mock_get_client,
+        patch("tools.box_tools_shared_links.get_box_client") as mock_get_client,
     ):
         mock_get_client.return_value = "client"
         mock_create_or_update.return_value = {
@@ -133,9 +135,9 @@ async def test_box_shared_link_folder_remove_tool():
     folder_id = "12345"
     with (
         patch(
-            "src.box_tools_shared_links.box_shared_link_folder_remove"
+            "tools.box_tools_shared_links.box_shared_link_folder_remove"
         ) as mock_remove,
-        patch("src.box_tools_shared_links.get_box_client") as mock_get_client,
+        patch("tools.box_tools_shared_links.get_box_client") as mock_get_client,
     ):
         mock_get_client.return_value = "client"
         mock_remove.return_value = {
@@ -155,10 +157,9 @@ async def test_box_shared_link_folder_find_by_shared_link_url_tool():
     shared_link_url = "https://box.com/s/abcd1234"
     with (
         patch(
-            "src.box_tools_shared_links."
-            "box_shared_link_folder_find_by_shared_link_url"
+            "tools.box_tools_shared_links.box_shared_link_folder_find_by_shared_link_url"
         ) as mock_find,
-        patch("src.box_tools_shared_links.get_box_client") as mock_get_client,
+        patch("tools.box_tools_shared_links.get_box_client") as mock_get_client,
     ):
         mock_get_client.return_value = "client"
         mock_find.return_value = {"id": "12345", "type": "folder", "shared_link": {}}
@@ -175,8 +176,8 @@ async def test_box_shared_link_web_link_get_tool():
     ctx = MagicMock(spec=Context)
     web_link_id = "12345"
     with (
-        patch("src.box_tools_shared_links.box_shared_link_web_link_get") as mock_get,
-        patch("src.box_tools_shared_links.get_box_client") as mock_get_client,
+        patch("tools.box_tools_shared_links.box_shared_link_web_link_get") as mock_get,
+        patch("tools.box_tools_shared_links.get_box_client") as mock_get_client,
     ):
         mock_get_client.return_value = "client"
         mock_get.return_value = {"id": "12345", "type": "web_link", "shared_link": {}}
@@ -191,9 +192,9 @@ async def test_box_shared_link_web_link_create_or_update_tool():
     web_link_id = "12345"
     with (
         patch(
-            "src.box_tools_shared_links.box_shared_link_web_link_create_or_update"
+            "tools.box_tools_shared_links.box_shared_link_web_link_create_or_update"
         ) as mock_create_or_update,
-        patch("src.box_tools_shared_links.get_box_client") as mock_get_client,
+        patch("tools.box_tools_shared_links.get_box_client") as mock_get_client,
     ):
         mock_get_client.return_value = "client"
         mock_create_or_update.return_value = {
@@ -212,9 +213,9 @@ async def test_box_shared_link_web_link_remove_tool():
     web_link_id = "12345"
     with (
         patch(
-            "src.box_tools_shared_links.box_shared_link_web_link_remove"
+            "tools.box_tools_shared_links.box_shared_link_web_link_remove"
         ) as mock_remove,
-        patch("src.box_tools_shared_links.get_box_client") as mock_get_client,
+        patch("tools.box_tools_shared_links.get_box_client") as mock_get_client,
     ):
         mock_get_client.return_value = "client"
         mock_remove.return_value = {
@@ -234,10 +235,10 @@ async def test_box_shared_link_web_link_find_by_shared_link_url_tool():
     shared_link_url = "https://box.com/s/abcd1234"
     with (
         patch(
-            "src.box_tools_shared_links."
+            "tools.box_tools_shared_links."
             "box_shared_link_web_link_find_by_shared_link_url"
         ) as mock_find,
-        patch("src.box_tools_shared_links.get_box_client") as mock_get_client,
+        patch("tools.box_tools_shared_links.get_box_client") as mock_get_client,
     ):
         mock_get_client.return_value = "client"
         mock_find.return_value = {"id": "12345", "type": "web_link", "shared_link": {}}
