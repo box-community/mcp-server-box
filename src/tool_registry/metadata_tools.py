@@ -1,6 +1,6 @@
 from mcp.server.fastmcp import FastMCP
 
-from box_tools_metadata import (
+from tools.box_tools_metadata import (
     box_metadata_delete_instance_on_file_tool,
     box_metadata_get_instance_on_file_tool,
     box_metadata_set_instance_on_file_tool,

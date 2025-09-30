@@ -6,7 +6,7 @@ from box_ai_agents_toolkit import (
 )
 from mcp.server.fastmcp import Context
 
-from box_tools_generic import get_box_client
+from tools.box_tools_generic import get_box_client
 
 
 async def box_web_link_create_tool(

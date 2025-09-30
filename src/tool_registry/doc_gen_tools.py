@@ -1,6 +1,6 @@
 from mcp.server.fastmcp import FastMCP
 
-from box_tools_docgen import (
+from tools.box_tools_docgen import (
     box_docgen_create_batch_tool,
     box_docgen_create_single_file_from_user_input_tool,
     box_docgen_get_job_by_id_tool,

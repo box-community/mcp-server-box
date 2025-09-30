@@ -1,6 +1,6 @@
 from mcp.server.fastmcp import FastMCP
 
-from box_tools_shared_links import (
+from tools.box_tools_shared_links import (
     box_shared_link_file_get_tool,
     box_shared_link_file_create_or_update_tool,
     box_shared_link_file_remove_tool,

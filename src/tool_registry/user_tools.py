@@ -1,6 +1,6 @@
 from mcp.server.fastmcp import FastMCP
 
-from box_tools_users import (
+from tools.box_tools_users import (
     box_users_list_tool,
     box_users_locate_by_email_tool,
     box_users_locate_by_name_tool,

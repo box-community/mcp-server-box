@@ -1,4 +1,3 @@
-
 from box_ai_agents_toolkit import (
     box_users_list,
     box_users_locate_by_name,
@@ -7,7 +6,7 @@ from box_ai_agents_toolkit import (
 )
 from mcp.server.fastmcp import Context
 
-from box_tools_generic import get_box_client
+from tools.box_tools_generic import get_box_client
 
 
 async def box_users_list_tool(ctx: Context) -> dict:

@@ -1,5 +1,5 @@
 from mcp.server.fastmcp import FastMCP
-from box_tools_collaboration import (
+from tools.box_tools_collaboration import (
     box_collaboration_list_by_file_tool,
     box_collaboration_list_by_folder_tool,
     box_collaboration_delete_tool,

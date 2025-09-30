@@ -1,6 +1,6 @@
 from mcp.server.fastmcp import FastMCP
 
-from box_tools_generic import (
+from tools.box_tools_generic import (
     box_authorize_app_tool,
     box_who_am_i,
 )
