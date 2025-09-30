@@ -1,5 +1,8 @@
 import argparse
 import logging
+
+import tomli
+from pathlib import Path
 import sys
 
 from mcp.server.fastmcp import FastMCP
@@ -54,11 +57,22 @@ def get_mcp_server(
 def create_server_info_tool(mcp: FastMCP, args):
     """Create and register the server info tool"""
 
+    def get_version():
+        """Read version from pyproject.toml"""
+        try:
+            pyproject_path = Path(__file__).parent.parent / "pyproject.toml"
+            with open(pyproject_path, "rb") as f:
+                pyproject_data = tomli.load(f)
+            return pyproject_data.get("project", {}).get("version", "unknown")
+        except Exception:
+            return "unknown"
+
     @mcp.tool()
     def mcp_server_info():
         """Returns information about the MCP server."""
         info = {
             "server_name": mcp.name,
+            "version": get_version(),
             "transport": args.transport,
             "auth": args.auth,
         }
