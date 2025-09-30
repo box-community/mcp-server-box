@@ -81,6 +81,13 @@ from box_tools_collaboration import (
     box_collaboration_update_tool,
 )
 
+from box_tools_web_link import (
+    box_web_link_create_tool,
+    box_web_link_get_by_id_tool,
+    box_web_link_update_by_id_tool,
+    box_web_link_delete_by_id_tool,
+)
+
 
 from server_context import box_lifespan_ccg, box_lifespan_oauth
 
@@ -193,6 +200,12 @@ def register_tools(mcp: FastMCP):
     mcp.tool()(box_collaboration_file_group_by_group_id_tool)
     mcp.tool()(box_collaboration_folder_group_by_group_id_tool)
     mcp.tool()(box_collaboration_update_tool)
+
+    # WebLink Tools
+    mcp.tool()(box_web_link_create_tool)
+    mcp.tool()(box_web_link_get_by_id_tool)
+    mcp.tool()(box_web_link_update_by_id_tool)
+    mcp.tool()(box_web_link_delete_by_id_tool)
 
 
 if __name__ == "__main__":
