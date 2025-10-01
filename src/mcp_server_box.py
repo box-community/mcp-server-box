@@ -5,6 +5,7 @@ import logging
 import sys
 
 from server import create_mcp_server, register_tools, create_server_info_tool
+from config import CONFIG, TransportType, AuthType
 
 
 # Logging configuration
@@ -18,26 +19,26 @@ def parse_arguments() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Box Community MCP Server")
     parser.add_argument(
         "--transport",
-        choices=["stdio", "sse", "streamable-http"],
-        default="stdio",
-        help="Transport type (default: stdio)",
+        choices=[t.value for t in TransportType],
+        default=CONFIG.transport,
+        help=f"Transport type (default: {CONFIG.transport})",
     )
     parser.add_argument(
         "--host",
-        default="0.0.0.0",
-        help="Host for SSE/HTTP transport (default: 0.0.0.0)",
+        default=CONFIG.host,
+        help=f"Host for SSE/HTTP transport (default: {CONFIG.host})",
     )
     parser.add_argument(
         "--port",
         type=int,
-        default=8001,
-        help="Port for SSE/HTTP transport (default: 8000)",
+        default=CONFIG.port,
+        help=f"Port for SSE/HTTP transport (default: {CONFIG.port})",
     )
     parser.add_argument(
         "--box-auth",
-        choices=["oauth", "ccg"],
-        default="oauth",
-        help="Authentication type for Box API (default: oauth)",
+        choices=[a.value for a in AuthType],
+        default=CONFIG.box_auth,
+        help=f"Authentication type for Box API (default: {CONFIG.box_auth})",
     )
 
     parser.add_argument(
@@ -54,7 +55,7 @@ def main() -> int:
     args = parse_arguments()
 
     # Create MCP server
-    server_name = f"Box Community MCP {args.transport.upper()} Server"
+    server_name = f"{CONFIG.server_name_prefix} {args.transport.upper()} Server"
     mcp = create_mcp_server(
         server_name=server_name,
         transport=args.transport,
