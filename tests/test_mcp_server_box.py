@@ -1,4 +1,4 @@
-from src.mcp_server_box import get_mcp_server, create_server_info_tool
+from src.mcp_server_box import create_server_info_tool, get_mcp_server
 
 
 class DummyArgs:

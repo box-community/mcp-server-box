@@ -1,7 +1,7 @@
 from box_ai_agents_toolkit import (
     box_users_list,
-    box_users_locate_by_name,
     box_users_locate_by_email,
+    box_users_locate_by_name,
     box_users_search_by_name_or_email,
 )
 from mcp.server.fastmcp import Context

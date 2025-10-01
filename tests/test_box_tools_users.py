@@ -1,5 +1,7 @@
-import pytest
 from unittest.mock import MagicMock, patch
+
+import pytest
+from mcp.server.fastmcp import Context
 
 from tools.box_tools_users import (
     box_users_list_tool,
@@ -7,7 +9,6 @@ from tools.box_tools_users import (
     box_users_locate_by_name_tool,
     box_users_search_by_name_or_email_tool,
 )
-from mcp.server.fastmcp import Context
 
 
 @pytest.mark.asyncio

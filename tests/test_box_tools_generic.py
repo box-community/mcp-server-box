@@ -2,12 +2,12 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
+from server_context import BoxContext
 from tools.box_tools_generic import (
     box_authorize_app_tool,
     box_who_am_i,
     get_box_client,
 )
-from server_context import BoxContext
 
 
 @pytest.fixture

@@ -1,26 +1,25 @@
 import argparse
 import logging
+import sys
+from pathlib import Path
 
 import tomli
-from pathlib import Path
-import sys
-
 from mcp.server.fastmcp import FastMCP
-from server_context import box_lifespan_ccg, box_lifespan_oauth
 
+from server_context import box_lifespan_ccg, box_lifespan_oauth
 from tool_registry import register_all_tools
 from tool_registry.ai_tools import register_ai_tools
-from tool_registry.file_tools import register_file_tools
-from tool_registry.folder_tools import register_folder_tools
 from tool_registry.collaboration_tools import register_collaboration_tools
 from tool_registry.doc_gen_tools import register_doc_gen_tools
+from tool_registry.file_tools import register_file_tools
+from tool_registry.folder_tools import register_folder_tools
+from tool_registry.generic_tools import register_generic_tools
+from tool_registry.group_tools import register_group_tools
 from tool_registry.metadata_tools import register_metadata_tools
 from tool_registry.search_tools import register_search_tools
 from tool_registry.shared_link_tools import register_shared_link_tools
 from tool_registry.user_tools import register_user_tools
-from tool_registry.group_tools import register_group_tools
 from tool_registry.web_link_tools import register_web_link_tools
-from tool_registry.generic_tools import register_generic_tools
 
 # Logging configuration
 logging.basicConfig(level=logging.CRITICAL)

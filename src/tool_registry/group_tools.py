@@ -1,9 +1,9 @@
 from mcp.server.fastmcp import FastMCP
 
 from tools.box_tools_groups import (
-    box_groups_search_tool,
-    box_groups_list_members_tool,
     box_groups_list_by_user_tool,
+    box_groups_list_members_tool,
+    box_groups_search_tool,
 )
 
 
