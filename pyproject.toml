@@ -4,6 +4,9 @@ version = "0.2.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
+scripts = { "mcp-server-box" = "mcp_server_box:main" }
+license = "MIT"
+authors = [{ name = "Box DevRel", email = "dx@box.com" }]
 dependencies = [
     "box-ai-agents-toolkit>=0.0.54",
     "fastapi>=0.118.0",
@@ -21,4 +24,4 @@ dev = [
 ]
 
 [tool.pytest.ini_options]
-pythonpath = [".", "src", "src/tools"]
+pythonpath = [".", "src"]

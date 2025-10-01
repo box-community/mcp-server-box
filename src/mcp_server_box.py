@@ -22,9 +22,9 @@ from tool_registry.user_tools import register_user_tools
 from tool_registry.web_link_tools import register_web_link_tools
 
 # Logging configuration
-logging.basicConfig(level=logging.CRITICAL)
+logging.basicConfig(level=logging.INFO)
 for logger_name in logging.root.manager.loggerDict:
-    logging.getLogger(logger_name).setLevel(logging.CRITICAL)
+    logging.getLogger(logger_name).setLevel(logging.INFO)
 
 
 def get_mcp_server(
@@ -104,10 +104,10 @@ def main():
         help="Port for SSE/HTTP transport (default: 8000)",
     )
     parser.add_argument(
-        "--auth",
+        "--box-auth",
         choices=["oauth", "ccg"],
         default="oauth",
-        help="Authentication type (default: oauth)",
+        help="Authentication type for Box API (default: oauth)",
     )
 
     args = parser.parse_args()
@@ -118,7 +118,7 @@ def main():
         transport=args.transport,
         host=args.host,
         port=args.port,
-        auth=args.auth,
+        auth=args.box_auth,
     )
 
     # Register all tools
