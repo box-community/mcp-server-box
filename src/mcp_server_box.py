@@ -4,9 +4,8 @@ import argparse
 import logging
 import sys
 
-from server import create_mcp_server, register_tools, create_server_info_tool
-from config import CONFIG, TransportType, AuthType
-
+from config import CONFIG, AuthType, TransportType
+from server import create_mcp_server, create_server_info_tool, register_tools
 
 # Logging configuration
 logging.basicConfig(level=logging.INFO)

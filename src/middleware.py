@@ -1,12 +1,15 @@
 """Authentication middleware for MCP server."""
 
-import os
 import logging
+import os
+
 from fastapi import Request, status
 from mcp.server.fastmcp import FastMCP
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.responses import JSONResponse
 from starlette.routing import Route
+
+from config import TransportType
 
 logger = logging.getLogger(__name__)
 
@@ -99,7 +102,7 @@ def add_auth_middleware(mcp: FastMCP, transport: str) -> None:
     """Add authentication middleware by wrapping the app creation method."""
     logger.info(f"Setting up auth middleware wrapper for transport: {transport}")
 
-    if transport == "sse":
+    if transport == TransportType.SSE.value:
         # Store the original method
         original_sse_app = mcp.sse_app
 
@@ -122,7 +125,7 @@ def add_auth_middleware(mcp: FastMCP, transport: str) -> None:
         mcp.sse_app = wrapped_sse_app
         logger.info("Wrapped sse_app method")
 
-    elif transport == "streamable-http":
+    elif transport == TransportType.STREAMABLE_HTTP.value:
         original_streamable_http_app = mcp.streamable_http_app
 
         def wrapped_streamable_http_app():

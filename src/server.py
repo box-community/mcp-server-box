@@ -5,8 +5,9 @@ from pathlib import Path
 import tomli
 from mcp.server.fastmcp import FastMCP
 
-from server_context import box_lifespan_ccg, box_lifespan_oauth
+from config import CONFIG, TransportType
 from middleware import add_auth_middleware
+from server_context import box_lifespan_ccg, box_lifespan_oauth
 from tool_registry import register_all_tools
 from tool_registry.ai_tools import register_ai_tools
 from tool_registry.collaboration_tools import register_collaboration_tools
@@ -34,11 +35,11 @@ def get_version() -> str:
 
 
 def create_mcp_server(
-    server_name: str = "Box MCP Server",
-    transport: str = "stdio",
-    host: str = "127.0.0.1",
-    port: int = 8001,
-    box_auth: str = "oauth",
+    server_name: str = CONFIG.server_name_prefix,
+    transport: str = CONFIG.transport,
+    host: str = CONFIG.host,
+    port: int = CONFIG.port,
+    box_auth: str = CONFIG.box_auth,
     require_auth: bool = True,
 ) -> FastMCP:
     """Create and configure the MCP server."""
@@ -47,7 +48,7 @@ def create_mcp_server(
     lifespan = box_lifespan_ccg if box_auth == "ccg" else box_lifespan_oauth
 
     # Create MCP server with appropriate transport
-    if transport == "stdio":
+    if transport == TransportType.STDIO.value:
         mcp = FastMCP(server_name, lifespan=lifespan)
     else:
         mcp = FastMCP(
@@ -86,7 +87,11 @@ def register_tools(mcp: FastMCP) -> None:
 
 
 def create_server_info_tool(
-    mcp: FastMCP, transport: str, auth: str, host: str = "127.0.0.1", port: int = 8001
+    mcp: FastMCP,
+    transport: str,
+    box_auth: str,
+    host: str = "127.0.0.1",
+    port: int = 8001,
 ) -> None:
     """Create and register the server info tool."""
 
@@ -97,10 +102,10 @@ def create_server_info_tool(
             "server_name": mcp.name,
             "version": get_version(),
             "transport": transport,
-            "auth": auth,
+            "box auth": box_auth,
         }
 
-        if transport != "stdio":
+        if transport != TransportType.STDIO.value:
             info["host"] = host
             info["port"] = str(port)
 
