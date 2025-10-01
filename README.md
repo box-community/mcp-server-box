@@ -46,7 +46,7 @@ BOX_CLIENT_ID = YOUR_CLIENT_ID
 BOX_CLIENT_SECRET = YOUR_CLIENT_SECRET
 BOX_REDIRECT_URL = http://localhost:8000/callback
 
-MCP_PROXY_AUTH_TOKEN = YOUR_MCP_PROXY_AUTH_TOKEN
+BOX_MCP_SERVER_AUTH_TOKEN = YOUR_BOX_MCP_SERVER_AUTH_TOKEN
 ```
 
 #### Using CCG with a Box App
@@ -56,10 +56,10 @@ BOX_CLIENT_SECRET = YOUR_CLIENT_SECRET
 BOX_SUBJECT_TYPE = user_or_enterprise
 BOX_SUBJECT_ID = YOUR_USER_OR_ENTERPRISE_ID
 
-MCP_PROXY_AUTH_TOKEN = YOUR_MCP_PROXY_AUTH_TOKEN
+BOX_MCP_SERVER_AUTH_TOKEN = YOUR_BOX_MCP_SERVER_AUTH_TOKEN
 ```
 
-> Note: The `MCP_PROXY_AUTH_TOKEN` is the token used to authenticate requests to the MCP Proxy server. You can generate this token.
+> Note: The `BOX_MCP_SERVER_AUTH_TOKEN` is the token used to authenticate requests to the Box MCP server. You can generate this token.
 
 ### Run the MCP server in STDIO mode:
 ```sh

@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 class AuthMiddleware(BaseHTTPMiddleware):
     """Middleware to validate Bearer token authentication.
-    Expects the token to be set in the MCP_PROXY_AUTH_TOKEN environment variable.
+    Expects the token to be set in the BOX_MCP_SERVER_AUTH_TOKEN environment variable.
     This middleware wont even be loaded if the --no-mcp-server-auth flag is set.
     """
 
@@ -27,7 +27,7 @@ class AuthMiddleware(BaseHTTPMiddleware):
             logger.info("Allowing OAuth discovery endpoint without authentication")
             return await call_next(request)
 
-        expected_token = os.getenv("MCP_PROXY_AUTH_TOKEN")
+        expected_token = os.getenv("BOX_MCP_SERVER_AUTH_TOKEN")
 
         # if no expected token is set, reject all requests
         if not expected_token:
