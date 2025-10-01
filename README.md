@@ -91,6 +91,8 @@ Below is a summary of the available tools:
 To run the MCP server with specific configurations, you can use the following command line parameters:
 ```sh
 uv run src/mcp_server_box.py --help
+```
+```
 usage: mcp_server_box.py [-h] [--transport {stdio,sse,streamable-http}] [--host HOST]
                          [--port PORT] [--box-auth {oauth,ccg}] [--no-mcp-server-auth]
 
