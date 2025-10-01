@@ -132,3 +132,34 @@ Add the configuration:
 ```
 
 Restart Claude if it is running.
+
+### Cursor Configuration
+
+Cursor supports MCP servers through its configuration file. Here's how to set it up:
+
+The Cursor MCP configuration file is located at:
+- **macOS/Linux**: `~/.cursor/config.json` or `~/.config/cursor/config.json`
+- **Windows**: `%APPDATA%\Cursor\config.json`
+
+#### Add the MCP Server Configuration: STDIO Transport
+
+Edit your Cursor configuration file and add the following under the `mcpServers` section:
+```json
+{
+    "mcpServers": {
+        "mcp-server-box": {
+            "command": "uv",
+            "args": [
+                "--directory",
+                "/path/to/mcp-server-box",
+                "run",
+                "src/mcp_server_box.py"
+            ],
+            "env": {
+                "BOX_CLIENT_ID": "YOUR_CLIENT_ID",
+                "BOX_CLIENT_SECRET": "YOUR_CLIENT_SECRET",
+                "BOX_REDIRECT_URL": "http://localhost:8000/callback"
+            }
+        }
+    }
+}
