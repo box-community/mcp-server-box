@@ -6,9 +6,8 @@ import json
 
 import dotenv
 
-from fastapi import Request, status
+from fastapi import status
 from mcp.server.fastmcp import FastMCP
-from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import JSONResponse
 from starlette.routing import Route
@@ -26,8 +25,8 @@ WWW_HEADER = {
 }
 
 
-class AuthMiddleware(BaseHTTPMiddleware):
-    """Middleware to validate Bearer token authentication.
+class AuthMiddleware:
+    """Pure ASGI middleware to validate Bearer token authentication.
     Expects the token to be set in the BOX_MCP_SERVER_AUTH_TOKEN environment variable.
     This middleware wont even be loaded if the --no-mcp-server-auth flag is set.
     """
@@ -40,78 +39,73 @@ class AuthMiddleware(BaseHTTPMiddleware):
         "/.well-known/openid-configuration",
     }
 
-    async def dispatch(self, request: Request, call_next):
-        """Validate Bearer token before processing request according to OAuth 2.1 / RFC 9728."""
-        logger.debug(f"AuthMiddleware processing: {request.method} {request.url.path}")
+    def __init__(self, app):
+        self.app = app
+
+    async def __call__(self, scope, receive, send):
+        """Pure ASGI middleware - handles streaming properly."""
+        if scope["type"] != "http":
+            await self.app(scope, receive, send)
+            return
+
+        path = scope["path"]
+        logger.debug(f"AuthMiddleware processing: {scope['method']} {path}")
 
         # Allow public OAuth discovery endpoints without authentication
-        if request.url.path in self.PUBLIC_PATHS:
-            logger.debug(f"Public OAuth discovery endpoint accessed: {request.url.path}")
-            return await call_next(request)
+        if path in self.PUBLIC_PATHS:
+            logger.debug(f"Public OAuth discovery endpoint accessed: {path}")
+            await self.app(scope, receive, send)
+            return
 
         expected_token = os.getenv("BOX_MCP_SERVER_AUTH_TOKEN")
 
-        # if no expected token is set, reject all requests with proper OAuth 2.1 error
+        # Extract authorization header
+        headers = dict(scope.get("headers", []))
+        auth_header = headers.get(b"authorization", b"").decode("utf-8")
+
+        # Validate authentication
+        error_response = None
+
         if not expected_token:
-            logger.error(
-                "BOX_MCP_SERVER_AUTH_TOKEN not configured - authentication required but no token set"
-            )
-            return JSONResponse(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                content={
-                    "error": "invalid_token",
-                    "error_description": "Server authentication not properly configured",
-                },
-                headers=WWW_HEADER,
-                media_type="application/json",
-            )
-
-        auth_header = request.headers.get("authorization")
-        if not auth_header:
-            logger.warning(
-                f"Missing authorization header for {request.method} {request.url.path}"
-            )
-            return JSONResponse(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                content={
-                    "error": "invalid_request",
-                    "error_description": "Missing Authorization header",
-                },
-                headers=WWW_HEADER,
-                media_type="application/json",
-            )
-
-        if not auth_header.startswith("Bearer "):
-            logger.warning(
-                f"Invalid authorization header format: {auth_header[:20]}..."
-            )
-            return JSONResponse(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                content={
-                    "error": "invalid_request",
-                    "error_description": "Authorization header must use Bearer scheme",
-                },
-                headers=WWW_HEADER,
-                media_type="application/json",
-            )
-
-        token = auth_header.replace("Bearer ", "")
-        if token != expected_token:
-            logger.warning(f"Invalid token for {request.method} {request.url.path}")
-            return JSONResponse(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                content={
+            logger.error("BOX_MCP_SERVER_AUTH_TOKEN not configured")
+            error_response = {
+                "error": "invalid_token",
+                "error_description": "Server authentication not properly configured",
+            }
+        elif not auth_header:
+            logger.warning(f"Missing authorization header for {scope['method']} {path}")
+            error_response = {
+                "error": "invalid_request",
+                "error_description": "Missing Authorization header",
+            }
+        elif not auth_header.startswith("Bearer "):
+            logger.warning("Invalid authorization header format")
+            error_response = {
+                "error": "invalid_request",
+                "error_description": "Authorization header must use Bearer scheme",
+            }
+        else:
+            token = auth_header.replace("Bearer ", "")
+            if token != expected_token:
+                logger.warning(f"Invalid token for {scope['method']} {path}")
+                error_response = {
                     "error": "invalid_token",
                     "error_description": "The access token is invalid or expired",
-                },
-                headers=WWW_HEADER,
-                media_type="application/json",
-            )
+                }
 
-        logger.debug(
-            f"Authentication successful for {request.method} {request.url.path}"
-        )
-        return await call_next(request)
+        # If there's an error, send error response
+        if error_response:
+            response = JSONResponse(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                content=error_response,
+                headers=WWW_HEADER,
+            )
+            await response(scope, receive, send)
+            return
+
+        # Authentication successful, pass to next layer
+        logger.debug(f"Authentication successful for {scope['method']} {path}")
+        await self.app(scope, receive, send)
 
 
 def add_auth_middleware(mcp: FastMCP, transport: str) -> None:
