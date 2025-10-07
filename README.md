@@ -65,7 +65,8 @@ OAUTH_PROTECTED_RESOURCES_CONFIG_FILE = .oauth-protected-resource.json
 
 > **Note**:
 > - The `BOX_MCP_SERVER_AUTH_TOKEN` is the Bearer token used to authenticate MCP client requests to the server (required for SSE and HTTP transports)
-> - For detailed authentication setup and OAuth 2.1 configuration, see [AUTHENTICATION.md](docs/AUTHENTICATION.md)
+
+
 
 ### Run the MCP server in STDIO mode:
 ```sh

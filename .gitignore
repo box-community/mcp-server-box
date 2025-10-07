@@ -17,3 +17,5 @@ wheels/
 .DS_Store
 
 .coverage
+
+.oauth*

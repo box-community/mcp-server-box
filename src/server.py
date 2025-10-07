@@ -5,7 +5,7 @@ from pathlib import Path
 import tomli
 from mcp.server.fastmcp import FastMCP
 
-from config import TransportType, ServerConfig
+from config import ServerConfig, TransportType
 from middleware import add_auth_middleware
 from server_context import box_lifespan_ccg, box_lifespan_oauth
 from tool_registry import register_all_tools
