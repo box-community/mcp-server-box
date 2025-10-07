@@ -14,6 +14,7 @@ from starlette.responses import JSONResponse
 from starlette.routing import Route
 
 from config import TransportType, DEFAULT_CONFIG
+from oauth_endpoints import add_oauth_endpoints
 
 dotenv.load_dotenv()
 
@@ -31,9 +32,22 @@ class AuthMiddleware(BaseHTTPMiddleware):
     This middleware wont even be loaded if the --no-mcp-server-auth flag is set.
     """
 
+    # OAuth discovery endpoints that must be publicly accessible (no auth required)
+    PUBLIC_PATHS = {
+        "/.well-known/oauth-protected-resource",
+        "/.well-known/oauth-protected-resource/mcp",
+        "/.well-known/oauth-authorization-server",
+        "/.well-known/openid-configuration",
+    }
+
     async def dispatch(self, request: Request, call_next):
         """Validate Bearer token before processing request according to OAuth 2.1 / RFC 9728."""
         logger.debug(f"AuthMiddleware processing: {request.method} {request.url.path}")
+
+        # Allow public OAuth discovery endpoints without authentication
+        if request.url.path in self.PUBLIC_PATHS:
+            logger.debug(f"Public OAuth discovery endpoint accessed: {request.url.path}")
+            return await call_next(request)
 
         expected_token = os.getenv("BOX_MCP_SERVER_AUTH_TOKEN")
 
@@ -114,6 +128,10 @@ def add_auth_middleware(mcp: FastMCP, transport: str) -> None:
             app = original_sse_app(mount_path)
             logger.info(f"Adding middleware to app: {id(app)}")
 
+            # Add OAuth discovery endpoints first
+            add_oauth_endpoints(app)
+            logger.info("Added OAuth discovery endpoints")
+
             # Then add auth middleware
             app.add_middleware(AuthMiddleware)
             logger.info(
@@ -141,6 +159,10 @@ def add_auth_middleware(mcp: FastMCP, transport: str) -> None:
             logger.info("wrapped_streamable_http_app called")
             app = original_streamable_http_app()
             logger.info(f"Adding middleware to app: {id(app)}")
+
+            # Add OAuth discovery endpoints first
+            add_oauth_endpoints(app)
+            logger.info("Added OAuth discovery endpoints")
 
             # Then add auth middleware
             app.add_middleware(AuthMiddleware)
