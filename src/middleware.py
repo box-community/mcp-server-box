@@ -2,16 +2,27 @@
 
 import logging
 import os
+import json
+
+import dotenv
 
 from fastapi import Request, status
 from mcp.server.fastmcp import FastMCP
 from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import JSONResponse
 from starlette.routing import Route
 
-from config import TransportType
+from config import TransportType, DEFAULT_CONFIG
+
+dotenv.load_dotenv()
 
 logger = logging.getLogger(__name__)
+
+# OAuth 2.1 configuration
+WWW_HEADER = {
+    "WWW-Authenticate": f'Bearer realm="OAuth", resource_metadata="http://{DEFAULT_CONFIG.host}:{DEFAULT_CONFIG.port}/.well-known/oauth-protected-resource"'
+}
 
 
 class AuthMiddleware(BaseHTTPMiddleware):
@@ -21,81 +32,72 @@ class AuthMiddleware(BaseHTTPMiddleware):
     """
 
     async def dispatch(self, request: Request, call_next):
-        """Validate Bearer token before processing request."""
-        # logger.info(f"AuthMiddleware triggered for {request.url}")
-        # logger.info(f"Headers: {request.headers}")
-
-        # Always allow OAuth discovery endpoint
-        if request.url.path == "/.well-known/oauth-protected-resource":
-            logger.info("Allowing OAuth discovery endpoint without authentication")
-            return await call_next(request)
+        """Validate Bearer token before processing request according to OAuth 2.1 / RFC 9728."""
+        logger.debug(f"AuthMiddleware processing: {request.method} {request.url.path}")
 
         expected_token = os.getenv("BOX_MCP_SERVER_AUTH_TOKEN")
 
-        # if no expected token is set, reject all requests
+        # if no expected token is set, reject all requests with proper OAuth 2.1 error
         if not expected_token:
-            logger.warning("No token configured, rejecting all requests")
+            logger.error(
+                "BOX_MCP_SERVER_AUTH_TOKEN not configured - authentication required but no token set"
+            )
             return JSONResponse(
                 status_code=status.HTTP_401_UNAUTHORIZED,
-                content={"error": "No authentication token configured"},
+                content={
+                    "error": "invalid_token",
+                    "error_description": "Server authentication not properly configured",
+                },
+                headers=WWW_HEADER,
+                media_type="application/json",
             )
 
         auth_header = request.headers.get("authorization")
         if not auth_header:
-            logger.warning("Missing authorization header")
+            logger.warning(
+                f"Missing authorization header for {request.method} {request.url.path}"
+            )
             return JSONResponse(
                 status_code=status.HTTP_401_UNAUTHORIZED,
-                content={"error": "Missing authorization header"},
+                content={
+                    "error": "invalid_request",
+                    "error_description": "Missing Authorization header",
+                },
+                headers=WWW_HEADER,
+                media_type="application/json",
             )
 
         if not auth_header.startswith("Bearer "):
-            logger.warning("Invalid authorization header format")
+            logger.warning(
+                f"Invalid authorization header format: {auth_header[:20]}..."
+            )
             return JSONResponse(
                 status_code=status.HTTP_401_UNAUTHORIZED,
-                content={"error": "Invalid authorization header"},
+                content={
+                    "error": "invalid_request",
+                    "error_description": "Authorization header must use Bearer scheme",
+                },
+                headers=WWW_HEADER,
+                media_type="application/json",
             )
 
         token = auth_header.replace("Bearer ", "")
         if token != expected_token:
-            logger.warning("Invalid token")
+            logger.warning(f"Invalid token for {request.method} {request.url.path}")
             return JSONResponse(
                 status_code=status.HTTP_401_UNAUTHORIZED,
-                content={"error": "Invalid token"},
+                content={
+                    "error": "invalid_token",
+                    "error_description": "The access token is invalid or expired",
+                },
+                headers=WWW_HEADER,
+                media_type="application/json",
             )
 
-        logger.info("Authentication successful")
-        return await call_next(request)
-
-
-def add_oauth_discovery_endpoint(app, transport: str) -> None:
-    """Add OAuth discovery endpoint to the Starlette app."""
-
-    async def oauth_discovery(request):
-        """OAuth 2.0 Protected Resource Metadata endpoint."""
-        logger.info("OAuth discovery endpoint called")
-        return JSONResponse(
-            status_code=status.HTTP_501_NOT_IMPLEMENTED,
-            content={
-                "error": "OAuth discovery not implemented for transport: {transport}"
-            },
+        logger.debug(
+            f"Authentication successful for {request.method} {request.url.path}"
         )
-        # return JSONResponse(
-        #     {
-        #         "resource": "box-mcp-server",
-        #         "authorization_servers": [],  # Add your OAuth server URLs here if needed
-        #         "bearer_methods_supported": ["header"],
-        #         "resource_documentation": "https://github.com/box-community/mcp-server-box",
-        #     }
-        # )
-
-    # Add the route at the beginning
-    app.routes.insert(
-        0,
-        Route(
-            "/.well-known/oauth-protected-resource", oauth_discovery, methods=["GET"]
-        ),
-    )
-    logger.info("Added OAuth discovery endpoint")
+        return await call_next(request)
 
 
 def add_auth_middleware(mcp: FastMCP, transport: str) -> None:
@@ -112,12 +114,19 @@ def add_auth_middleware(mcp: FastMCP, transport: str) -> None:
             app = original_sse_app(mount_path)
             logger.info(f"Adding middleware to app: {id(app)}")
 
-            # Add OAuth discovery endpoint first (before middleware)
-            add_oauth_discovery_endpoint(app, transport)
             # Then add auth middleware
             app.add_middleware(AuthMiddleware)
             logger.info(
                 f"Middleware added. App middleware count: {len(app.user_middleware)}"
+            )
+            app.add_middleware(
+                CORSMiddleware,
+                allow_origins=["*"],
+                allow_credentials=False,
+                allow_methods=["GET", "POST", "OPTIONS"],
+                allow_headers=["Mcp-Protocol-Version", "Content-Type", "Authorization"],
+                expose_headers=["WWW-Authenticate"],
+                max_age=86400,
             )
             return app
 
@@ -133,13 +142,19 @@ def add_auth_middleware(mcp: FastMCP, transport: str) -> None:
             app = original_streamable_http_app()
             logger.info(f"Adding middleware to app: {id(app)}")
 
-            # Add OAuth discovery endpoint first (before middleware)
-            add_oauth_discovery_endpoint(app, transport)
-
             # Then add auth middleware
             app.add_middleware(AuthMiddleware)
             logger.info(
                 f"Middleware added. App middleware count: {len(app.user_middleware)}"
+            )
+            app.add_middleware(
+                CORSMiddleware,
+                allow_origins=["*"],
+                allow_credentials=False,
+                allow_methods=["GET", "POST", "OPTIONS"],
+                allow_headers=["Mcp-Protocol-Version", "Content-Type", "Authorization"],
+                expose_headers=["WWW-Authenticate"],
+                max_age=86400,
             )
             return app
 

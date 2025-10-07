@@ -5,7 +5,7 @@ from pathlib import Path
 import tomli
 from mcp.server.fastmcp import FastMCP
 
-from config import CONFIG, TransportType
+from config import TransportType, ServerConfig
 from middleware import add_auth_middleware
 from server_context import box_lifespan_ccg, box_lifespan_oauth
 from tool_registry import register_all_tools
@@ -36,32 +36,27 @@ def get_version() -> str:
 
 
 def create_mcp_server(
-    server_name: str = CONFIG.server_name_prefix,
-    transport: str = CONFIG.transport,
-    host: str = CONFIG.host,
-    port: int = CONFIG.port,
-    box_auth: str = CONFIG.box_auth,
-    require_auth: bool = True,
+    config: ServerConfig,
 ) -> FastMCP:
     """Create and configure the MCP server."""
 
     # Select appropriate lifespan based on auth type
-    lifespan = box_lifespan_ccg if box_auth == "ccg" else box_lifespan_oauth
+    lifespan = box_lifespan_ccg if config.box_auth == "ccg" else box_lifespan_oauth
 
     # Create MCP server with appropriate transport
-    if transport == TransportType.STDIO.value:
-        mcp = FastMCP(server_name, lifespan=lifespan)
+    if config.transport == TransportType.STDIO.value:
+        mcp = FastMCP(name=config.server_name, lifespan=lifespan)
     else:
         mcp = FastMCP(
-            server_name,
+            name=config.server_name,
             stateless_http=True,
-            host=host,
-            port=port,
+            host=config.host,
+            port=config.port,
             lifespan=lifespan,
         )
         # Add authentication middleware for HTTP transports
-        if require_auth:
-            add_auth_middleware(mcp, transport)
+        if config.require_auth:
+            add_auth_middleware(mcp, config.transport)
 
     return mcp
 
@@ -90,10 +85,7 @@ def register_tools(mcp: FastMCP) -> None:
 
 def create_server_info_tool(
     mcp: FastMCP,
-    transport: str,
-    box_auth: str,
-    host: str = "127.0.0.1",
-    port: int = 8001,
+    config: ServerConfig,
 ) -> None:
     """Create and register the server info tool."""
 
@@ -103,12 +95,12 @@ def create_server_info_tool(
         info = {
             "server_name": mcp.name,
             "version": get_version(),
-            "transport": transport,
-            "box auth": box_auth,
+            "transport": config.transport,
+            "box auth": config.box_auth,
         }
 
-        if transport != TransportType.STDIO.value:
-            info["host"] = host
-            info["port"] = str(port)
+        if config.transport != TransportType.STDIO.value:
+            info["host"] = config.host
+            info["port"] = str(config.port)
 
         return info
