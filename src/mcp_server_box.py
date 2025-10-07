@@ -4,7 +4,7 @@ import argparse
 import logging
 import sys
 
-from config import CONFIG, AuthType, TransportType
+from config import DEFAULT_CONFIG, AuthType, TransportType, ServerConfig
 from server import create_mcp_server, create_server_info_tool, register_tools
 
 # Logging configuration
@@ -19,25 +19,25 @@ def parse_arguments() -> argparse.Namespace:
     parser.add_argument(
         "--transport",
         choices=[t.value for t in TransportType],
-        default=CONFIG.transport,
-        help=f"Transport type (default: {CONFIG.transport})",
+        default=DEFAULT_CONFIG.transport,
+        help=f"Transport type (default: {DEFAULT_CONFIG.transport})",
     )
     parser.add_argument(
         "--host",
-        default=CONFIG.host,
-        help=f"Host for SSE/HTTP transport (default: {CONFIG.host})",
+        default=DEFAULT_CONFIG.host,
+        help=f"Host for SSE/HTTP transport (default: {DEFAULT_CONFIG.host})",
     )
     parser.add_argument(
         "--port",
         type=int,
-        default=CONFIG.port,
-        help=f"Port for SSE/HTTP transport (default: {CONFIG.port})",
+        default=DEFAULT_CONFIG.port,
+        help=f"Port for SSE/HTTP transport (default: {DEFAULT_CONFIG.port})",
     )
     parser.add_argument(
         "--box-auth",
         choices=[a.value for a in AuthType],
-        default=CONFIG.box_auth,
-        help=f"Authentication type for Box API (default: {CONFIG.box_auth})",
+        default=DEFAULT_CONFIG.box_auth,
+        help=f"Authentication type for Box API (default: {DEFAULT_CONFIG.box_auth})",
     )
 
     parser.add_argument(
@@ -54,26 +54,33 @@ def main() -> int:
     args = parse_arguments()
 
     # Create MCP server
-    server_name = f"{CONFIG.server_name_prefix} {args.transport.upper()} Server"
-    mcp = create_mcp_server(
-        server_name=server_name,
+    server_name = f"{DEFAULT_CONFIG.server_name} {args.transport.upper()} Server"
+
+    # Create config from arguments
+    config = ServerConfig(
         transport=args.transport,
         host=args.host,
         port=args.port,
         box_auth=args.box_auth,
         require_auth=not args.no_mcp_server_auth,
+        server_name=server_name,
+    )
+
+    # Create and configure MCP server
+    mcp = create_mcp_server(
+        config=config,
     )
 
     # Register all tools
     register_tools(mcp)
 
     # Register server info tool
-    create_server_info_tool(mcp, args.transport, args.box_auth, args.host, args.port)
+    create_server_info_tool(mcp, config=config)
 
     # Run server
     try:
-        print(f"Starting {server_name} on {args.host}:{args.port}", file=sys.stderr)
-        mcp.run(transport=args.transport)
+        print(f"Starting {server_name} on {config.host}:{config.port}", file=sys.stderr)
+        mcp.run(transport=TransportType(config.transport).value)
         return 0
     except Exception as e:
         print(f"Error starting server: {e}", file=sys.stderr)

@@ -46,7 +46,9 @@ BOX_CLIENT_ID = YOUR_CLIENT_ID
 BOX_CLIENT_SECRET = YOUR_CLIENT_SECRET
 BOX_REDIRECT_URL = http://localhost:8000/callback
 
+# MCP Server Authentication (for HTTP transports)
 BOX_MCP_SERVER_AUTH_TOKEN = YOUR_BOX_MCP_SERVER_AUTH_TOKEN
+OAUTH_PROTECTED_RESOURCES_CONFIG_FILE = .oauth-protected-resource.json
 ```
 
 #### Using CCG with a Box App
@@ -56,10 +58,14 @@ BOX_CLIENT_SECRET = YOUR_CLIENT_SECRET
 BOX_SUBJECT_TYPE = user_or_enterprise
 BOX_SUBJECT_ID = YOUR_USER_OR_ENTERPRISE_ID
 
+# MCP Server Authentication (for HTTP transports)
 BOX_MCP_SERVER_AUTH_TOKEN = YOUR_BOX_MCP_SERVER_AUTH_TOKEN
+OAUTH_PROTECTED_RESOURCES_CONFIG_FILE = .oauth-protected-resource.json
 ```
 
-> Note: The `BOX_MCP_SERVER_AUTH_TOKEN` is the token used to authenticate requests to the Box MCP server. You can generate this token.
+> **Note**:
+> - The `BOX_MCP_SERVER_AUTH_TOKEN` is the Bearer token used to authenticate MCP client requests to the server (required for SSE and HTTP transports)
+> - For detailed authentication setup and OAuth 2.1 configuration, see [AUTHENTICATION.md](docs/AUTHENTICATION.md)
 
 ### Run the MCP server in STDIO mode:
 ```sh

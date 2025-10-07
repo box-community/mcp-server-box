@@ -19,7 +19,7 @@ class AuthType(str, Enum):
     CCG = "ccg"
 
 
-@dataclass(frozen=True)
+@dataclass
 class ServerConfig:
     """Default configuration values for the MCP server."""
 
@@ -28,8 +28,8 @@ class ServerConfig:
     port: int = 8001
     box_auth: str = AuthType.OAUTH.value
     require_auth: bool = True
-    server_name_prefix: str = "Box Community MCP"
+    server_name: str = "Box Community MCP"
 
 
 # Global instance
-CONFIG = ServerConfig()
+DEFAULT_CONFIG = ServerConfig()
