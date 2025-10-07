@@ -2,17 +2,14 @@
 
 import logging
 import os
-import json
 
 import dotenv
-
 from fastapi import status
 from mcp.server.fastmcp import FastMCP
 from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import JSONResponse
-from starlette.routing import Route
 
-from config import TransportType, DEFAULT_CONFIG
+from config import DEFAULT_CONFIG, TransportType
 from oauth_endpoints import add_oauth_endpoints
 
 dotenv.load_dotenv()

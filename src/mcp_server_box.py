@@ -4,7 +4,7 @@ import argparse
 import logging
 import sys
 
-from config import DEFAULT_CONFIG, AuthType, TransportType, ServerConfig
+from config import DEFAULT_CONFIG, AuthType, ServerConfig, TransportType
 from server import create_mcp_server, create_server_info_tool, register_tools
 
 # Logging configuration

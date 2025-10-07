@@ -5,7 +5,6 @@ import logging
 import os
 from pathlib import Path
 
-import httpx
 from fastapi import Request
 from starlette.responses import JSONResponse
 
