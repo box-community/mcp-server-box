@@ -1,8 +1,11 @@
 {
 	"servers": {
 		"my-mcp-server-0cb58fb7": {
-			"url": "http://localhost:8001",
-			"type": "http"
+			"url": "http://localhost:8001/mcp",
+			"type": "http",
+			"headers": {
+				"Authorization": "Bearer atJYN8Dnhzfm5ic17o0TO4jbMC5I6OnUYdMwTN4p7R7ai3Jr6EclHyoD8LZmWAATgsTOhZom3WRhCxRoRp5M12aAN6iPPt0ISAQkL6ukSJAWL1FGrM60xeY4MpCas3ZM"
+			}
 		}
 	},
 	"inputs": []

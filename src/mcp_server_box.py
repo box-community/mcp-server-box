@@ -4,7 +4,7 @@ import argparse
 import logging
 import sys
 
-from config import DEFAULT_CONFIG, AuthType, ServerConfig, TransportType
+from config import DEFAULT_CONFIG, BoxAuthType, ServerConfig, TransportType, McpAuthType
 from server import create_mcp_server, create_server_info_tool, register_tools
 
 # Logging configuration
@@ -20,7 +20,7 @@ def parse_arguments() -> argparse.Namespace:
         "--transport",
         choices=[t.value for t in TransportType],
         default=DEFAULT_CONFIG.transport,
-        help=f"Transport type (default: {DEFAULT_CONFIG.transport})",
+        help=f"Transport type (default: {DEFAULT_CONFIG.transport.value})",
     )
     parser.add_argument(
         "--host",
@@ -34,16 +34,17 @@ def parse_arguments() -> argparse.Namespace:
         help=f"Port for SSE/HTTP transport (default: {DEFAULT_CONFIG.port})",
     )
     parser.add_argument(
-        "--box-auth",
-        choices=[a.value for a in AuthType],
+        "--box-auth-type",
+        choices=[a.value for a in BoxAuthType],
         default=DEFAULT_CONFIG.box_auth,
-        help=f"Authentication type for Box API (default: {DEFAULT_CONFIG.box_auth})",
+        help=f"Authentication type for Box API (default: {DEFAULT_CONFIG.box_auth.value})",
     )
 
     parser.add_argument(
-        "--no-mcp-server-auth",
-        action="store_true",
-        help="Disable authentication (for development only)",
+        "--mcp-auth-type",
+        choices=[a.value for a in McpAuthType],
+        default=DEFAULT_CONFIG.mcp_auth_type,
+        help=f"Authentication type for MCP server (default: {DEFAULT_CONFIG.mcp_auth_type.value})",
     )
 
     return parser.parse_args()
@@ -58,11 +59,11 @@ def main() -> int:
 
     # Create config from arguments
     config = ServerConfig(
-        transport=args.transport,
+        transport=TransportType(args.transport),
         host=args.host,
         port=args.port,
-        box_auth=args.box_auth,
-        require_auth=not args.no_mcp_server_auth,
+        box_auth=args.box_auth_type,
+        mcp_auth_type=args.mcp_auth_type,
         server_name=server_name,
     )
 
@@ -80,7 +81,10 @@ def main() -> int:
     # Run server
     try:
         print(f"Starting {server_name} on {config.host}:{config.port}", file=sys.stderr)
-        mcp.run(transport=TransportType(config.transport).value)
+        transport_value = config.transport.value
+        if transport_value == "http":
+            transport_value = "streamable-http"
+        mcp.run(transport=transport_value)
         return 0
     except Exception as e:
         print(f"Error starting server: {e}", file=sys.stderr)

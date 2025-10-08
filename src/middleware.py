@@ -2,6 +2,7 @@
 
 import logging
 import os
+from typing import Literal
 
 import dotenv
 from fastapi import status
@@ -9,8 +10,10 @@ from mcp.server.fastmcp import FastMCP
 from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import JSONResponse
 
-from config import DEFAULT_CONFIG, TransportType
+from config import DEFAULT_CONFIG, TransportType, ServerConfig, McpAuthType
 from oauth_endpoints import add_oauth_endpoints
+from mcp_auth.auth_token import auth_validate_token
+from mcp_auth.auth_scalekit import auth_validate_token_scalekit
 
 dotenv.load_dotenv()
 
@@ -36,8 +39,9 @@ class AuthMiddleware:
         "/.well-known/openid-configuration",
     }
 
-    def __init__(self, app):
+    def __init__(self, app, mcp_auth_type: str):
         self.app = app
+        self.mcp_auth_type = McpAuthType(mcp_auth_type)
 
     async def __call__(self, scope, receive, send):
         """Pure ASGI middleware - handles streaming properly."""
@@ -54,62 +58,41 @@ class AuthMiddleware:
             await self.app(scope, receive, send)
             return
 
-        expected_token = os.getenv("BOX_MCP_SERVER_AUTH_TOKEN")
+        # If no authentication required, pass through
+        if self.mcp_auth_type == McpAuthType.NONE:
+            logger.debug("MCP auth type is NONE, skipping authentication")
+            await self.app(scope, receive, send)
+            return
 
-        # Extract authorization header
-        headers = dict(scope.get("headers", []))
-        auth_header = headers.get(b"authorization", b"").decode("utf-8")
-
-        # Validate authentication
         error_response = None
 
-        if not expected_token:
-            logger.error("BOX_MCP_SERVER_AUTH_TOKEN not configured")
-            error_response = {
-                "error": "invalid_token",
-                "error_description": "Server authentication not properly configured",
-            }
-        elif not auth_header:
-            logger.warning(f"Missing authorization header for {scope['method']} {path}")
-            error_response = {
-                "error": "invalid_request",
-                "error_description": "Missing Authorization header",
-            }
-        elif not auth_header.startswith("Bearer "):
-            logger.warning("Invalid authorization header format")
-            error_response = {
-                "error": "invalid_request",
-                "error_description": "Authorization header must use Bearer scheme",
-            }
-        else:
-            token = auth_header.replace("Bearer ", "")
-            if token != expected_token:
-                logger.warning(f"Invalid token for {scope['method']} {path}")
-                error_response = {
-                    "error": "invalid_token",
-                    "error_description": "The access token is invalid or expired",
-                }
+        if self.mcp_auth_type == McpAuthType.TOKEN:
+            logger.debug("MCP auth type is TOKEN, performing token authentication")
+            error_response = auth_validate_token(scope=scope)
+
+        if self.mcp_auth_type == McpAuthType.OAUTH:
+            logger.debug("MCP auth type is OAUTH, performing OAuth authentication")
+            error_response = await auth_validate_token_scalekit(scope=scope)
 
         # If there's an error, send error response
-        if error_response:
-            response = JSONResponse(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                content=error_response,
-                headers=WWW_HEADER,
-            )
-            await response(scope, receive, send)
+        if error_response is not None:
+            # add headers to response
+            error_response.headers.update(WWW_HEADER)
+            await error_response(scope, receive, send)
             return
 
         # Authentication successful, pass to next layer
-        logger.debug(f"Authentication successful for {scope['method']} {path}")
+        logger.debug(
+            f"[Middleware]Authentication successful for {scope['method']} {path}"
+        )
         await self.app(scope, receive, send)
 
 
-def add_auth_middleware(mcp: FastMCP, transport: str) -> None:
+def add_auth_middleware(mcp: FastMCP, transport: TransportType, mcp_auth_type: McpAuthType | str) -> None:
     """Add authentication middleware by wrapping the app creation method."""
     logger.info(f"Setting up auth middleware wrapper for transport: {transport}")
 
-    if transport == TransportType.SSE.value:
+    if transport == TransportType.SSE:
         # Store the original method
         original_sse_app = mcp.sse_app
 
@@ -124,7 +107,7 @@ def add_auth_middleware(mcp: FastMCP, transport: str) -> None:
             logger.info("Added OAuth discovery endpoints")
 
             # Then add auth middleware
-            app.add_middleware(AuthMiddleware)
+            app.add_middleware(AuthMiddleware, mcp_auth_type=str(mcp_auth_type.value) if isinstance(mcp_auth_type, McpAuthType) else mcp_auth_type)
             logger.info(
                 f"Middleware added. App middleware count: {len(app.user_middleware)}"
             )
@@ -156,7 +139,7 @@ def add_auth_middleware(mcp: FastMCP, transport: str) -> None:
             logger.info("Added OAuth discovery endpoints")
 
             # Then add auth middleware
-            app.add_middleware(AuthMiddleware)
+            app.add_middleware(AuthMiddleware, mcp_auth_type=str(mcp_auth_type.value) if isinstance(mcp_auth_type, McpAuthType) else mcp_auth_type)
             logger.info(
                 f"Middleware added. App middleware count: {len(app.user_middleware)}"
             )
