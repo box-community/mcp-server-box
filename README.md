@@ -82,6 +82,7 @@ Below is a summary of the available tools:
 | [box_tools_metadata](docs/box_tools_metadata.md)       | Metadata template and instance management        |
 | [box_tools_search](docs/box_tools_search.md)         | Search files and folders                         |
 | [box_tools_shared_links](docs/box_tools_shared_links.md)   | Shared link management for files/folders/web-links|
+| [box_tools_tasks](docs/box_tools_tasks.md)          | Task and task assignment management              |
 | [box_tools_users](docs/box_tools_users.md)          | User management and queries                      |
 | [box_tools_web_link](docs/box_tools_web_link.md)       | Web link creation and management                 |
 
