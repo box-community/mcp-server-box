@@ -12,6 +12,7 @@ wheels/
 # Secrets
 .env*
 .auth.*
+.oauth-*
 
 # Garbage
 .DS_Store
