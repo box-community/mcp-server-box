@@ -8,11 +8,11 @@ scripts = { "mcp-server-box" = "mcp_server_box:main" }
 license = "MIT"
 authors = [{ name = "Box DevRel", email = "dx@box.com" }]
 dependencies = [
-    "box-ai-agents-toolkit>=0.0.54",
-    "fastapi>=0.118.0",
-    "mcp[cli]>=1.15.0",
+    "box-ai-agents-toolkit>=0.1.1",
+    "fastapi>=0.119.1",
+    "mcp[cli]>=1.18.0",
     "python-dotenv>=1.1.1",
-    "tomli>=2.2.1",
+    "tomli>=2.3.0",
 ]
 
 [dependency-groups]
@@ -20,8 +20,8 @@ dev = [
     "pytest>=8.4.2",
     "pytest-asyncio>=1.2.0",
     "pytest-cov>=7.0.0",
-    "ruff>=0.13.2",
+    "ruff>=0.14.1",
 ]
 
 [tool.pytest.ini_options]
-pythonpath = [".", "src"]
+pythonpath = [".", "src", "tests"]

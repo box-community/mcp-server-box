@@ -19,6 +19,7 @@ from tool_registry.group_tools import register_group_tools
 from tool_registry.metadata_tools import register_metadata_tools
 from tool_registry.search_tools import register_search_tools
 from tool_registry.shared_link_tools import register_shared_link_tools
+from tool_registry.tasks_tools import register_tasks_tools
 from tool_registry.user_tools import register_user_tools
 from tool_registry.web_link_tools import register_web_link_tools
 
@@ -82,6 +83,7 @@ def register_tools(mcp: FastMCP) -> None:
             register_collaboration_tools,
             register_web_link_tools,
             register_shared_link_tools,
+            register_tasks_tools,
         ],
     )
 
