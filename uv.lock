@@ -549,6 +549,7 @@ requires-dist = [
     { name = "fastapi", specifier = ">=0.119.1" },
     { name = "mcp", extras = ["cli"], specifier = ">=1.18.0" },
     { name = "python-dotenv", specifier = ">=1.1.1" },
+    { name = "scalekit-sdk-python", specifier = ">=2.4.7" },
     { name = "tomli", specifier = ">=2.3.0" },
 ]
 
