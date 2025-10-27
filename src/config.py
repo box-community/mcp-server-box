@@ -9,25 +9,33 @@ class TransportType(str, Enum):
 
     STDIO = "stdio"
     SSE = "sse"
-    STREAMABLE_HTTP = "streamable-http"
+    STREAMABLE_HTTP = "http"
 
 
-class AuthType(str, Enum):
+class BoxAuthType(str, Enum):
     """Available authentication types for Box API."""
 
     OAUTH = "oauth"
     CCG = "ccg"
 
 
+class McpAuthType(str, Enum):
+    """Available authentication types for MCP server."""
+
+    OAUTH = "oauth"
+    TOKEN = "token"
+    NONE = "none"
+
+
 @dataclass
 class ServerConfig:
     """Default configuration values for the MCP server."""
 
-    transport: str = TransportType.STDIO.value
-    host: str = "0.0.0.0"
+    transport: TransportType = TransportType.STDIO
+    host: str = "localhost"
     port: int = 8001
-    box_auth: str = AuthType.OAUTH.value
-    require_auth: bool = True
+    box_auth: BoxAuthType = BoxAuthType.OAUTH
+    mcp_auth_type: McpAuthType = McpAuthType.TOKEN
     server_name: str = "Box Community MCP"
 
 

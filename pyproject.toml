@@ -12,6 +12,7 @@ dependencies = [
     "fastapi>=0.119.1",
     "mcp[cli]>=1.18.0",
     "python-dotenv>=1.1.1",
+    "scalekit-sdk-python>=2.4.7",
     "tomli>=2.3.0",
 ]
 
