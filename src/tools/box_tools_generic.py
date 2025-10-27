@@ -7,11 +7,22 @@ from server_context import BoxContext
 
 
 def get_box_client(ctx: Context) -> BoxClient:
-    """Helper function to get Box client from context"""
-    client = cast(BoxContext, ctx.request_context.lifespan_context).client
-    if client is None:
-        raise RuntimeError("Box client is not initialized in the context.")
-    return client
+    """Helper function to get Box client from context.
+
+    This works for both OAuth and CCG modes:
+    - OAuth mode: Creates a client from the Bearer token in the request
+    - CCG mode: Returns the pre-initialized client
+    """
+    box_context = cast(BoxContext, ctx.request_context.lifespan_context)
+
+    # For OAuth mode, we need the request to extract the token
+    if box_context.client is None:
+        # Store the request in the context if not already there
+        if box_context.request is None and ctx.request_context.request is not None:
+            box_context.request = ctx.request_context.request
+
+    # Use the new get_active_client() method which handles both modes
+    return box_context.get_active_client()
 
 
 async def box_who_am_i(ctx: Context) -> dict:

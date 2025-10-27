@@ -13,7 +13,7 @@ from starlette.responses import JSONResponse
 from config import DEFAULT_CONFIG, TransportType, ServerConfig, McpAuthType
 from oauth_endpoints import add_oauth_endpoints
 from mcp_auth.auth_token import auth_validate_token
-from mcp_auth.auth_scalekit import auth_validate_token_scalekit
+from mcp_auth.auth_box import box_auth_validate_token
 
 dotenv.load_dotenv()
 
@@ -72,7 +72,7 @@ class AuthMiddleware:
 
         if self.mcp_auth_type == McpAuthType.OAUTH:
             logger.debug("MCP auth type is OAUTH, performing OAuth authentication")
-            error_response = await auth_validate_token_scalekit(scope=scope)
+            error_response = box_auth_validate_token(scope=scope)
 
         # If there's an error, send error response
         if error_response is not None:
@@ -88,7 +88,9 @@ class AuthMiddleware:
         await self.app(scope, receive, send)
 
 
-def add_auth_middleware(mcp: FastMCP, transport: TransportType, mcp_auth_type: McpAuthType | str) -> None:
+def add_auth_middleware(
+    mcp: FastMCP, transport: TransportType, mcp_auth_type: McpAuthType | str
+) -> None:
     """Add authentication middleware by wrapping the app creation method."""
     logger.info(f"Setting up auth middleware wrapper for transport: {transport}")
 
@@ -107,7 +109,12 @@ def add_auth_middleware(mcp: FastMCP, transport: TransportType, mcp_auth_type: M
             logger.info("Added OAuth discovery endpoints")
 
             # Then add auth middleware
-            app.add_middleware(AuthMiddleware, mcp_auth_type=str(mcp_auth_type.value) if isinstance(mcp_auth_type, McpAuthType) else mcp_auth_type)
+            app.add_middleware(
+                AuthMiddleware,
+                mcp_auth_type=str(mcp_auth_type.value)
+                if isinstance(mcp_auth_type, McpAuthType)
+                else mcp_auth_type,
+            )
             logger.info(
                 f"Middleware added. App middleware count: {len(app.user_middleware)}"
             )
@@ -139,7 +146,12 @@ def add_auth_middleware(mcp: FastMCP, transport: TransportType, mcp_auth_type: M
             logger.info("Added OAuth discovery endpoints")
 
             # Then add auth middleware
-            app.add_middleware(AuthMiddleware, mcp_auth_type=str(mcp_auth_type.value) if isinstance(mcp_auth_type, McpAuthType) else mcp_auth_type)
+            app.add_middleware(
+                AuthMiddleware,
+                mcp_auth_type=str(mcp_auth_type.value)
+                if isinstance(mcp_auth_type, McpAuthType)
+                else mcp_auth_type,
+            )
             logger.info(
                 f"Middleware added. App middleware count: {len(app.user_middleware)}"
             )
