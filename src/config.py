@@ -33,7 +33,7 @@ class ServerConfig:
 
     transport: TransportType = TransportType.STDIO
     host: str = "localhost"
-    port: int = 8001
+    port: int = 8005
     box_auth: BoxAuthType = BoxAuthType.OAUTH
     mcp_auth_type: McpAuthType = McpAuthType.TOKEN
     server_name: str = "Box Community MCP"

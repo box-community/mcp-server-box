@@ -14,15 +14,16 @@ from config import DEFAULT_CONFIG, TransportType, ServerConfig, McpAuthType
 from oauth_endpoints import add_oauth_endpoints
 from mcp_auth.auth_token import auth_validate_token
 from mcp_auth.auth_box import box_auth_validate_token
+# from mcp_server_box import WWW_HEADER
 
 dotenv.load_dotenv()
 
 logger = logging.getLogger(__name__)
 
-# OAuth 2.1 configuration
-WWW_HEADER = {
-    "WWW-Authenticate": f'Bearer realm="OAuth", resource_metadata="http://{DEFAULT_CONFIG.host}:{DEFAULT_CONFIG.port}/.well-known/oauth-protected-resource"'
-}
+# # OAuth 2.1 configuration
+# WWW_HEADER = {
+#     "WWW-Authenticate": f'Bearer realm="OAuth", resource_metadata="http://{DEFAULT_CONFIG.host}:{DEFAULT_CONFIG.port}/.well-known/oauth-protected-resource"'
+# }
 
 
 class AuthMiddleware:
@@ -39,9 +40,13 @@ class AuthMiddleware:
         "/.well-known/openid-configuration",
     }
 
-    def __init__(self, app, mcp_auth_type: str):
+    def __init__(self, app, config: ServerConfig):
         self.app = app
-        self.mcp_auth_type = McpAuthType(mcp_auth_type)
+        self.mcp_auth_type = McpAuthType(config.mcp_auth_type)
+        self.config = config
+        self.www_header = {
+            "WWW-Authenticate": f'Bearer realm="OAuth", resource_metadata="http://{self.config.host}:{self.config.port}/.well-known/oauth-protected-resource"'
+        }
 
     async def __call__(self, scope, receive, send):
         """Pure ASGI middleware - handles streaming properly."""
@@ -77,7 +82,7 @@ class AuthMiddleware:
         # If there's an error, send error response
         if error_response is not None:
             # add headers to response
-            error_response.headers.update(WWW_HEADER)
+            error_response.headers.update(self.www_header)
             await error_response(scope, receive, send)
             return
 
@@ -89,12 +94,13 @@ class AuthMiddleware:
 
 
 def add_auth_middleware(
-    mcp: FastMCP, transport: TransportType, mcp_auth_type: McpAuthType | str
+    mcp: FastMCP,
+    config: ServerConfig,  # transport: TransportType, mcp_auth_type: McpAuthType | str
 ) -> None:
     """Add authentication middleware by wrapping the app creation method."""
-    logger.info(f"Setting up auth middleware wrapper for transport: {transport}")
+    logger.info(f"Setting up auth middleware wrapper for transport: {config.transport}")
 
-    if transport == TransportType.SSE:
+    if config.transport == TransportType.SSE:
         # Store the original method
         original_sse_app = mcp.sse_app
 
@@ -111,9 +117,7 @@ def add_auth_middleware(
             # Then add auth middleware
             app.add_middleware(
                 AuthMiddleware,
-                mcp_auth_type=str(mcp_auth_type.value)
-                if isinstance(mcp_auth_type, McpAuthType)
-                else mcp_auth_type,
+                config=config,
             )
             logger.info(
                 f"Middleware added. App middleware count: {len(app.user_middleware)}"
@@ -133,7 +137,7 @@ def add_auth_middleware(
         mcp.sse_app = wrapped_sse_app
         logger.info("Wrapped sse_app method")
 
-    elif transport == TransportType.STREAMABLE_HTTP.value:
+    elif config.transport == TransportType.STREAMABLE_HTTP.value:
         original_streamable_http_app = mcp.streamable_http_app
 
         def wrapped_streamable_http_app():
@@ -148,9 +152,7 @@ def add_auth_middleware(
             # Then add auth middleware
             app.add_middleware(
                 AuthMiddleware,
-                mcp_auth_type=str(mcp_auth_type.value)
-                if isinstance(mcp_auth_type, McpAuthType)
-                else mcp_auth_type,
+                config=config,
             )
             logger.info(
                 f"Middleware added. App middleware count: {len(app.user_middleware)}"

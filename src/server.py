@@ -55,7 +55,7 @@ def create_mcp_server(
             lifespan=lifespan,
         )
         # Add authentication middleware for HTTP/SSE transports
-        add_auth_middleware(mcp, config.transport, config.mcp_auth_type)
+        add_auth_middleware(mcp, config)
 
     return mcp
 
