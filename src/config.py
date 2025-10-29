@@ -21,6 +21,7 @@ class BoxAuthType(str, Enum):
 
     OAUTH = "oauth"
     CCG = "ccg"
+    JWT = "jwt"
 
 
 class McpAuthType(str, Enum):

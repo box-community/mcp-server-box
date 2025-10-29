@@ -61,7 +61,9 @@ def main() -> int:
     args = parse_arguments()
 
     # Create MCP server
-    server_name = f"{DEFAULT_CONFIG.server_name} {args.transport.upper()} Server"
+    server_name = (
+        f"{DEFAULT_CONFIG.server_name} Server using transport {args.transport.upper()}"
+    )
 
     # Create config from arguments
     config = ServerConfig(
