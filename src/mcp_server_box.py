@@ -4,13 +4,19 @@ import argparse
 import logging
 import sys
 
-from config import DEFAULT_CONFIG, BoxAuthType, ServerConfig, TransportType, McpAuthType
+from config import (
+    DEFAULT_CONFIG,
+    BoxAuthType,
+    McpAuthType,
+    ServerConfig,
+    TransportType,
+    setup_logging,
+)
 from server import create_mcp_server, create_server_info_tool, register_tools
 
-# Logging configuration
-logging.basicConfig(level=logging.INFO)
-for logger_name in logging.root.manager.loggerDict:
-    logging.getLogger(logger_name).setLevel(logging.INFO)
+# Configure logging
+setup_logging()
+logger = logging.getLogger(__name__)
 
 
 def parse_arguments() -> argparse.Namespace:
@@ -80,14 +86,16 @@ def main() -> int:
 
     # Run server
     try:
-        print(f"Starting {server_name} on {config.host}:{config.port}", file=sys.stderr)
+        logger.info(f"Starting {server_name}")
+        if config.transport != TransportType.STDIO:
+            logger.info(f"Listening on {config.host}:{config.port}")
         transport_value = config.transport.value
         if transport_value == "http":
             transport_value = "streamable-http"
         mcp.run(transport=transport_value)
         return 0
     except Exception as e:
-        print(f"Error starting server: {e}", file=sys.stderr)
+        logger.error(f"Error starting server: {e}")
         return 1
 
 
