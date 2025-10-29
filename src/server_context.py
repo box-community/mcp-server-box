@@ -3,8 +3,9 @@ from dataclasses import dataclass
 from typing import AsyncIterator
 import logging
 
-from box_ai_agents_toolkit import BoxClient, get_ccg_client
-from box_sdk_gen import BoxDeveloperTokenAuth
+# from box_ai_agents_toolkit import BoxClient, get_ccg_client,get_oauth_client, get_jwt_client
+from mcp_auth.auth_box_api import get_oauth_client, get_ccg_client, get_jwt_client
+from box_sdk_gen import BoxDeveloperTokenAuth, BoxClient
 from mcp.server.fastmcp import FastMCP
 from starlette.requests import Request
 
@@ -16,7 +17,7 @@ class BoxContext:
     client: BoxClient | None = None
     request: Request | None = None
 
-    def get_client_with_token(self, token: str) -> BoxClient:
+    def get_client_from_token(self, token: str) -> BoxClient:
         """Create a Box client using the provided OAuth token."""
         logger.info("Creating Box client with OAuth token")
         auth = BoxDeveloperTokenAuth(token=token)
@@ -31,9 +32,9 @@ class BoxContext:
         Raises:
             ValueError: If no client is available or no OAuth token found.
         """
-        # If we have a pre-created client (CCG mode), use it
+        # If we have a pre-created client , use it
         if self.client is not None:
-            logger.debug("Using pre-created Box client (CCG mode)")
+            logger.debug("Using pre-created Box client")
             return self.client
 
         # OAuth mode: extract token from request scope
@@ -46,11 +47,11 @@ class BoxContext:
             raise ValueError("No OAuth token found in request scope")
 
         logger.debug("Creating Box client from request OAuth token")
-        return self.get_client_with_token(token)
+        return self.get_client_from_token(token)
 
 
 @asynccontextmanager
-async def box_lifespan_oauth(server: FastMCP) -> AsyncIterator[BoxContext]:
+async def box_lifespan_mcp_oauth(server: FastMCP) -> AsyncIterator[BoxContext]:
     """Manage Box client lifecycle with OAuth handling.
 
     In OAuth mode, the client is created per-request using the Bearer token
@@ -60,8 +61,21 @@ async def box_lifespan_oauth(server: FastMCP) -> AsyncIterator[BoxContext]:
     """
     try:
         # Don't create a client at startup - it will be created per-request
-        logger.info("OAuth mode: Box client will be created per-request from Bearer token")
+        logger.info(
+            "OAuth mode: Box client will be created per-request from Bearer token"
+        )
         yield BoxContext(client=None)
+    finally:
+        # Cleanup (if needed)
+        pass
+
+
+@asynccontextmanager
+async def box_lifespan_oauth(server: FastMCP) -> AsyncIterator[BoxContext]:
+    """Manage Box client lifecycle with CCG handling"""
+    try:
+        client = get_oauth_client()
+        yield BoxContext(client=client)
     finally:
         # Cleanup (if needed)
         pass
@@ -72,6 +86,17 @@ async def box_lifespan_ccg(server: FastMCP) -> AsyncIterator[BoxContext]:
     """Manage Box client lifecycle with CCG handling"""
     try:
         client = get_ccg_client()
+        yield BoxContext(client=client)
+    finally:
+        # Cleanup (if needed)
+        pass
+
+
+@asynccontextmanager
+async def box_lifespan_jwt(server: FastMCP) -> AsyncIterator[BoxContext]:
+    """Manage Box client lifecycle with CCG handling"""
+    try:
+        client = get_jwt_client()
         yield BoxContext(client=client)
     finally:
         # Cleanup (if needed)

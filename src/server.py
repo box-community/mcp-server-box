@@ -5,9 +5,14 @@ from pathlib import Path
 import tomli
 from mcp.server.fastmcp import FastMCP
 
-from config import ServerConfig, TransportType
+from config import McpAuthType, ServerConfig, TransportType
 from middleware import add_auth_middleware
-from server_context import box_lifespan_ccg, box_lifespan_oauth
+from server_context import (
+    box_lifespan_oauth,
+    box_lifespan_ccg,
+    box_lifespan_jwt,
+    box_lifespan_mcp_oauth,
+)
 from tool_registry import register_all_tools
 from tool_registry.ai_tools import register_ai_tools
 from tool_registry.collaboration_tools import register_collaboration_tools
@@ -41,7 +46,17 @@ def create_mcp_server(
     """Create and configure the MCP server."""
 
     # Select appropriate lifespan based on auth type
-    lifespan = box_lifespan_ccg if config.box_auth == "ccg" else box_lifespan_oauth
+    if config.box_auth == "oauth":
+        if config.mcp_auth_type == McpAuthType.OAUTH:
+            lifespan = box_lifespan_mcp_oauth
+        else:
+            lifespan = box_lifespan_oauth
+    elif config.box_auth == "ccg":
+        lifespan = box_lifespan_ccg
+    elif config.box_auth == "jwt":
+        lifespan = box_lifespan_jwt
+    else:
+        raise ValueError(f"Unsupported Box auth type: {config.box_auth}")
 
     # Create MCP server with appropriate transport
     if config.transport == TransportType.STDIO.value:
@@ -95,6 +110,7 @@ def create_server_info_tool(
             "server_name": mcp.name,
             "version": get_version(),
             "transport": config.transport,
+            "mcp auth": config.mcp_auth_type,
             "box auth": config.box_auth,
         }
 

@@ -10,6 +10,7 @@
         "docgen",
         "dotenv",
         "fastmcp",
+        "levelname",
         "scalekit",
         "streamable"
     ]

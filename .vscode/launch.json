@@ -18,9 +18,9 @@
                 "--port",
                 "8005",
                 "--box-auth-type",
-                "oauth",
+                "ccg",
                 "--mcp-auth-type",
-                "oauth"
+                "none"
             ]
         }
     ]

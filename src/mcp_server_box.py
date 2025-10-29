@@ -39,18 +39,19 @@ def parse_arguments() -> argparse.Namespace:
         default=DEFAULT_CONFIG.port,
         help=f"Port for SSE/HTTP transport (default: {DEFAULT_CONFIG.port})",
     )
-    parser.add_argument(
-        "--box-auth-type",
-        choices=[a.value for a in BoxAuthType],
-        default=DEFAULT_CONFIG.box_auth,
-        help=f"Authentication type for Box API (default: {DEFAULT_CONFIG.box_auth.value})",
-    )
 
     parser.add_argument(
         "--mcp-auth-type",
         choices=[a.value for a in McpAuthType],
         default=DEFAULT_CONFIG.mcp_auth_type,
         help=f"Authentication type for MCP server (default: {DEFAULT_CONFIG.mcp_auth_type.value})",
+    )
+
+    parser.add_argument(
+        "--box-auth-type",
+        choices=[a.value for a in BoxAuthType],
+        default=DEFAULT_CONFIG.box_auth,
+        help=f"Authentication type for Box API (default: {DEFAULT_CONFIG.box_auth.value})",
     )
 
     return parser.parse_args()
@@ -61,9 +62,10 @@ def main() -> int:
     args = parse_arguments()
 
     # Create MCP server
-    server_name = (
-        f"{DEFAULT_CONFIG.server_name} Server using transport {args.transport.upper()}"
-    )
+    server_name = f"{DEFAULT_CONFIG.server_name}"
+
+    # TODO: Add configurable server name
+    # TODO: Validate auth type combinations and raise error for invalid ones
 
     # Create config from arguments
     config = ServerConfig(

@@ -4,7 +4,8 @@ import logging
 import sys
 from dataclasses import dataclass
 from enum import Enum
-
+import dotenv
+import os
 import colorlog
 
 
@@ -47,8 +48,11 @@ class ServerConfig:
 # Global instance
 DEFAULT_CONFIG = ServerConfig()
 
+dotenv.load_dotenv()
+LOG_LEVEL = getattr(logging, os.getenv("LOG_LEVEL", "INFO").upper(), logging.INFO)
 
-def setup_logging(level: int = logging.INFO) -> None:
+
+def setup_logging(level: int = LOG_LEVEL) -> None:
     """Configure colored logging for the application."""
     handler = logging.StreamHandler(sys.stderr)
     handler.setFormatter(
