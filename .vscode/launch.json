@@ -12,7 +12,7 @@
             "console": "integratedTerminal",
             "args": [
                 "--transport",
-                "http",
+                "sse",
                 "--host",
                 "my.host.local",
                 "--port",

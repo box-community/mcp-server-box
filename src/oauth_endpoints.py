@@ -188,6 +188,11 @@ def add_oauth_endpoints(app) -> None:
             methods=["GET", "OPTIONS"],
         ),
         Route(
+            "/.well-known/oauth-protected-resource/sse",
+            oauth_protected_resource_mcp_handler,
+            methods=["GET", "OPTIONS"],
+        ),
+        Route(
             "/.well-known/oauth-authorization-server",
             # oauth_authorization_server_handler,
             oauth_protected_resource_handler,
