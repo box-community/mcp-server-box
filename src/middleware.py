@@ -33,6 +33,7 @@ class AuthMiddleware:
         "/.well-known/oauth-protected-resource/mcp",
         "/.well-known/oauth-protected-resource/sse",
         "/.well-known/oauth-authorization-server",
+        "/oauth/register",
         "/.well-known/oauth-authorization-server/mcp",
         "/.well-known/openid-configuration",
     }
