@@ -47,14 +47,13 @@ def create_mcp_server(
 
     # Select appropriate lifespan based on auth type
     if config.box_auth == "oauth":
-        if config.mcp_auth_type == McpAuthType.OAUTH:
-            lifespan = box_lifespan_mcp_oauth
-        else:
-            lifespan = box_lifespan_oauth
+        lifespan = box_lifespan_oauth
     elif config.box_auth == "ccg":
         lifespan = box_lifespan_ccg
     elif config.box_auth == "jwt":
         lifespan = box_lifespan_jwt
+    elif config.box_auth == "mcp_client":
+        lifespan = box_lifespan_mcp_oauth
     else:
         raise ValueError(f"Unsupported Box auth type: {config.box_auth}")
 

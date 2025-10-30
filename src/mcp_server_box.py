@@ -79,7 +79,18 @@ def main() -> int:
 
     # if the transport is stdio, then the mcp auth must be none
     if config.transport == TransportType.STDIO:
+        if config.mcp_auth_type != McpAuthType.NONE:
+            logger.warning(
+                "MCP auth type must be 'none' when using stdio transport. Overriding to 'none'."
+            )
         config.mcp_auth_type = McpAuthType.NONE
+
+    if config.mcp_auth_type == McpAuthType.OAUTH:
+        if config.box_auth != BoxAuthType.MCP_CLIENT:
+            logger.warning(
+                "Box auth type must be 'mcp_client' when using MCP OAuth authentication. Overriding to 'mcp_client'."
+            )
+        config.box_auth = BoxAuthType.MCP_CLIENT
 
     # Create and configure MCP server
     mcp = create_mcp_server(
