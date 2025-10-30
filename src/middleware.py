@@ -41,7 +41,7 @@ class AuthMiddleware:
         self.mcp_auth_type = McpAuthType(config.mcp_auth_type)
         self.config = config
         self.www_header = {
-            "WWW-Authenticate": f'Bearer realm="OAuth", resource_metadata="http://{self.config.host}/.well-known/oauth-protected-resource"'
+            "WWW-Authenticate": f'Bearer realm="OAuth", resource_metadata="https://{self.config.host}/.well-known/oauth-protected-resource"'
         }
 
     async def __call__(self, scope, receive, send):
