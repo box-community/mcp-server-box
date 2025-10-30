@@ -20,11 +20,6 @@ dotenv.load_dotenv()
 
 logger = logging.getLogger(__name__)
 
-# # OAuth 2.1 configuration
-# WWW_HEADER = {
-#     "WWW-Authenticate": f'Bearer realm="OAuth", resource_metadata="http://{DEFAULT_CONFIG.host}:{DEFAULT_CONFIG.port}/.well-known/oauth-protected-resource"'
-# }
-
 
 class AuthMiddleware:
     """Pure ASGI middleware to validate Bearer token authentication.

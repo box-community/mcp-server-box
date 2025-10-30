@@ -77,6 +77,10 @@ def main() -> int:
         server_name=server_name,
     )
 
+    # if the transport is stdio, then the mcp auth must be none
+    if config.transport == TransportType.STDIO:
+        config.mcp_auth_type = McpAuthType.NONE
+
     # Create and configure MCP server
     mcp = create_mcp_server(
         config=config,
