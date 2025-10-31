@@ -33,10 +33,10 @@ class AuthMiddleware:
         "/.well-known/oauth-protected-resource/mcp",
         "/.well-known/oauth-protected-resource/sse",
         "/.well-known/oauth-authorization-server",
-        "/oauth/register",
         "/.well-known/oauth-authorization-server/mcp",
         "/.well-known/oauth-authorization-server/sse",
-        "/.well-known/openid-configuration",
+        "/oauth/register",
+        # "/.well-known/openid-configuration",
     }
 
     def __init__(self, app, config: ServerConfig):

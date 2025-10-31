@@ -85,59 +85,6 @@ async def oauth_protected_resource_handler(request: Request) -> JSONResponse:
     )
 
 
-async def oauth_protected_resource_mcp_handler(request: Request) -> JSONResponse:
-    """
-    MCP-specific variant of the OAuth Protected Resource endpoint.
-    Returns the same metadata as the standard endpoint.
-    """
-    return await oauth_protected_resource_handler(request)
-
-
-# async def oauth_authorization_server_handler(request: Request) -> JSONResponse:
-#     """
-#     Informational endpoint for OAuth Authorization Server metadata.
-
-#     This server is a PROTECTED RESOURCE, not an authorization server.
-#     Clients should use the protected resource endpoint instead.
-#     """
-#     # Handle OPTIONS preflight request
-#     if request.method == "OPTIONS":
-#         return JSONResponse(
-#             status_code=200,
-#             content={},
-#             headers={
-#                 "Access-Control-Allow-Origin": "*",
-#                 "Access-Control-Allow-Methods": "GET, OPTIONS",
-#                 "Access-Control-Allow-Headers": "*",
-#             },
-#         )
-
-#     metadata = load_protected_resource_metadata()
-#     auth_servers = metadata.get("authorization_servers", [])
-
-#     if auth_servers:
-#         message = (
-#             f"This MCP server is an OAuth 2.0 Protected Resource, not an authorization server. "
-#             f"For authorization server metadata, please query: {auth_servers[0]}/.well-known/oauth-authorization-server"
-#         )
-#     else:
-#         message = (
-#             "This MCP server is an OAuth 2.0 Protected Resource, not an authorization server. "
-#             "Use /.well-known/oauth-protected-resource to discover authorization requirements."
-#         )
-
-#     return JSONResponse(
-#         status_code=404,
-#         content={
-#             "error": "not_found",
-#             "error_description": message,
-#         },
-#         headers={
-#             "Access-Control-Allow-Origin": "*",
-#         },
-#     )
-
-
 async def openid_configuration_handler(request: Request) -> JSONResponse:
     """
     Informational endpoint for OpenID Connect configuration.
@@ -198,9 +145,10 @@ async def oauth_authorization_server_handler(request: Request) -> JSONResponse:
             f"{metadata.get('resource', '').rstrip('/mcp').rstrip('/sse').rstrip('/')}/oauth/register"
         )
 
-        # str(
-        #     request.url.replace(path="/oauth/register")
-        # )
+    # Add scopes_supported from protected resource metadata if not included in the box_metadata
+    if "scopes_supported" not in box_metadata and "scopes_supported" in metadata:
+        box_metadata["scopes_supported"] = metadata["scopes_supported"]
+
     return JSONResponse(
         status_code=200,
         content=box_metadata,
@@ -243,6 +191,7 @@ async def oauth_register_handler(request: Request) -> JSONResponse:
     box_metadata = box_response.json()
 
     # Build response using client's requested values
+    # TODO: In a real implementation, use client id and secret from .env
     registration_response = {
         "client_id": "utcn9zsvobqtby3e7za0qzwtebb6qbty",
         "client_secret": "v5DKn0mkV4q4IZZafjYn6kfuUnwtdVeb",
@@ -252,6 +201,9 @@ async def oauth_register_handler(request: Request) -> JSONResponse:
         "grant_types": grant_types,
         "response_types": response_types,
         "token_endpoint_auth_method": token_endpoint_auth_method,
+        # "scope": " ".join(box_metadata.get("scopes_supported", [])),
+
+        # "code":"none",
     }
 
     return JSONResponse(
@@ -278,29 +230,12 @@ def add_oauth_endpoints(app) -> None:
         ),
         Route(
             "/.well-known/oauth-protected-resource/mcp",
-            oauth_protected_resource_mcp_handler,
+            oauth_protected_resource_handler,
             methods=["GET", "OPTIONS"],
         ),
         Route(
             "/.well-known/oauth-protected-resource/sse",
-            oauth_protected_resource_mcp_handler,
-            methods=["GET", "OPTIONS"],
-        ),
-        # Route(
-        #     "/.well-known/oauth-authorization-server",
-        #     # oauth_authorization_server_handler,
-        #     oauth_protected_resource_handler,
-        #     methods=["GET", "OPTIONS"],
-        # ),
-        Route(
-            "/.well-known/oauth-authorization-server/mcp",
-            # oauth_authorization_server_handler,
-            oauth_protected_resource_mcp_handler,
-            methods=["GET", "OPTIONS"],
-        ),
-        Route(
-            "/.well-known/openid-configuration",
-            openid_configuration_handler,
+            oauth_protected_resource_handler,
             methods=["GET", "OPTIONS"],
         ),
         Route(
@@ -308,6 +243,22 @@ def add_oauth_endpoints(app) -> None:
             oauth_authorization_server_handler,
             methods=["GET", "OPTIONS"],
         ),
+        Route(
+            "/.well-known/oauth-authorization-server/mcp",
+            oauth_authorization_server_handler,
+            methods=["GET", "OPTIONS"],
+        ),
+        Route(
+            "/.well-known/oauth-authorization-server/sse",
+            oauth_authorization_server_handler,
+            methods=["GET", "OPTIONS"],
+        ),
+        # Route(
+        #     "/.well-known/openid-configuration",
+        #     openid_configuration_handler,
+        #     methods=["GET", "OPTIONS"],
+        # ),
+        
         Route(
             "/oauth/register",
             oauth_register_handler,
