@@ -8,10 +8,10 @@ from mcp.server.fastmcp import FastMCP
 from config import McpAuthType, ServerConfig, TransportType
 from middleware import add_auth_middleware
 from server_context import (
-    box_lifespan_oauth,
     box_lifespan_ccg,
     box_lifespan_jwt,
     box_lifespan_mcp_oauth,
+    box_lifespan_oauth,
 )
 from tool_registry import register_all_tools
 from tool_registry.ai_tools import register_ai_tools

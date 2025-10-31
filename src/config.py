@@ -1,12 +1,13 @@
 """Configuration for the Box MCP Server."""
 
 import logging
+import os
 import sys
 from dataclasses import dataclass
 from enum import Enum
-import dotenv
-import os
+
 import colorlog
+import dotenv
 
 
 class TransportType(str, Enum):

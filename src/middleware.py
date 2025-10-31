@@ -10,10 +10,11 @@ from mcp.server.fastmcp import FastMCP
 from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import JSONResponse
 
-from config import DEFAULT_CONFIG, TransportType, ServerConfig, McpAuthType
-from oauth_endpoints import add_oauth_endpoints
-from mcp_auth.auth_token import auth_validate_token
+from config import DEFAULT_CONFIG, McpAuthType, ServerConfig, TransportType
 from mcp_auth.auth_box import box_auth_validate_token
+from mcp_auth.auth_token import auth_validate_token
+from oauth_endpoints import add_oauth_endpoints
+
 # from mcp_server_box import WWW_HEADER
 
 dotenv.load_dotenv()

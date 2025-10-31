@@ -1,13 +1,14 @@
+import logging
 from contextlib import asynccontextmanager
 from dataclasses import dataclass
 from typing import AsyncIterator
-import logging
 
-# from box_ai_agents_toolkit import BoxClient, get_ccg_client,get_oauth_client, get_jwt_client
-from mcp_auth.auth_box_api import get_oauth_client, get_ccg_client, get_jwt_client
-from box_sdk_gen import BoxDeveloperTokenAuth, BoxClient
+from box_sdk_gen import BoxClient, BoxDeveloperTokenAuth
 from mcp.server.fastmcp import FastMCP
 from starlette.requests import Request
+
+# from box_ai_agents_toolkit import BoxClient, get_ccg_client,get_oauth_client, get_jwt_client
+from mcp_auth.auth_box_api import get_ccg_client, get_jwt_client, get_oauth_client
 
 logger = logging.getLogger(__name__)
 

@@ -1,23 +1,23 @@
-from dotenv import load_dotenv
-import os
 import json
+import os
 import pathlib
 from textwrap import dedent
 
 from box_sdk_gen import (
-    # Box OAuth
-    OAuthConfig,
+    BoxCCGAuth,
+    # Box Client
+    BoxClient,
+    BoxJWTAuth,
     BoxOAuth,
     # Box CCG
     CCGConfig,
-    BoxCCGAuth,
+    FileWithInMemoryCacheTokenStorage,
     # Box JWT
     JWTConfig,
-    BoxJWTAuth,
-    # Box Client
-    BoxClient,
-    FileWithInMemoryCacheTokenStorage,
+    # Box OAuth
+    OAuthConfig,
 )
+from dotenv import load_dotenv
 
 load_dotenv()
 

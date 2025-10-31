@@ -1,13 +1,13 @@
 import logging
 import os
 from typing import Optional
-from dotenv import load_dotenv
-from starlette.requests import Request
-from starlette.responses import JSONResponse
-from fastapi import status
 
+from dotenv import load_dotenv
+from fastapi import status
 from scalekit import ScalekitClient
 from scalekit.common.scalekit import TokenValidationOptions
+from starlette.requests import Request
+from starlette.responses import JSONResponse
 
 load_dotenv(dotenv_path=".env.scalekit")
 logger = logging.getLogger(__name__)
