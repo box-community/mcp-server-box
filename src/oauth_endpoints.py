@@ -188,14 +188,19 @@ async def oauth_authorization_server_handler(request: Request) -> JSONResponse:
             "https://account.box.com/.well-known/oauth-authorization-server"
         )
     box_metadata = box_response.json()
+    metadata = load_protected_resource_metadata()
 
     logger.debug(f"Box OAuth Authorization Server metadata: {request}")
 
     # Add registration_endpoint if missing
     if "registration_endpoint" not in box_metadata:
-        box_metadata["registration_endpoint"] = str(
-            request.url.replace(path="/oauth/register")
+        box_metadata["registration_endpoint"] = (
+            f"{metadata.get('resource', '').rstrip('/')}/oauth/register"
         )
+
+        # str(
+        #     request.url.replace(path="/oauth/register")
+        # )
     return JSONResponse(
         status_code=200,
         content=box_metadata,
