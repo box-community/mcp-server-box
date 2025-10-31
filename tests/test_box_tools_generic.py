@@ -16,7 +16,19 @@ def mock_ctx():
     ctx = MagicMock()
     mock_request_context = MagicMock()
     mock_lifespan_context = MagicMock(spec=BoxContext)
+
+    # Set up get_active_client to return the client attribute by default
+    def get_active_client_side_effect():
+        if mock_lifespan_context.client is not None:
+            return mock_lifespan_context.client
+        if mock_lifespan_context.request is None:
+            raise ValueError("No request context available")
+        raise ValueError("No OAuth token found in request scope")
+
+    mock_lifespan_context.get_active_client.side_effect = get_active_client_side_effect
+    mock_lifespan_context.request = None
     mock_request_context.lifespan_context = mock_lifespan_context
+    mock_request_context.request = None
     ctx.request_context = mock_request_context
     return ctx
 
@@ -50,11 +62,12 @@ def test_get_box_client_success(mock_ctx, mock_box_client):
 def test_get_box_client_none_client(mock_ctx):
     """Test get_box_client function with None client"""
     mock_ctx.request_context.lifespan_context.client = None
+    mock_ctx.request_context.request = None
 
-    with pytest.raises(RuntimeError) as exc_info:
+    with pytest.raises(ValueError) as exc_info:
         get_box_client(mock_ctx)
 
-    assert str(exc_info.value) == "Box client is not initialized in the context."
+    assert str(exc_info.value) == "No request context available"
 
 
 @pytest.mark.asyncio
@@ -82,11 +95,12 @@ async def test_box_who_am_i(mock_ctx, mock_box_client, sample_user_response):
 async def test_box_who_am_i_with_none_client(mock_ctx):
     """Test box_who_am_i function with None client"""
     mock_ctx.request_context.lifespan_context.client = None
+    mock_ctx.request_context.request = None
 
-    with pytest.raises(RuntimeError) as exc_info:
+    with pytest.raises(ValueError) as exc_info:
         await box_who_am_i(mock_ctx)
 
-    assert str(exc_info.value) == "Box client is not initialized in the context."
+    assert str(exc_info.value) == "No request context available"
 
 
 @pytest.mark.asyncio
@@ -159,9 +173,12 @@ def test_get_box_client_with_different_context_structure():
 
     # Set up the nested structure
     ctx.request_context.lifespan_context.client = mock_client
+    # Mock get_active_client to return the client
+    ctx.request_context.lifespan_context.get_active_client.return_value = mock_client
 
     result = get_box_client(ctx)
     assert result == mock_client
+    ctx.request_context.lifespan_context.get_active_client.assert_called_once()
 
 
 @pytest.mark.asyncio
