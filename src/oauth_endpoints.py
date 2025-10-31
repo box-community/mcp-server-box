@@ -189,6 +189,8 @@ async def oauth_authorization_server_handler(request: Request) -> JSONResponse:
         )
     box_metadata = box_response.json()
 
+    logger.debug(f"Box OAuth Authorization Server metadata: {request}")
+
     # Add registration_endpoint if missing
     if "registration_endpoint" not in box_metadata:
         box_metadata["registration_endpoint"] = str(
