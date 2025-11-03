@@ -51,7 +51,7 @@ def box_client() -> BoxClient:
             return get_jwt_client(config=app_config.box_api)
         except (ValueError, Exception):
             # Fallback to OAuth (requires manual authorization first)
-            return get_oauth_client()
+            return get_oauth_client(config=app_config.box_api)
 
 
 @pytest.fixture(scope="module")
