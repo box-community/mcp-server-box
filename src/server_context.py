@@ -35,7 +35,7 @@ class BoxContext:
         Raises:
             ValueError: If no client is available or no OAuth token found.
         """
-        # If we have a pre-created client , use it
+        # If we have a pre-created client, use it
         if self.client is not None:
             logger.debug("Using pre-created Box client")
             return self.client
