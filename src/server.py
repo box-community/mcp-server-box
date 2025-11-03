@@ -1,11 +1,12 @@
 """MCP server configuration and initialization."""
 
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 import tomli
 from mcp.server.fastmcp import FastMCP
 
-from config import McpAuthType, ServerConfig, TransportType
+from config import ServerConfig, TransportType
 from middleware import add_auth_middleware
 from server_context import (
     box_lifespan_ccg,
@@ -28,6 +29,9 @@ from tool_registry.tasks_tools import register_tasks_tools
 from tool_registry.user_tools import register_user_tools
 from tool_registry.web_link_tools import register_web_link_tools
 
+if TYPE_CHECKING:
+    from config import AppConfig
+
 
 def get_version() -> str:
     """Read version from pyproject.toml."""
@@ -41,35 +45,43 @@ def get_version() -> str:
 
 
 def create_mcp_server(
-    config: ServerConfig,
+    app_config: "AppConfig",
 ) -> FastMCP:
-    """Create and configure the MCP server."""
+    """
+    Create and configure the MCP server.
+
+    Args:
+        app_config: Complete application configuration
+
+    Returns:
+        FastMCP: Configured MCP server instance
+    """
 
     # Select appropriate lifespan based on auth type
-    if config.box_auth == "oauth":
-        lifespan = box_lifespan_oauth
-    elif config.box_auth == "ccg":
-        lifespan = box_lifespan_ccg
-    elif config.box_auth == "jwt":
-        lifespan = box_lifespan_jwt
-    elif config.box_auth == "mcp_client":
+    if app_config.server.box_auth == "oauth":
+        lifespan = lambda server: box_lifespan_oauth(server, app_config.box_api)
+    elif app_config.server.box_auth == "ccg":
+        lifespan = lambda server: box_lifespan_ccg(server, app_config.box_api)
+    elif app_config.server.box_auth == "jwt":
+        lifespan = lambda server: box_lifespan_jwt(server, app_config.box_api)
+    elif app_config.server.box_auth == "mcp_client":
         lifespan = box_lifespan_mcp_oauth
     else:
-        raise ValueError(f"Unsupported Box auth type: {config.box_auth}")
+        raise ValueError(f"Unsupported Box auth type: {app_config.server.box_auth}")
 
     # Create MCP server with appropriate transport
-    if config.transport == TransportType.STDIO.value:
-        mcp = FastMCP(name=config.server_name, lifespan=lifespan)
+    if app_config.server.transport == TransportType.STDIO.value:
+        mcp = FastMCP(name=app_config.server.server_name, lifespan=lifespan)
     else:
         mcp = FastMCP(
-            name=config.server_name,
+            name=app_config.server.server_name,
             stateless_http=True,
-            host=config.host,
-            port=config.port,
+            host=app_config.server.host,
+            port=app_config.server.port,
             lifespan=lifespan,
         )
         # Add authentication middleware for HTTP/SSE transports
-        add_auth_middleware(mcp, config)
+        add_auth_middleware(mcp, app_config)
 
     return mcp
 

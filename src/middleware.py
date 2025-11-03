@@ -1,23 +1,20 @@
 """Authentication middleware for MCP server."""
 
 import logging
-import os
-from typing import Literal
+from typing import TYPE_CHECKING
 
-import dotenv
 from fastapi import status
 from mcp.server.fastmcp import FastMCP
 from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import JSONResponse
 
-from config import DEFAULT_CONFIG, McpAuthType, ServerConfig, TransportType
+from config import McpAuthType, ServerConfig, TransportType
 from mcp_auth.auth_box import box_auth_validate_token
 from mcp_auth.auth_token import auth_validate_token
 from oauth_endpoints import add_oauth_endpoints
 
-# from mcp_server_box import WWW_HEADER
-
-dotenv.load_dotenv()
+if TYPE_CHECKING:
+    from config import AppConfig
 
 logger = logging.getLogger(__name__)
 
@@ -40,13 +37,13 @@ class AuthMiddleware:
         # "/.well-known/openid-configuration",
     }
 
-    def __init__(self, app, config: ServerConfig):
+    def __init__(self, app, app_config: "AppConfig"):
         self.app = app
-        self.mcp_auth_type = McpAuthType(config.mcp_auth_type)
-        self.config = config
+        self.app_config = app_config
+        self.mcp_auth_type = McpAuthType(app_config.server.mcp_auth_type)
         self.www_header = {
-            # "WWW-Authenticate": f'Bearer realm="OAuth", resource_metadata="http://{self.config.host}:{self.config.port}/.well-known/oauth-protected-resource"'
-            # "WWW-Authenticate": f'Bearer realm="OAuth", resource_metadata="https://{self.config.host}/.well-known/oauth-protected-resource"'
+            # "WWW-Authenticate": f'Bearer realm="OAuth", resource_metadata="http://{self.app_config.server.host}:{self.app_config.server.port}/.well-known/oauth-protected-resource"'
+            # "WWW-Authenticate": f'Bearer realm="OAuth", resource_metadata="https://{self.app_config.server.host}/.well-known/oauth-protected-resource"'
             "WWW-Authenticate": 'Bearer realm="OAuth", resource_metadata="/.well-known/oauth-protected-resource"'
         }
 
@@ -75,7 +72,7 @@ class AuthMiddleware:
 
         if self.mcp_auth_type == McpAuthType.TOKEN:
             logger.debug("MCP auth type is TOKEN, performing token authentication")
-            error_response = auth_validate_token(scope=scope)
+            error_response = auth_validate_token(scope=scope, config=self.app_config.mcp_auth)
 
         if self.mcp_auth_type == McpAuthType.OAUTH:
             logger.debug("MCP auth type is OAUTH, performing OAuth authentication")
@@ -97,12 +94,18 @@ class AuthMiddleware:
 
 def add_auth_middleware(
     mcp: FastMCP,
-    config: ServerConfig,  # transport: TransportType, mcp_auth_type: McpAuthType | str
+    app_config: "AppConfig",
 ) -> None:
-    """Add authentication middleware by wrapping the app creation method."""
-    logger.info(f"Setting up auth middleware wrapper for transport: {config.transport}")
+    """
+    Add authentication middleware by wrapping the app creation method.
 
-    if config.transport == TransportType.SSE:
+    Args:
+        mcp: FastMCP instance
+        app_config: Complete application configuration
+    """
+    logger.info(f"Setting up auth middleware wrapper for transport: {app_config.server.transport}")
+
+    if app_config.server.transport == TransportType.SSE:
         # Store the original method
         original_sse_app = mcp.sse_app
 
@@ -113,13 +116,13 @@ def add_auth_middleware(
             logger.info(f"Adding middleware to app: {id(app)}")
 
             # Add OAuth discovery endpoints first
-            add_oauth_endpoints(app)
+            add_oauth_endpoints(app, app_config)
             logger.info("Added OAuth discovery endpoints")
 
             # Then add auth middleware
             app.add_middleware(
                 AuthMiddleware,
-                config=config,
+                app_config=app_config,
             )
             logger.info(
                 f"Middleware added. App middleware count: {len(app.user_middleware)}"
@@ -139,7 +142,7 @@ def add_auth_middleware(
         mcp.sse_app = wrapped_sse_app
         logger.info("Wrapped sse_app method")
 
-    elif config.transport == TransportType.STREAMABLE_HTTP.value:
+    elif app_config.server.transport == TransportType.STREAMABLE_HTTP.value:
         original_streamable_http_app = mcp.streamable_http_app
 
         def wrapped_streamable_http_app():
@@ -148,13 +151,13 @@ def add_auth_middleware(
             logger.info(f"Adding middleware to app: {id(app)}")
 
             # Add OAuth discovery endpoints first
-            add_oauth_endpoints(app)
+            add_oauth_endpoints(app, app_config)
             logger.info("Added OAuth discovery endpoints")
 
             # Then add auth middleware
             app.add_middleware(
                 AuthMiddleware,
-                config=config,
+                app_config=app_config,
             )
             logger.info(
                 f"Middleware added. App middleware count: {len(app.user_middleware)}"

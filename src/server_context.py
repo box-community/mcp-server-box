@@ -1,7 +1,7 @@
 import logging
 from contextlib import asynccontextmanager
 from dataclasses import dataclass
-from typing import AsyncIterator
+from typing import TYPE_CHECKING, AsyncIterator
 
 from box_sdk_gen import BoxClient, BoxDeveloperTokenAuth
 from mcp.server.fastmcp import FastMCP
@@ -9,6 +9,9 @@ from starlette.requests import Request
 
 # from box_ai_agents_toolkit import BoxClient, get_ccg_client,get_oauth_client, get_jwt_client
 from mcp_auth.auth_box_api import get_ccg_client, get_jwt_client, get_oauth_client
+
+if TYPE_CHECKING:
+    from config import BoxApiConfig
 
 logger = logging.getLogger(__name__)
 
@@ -72,10 +75,19 @@ async def box_lifespan_mcp_oauth(server: FastMCP) -> AsyncIterator[BoxContext]:
 
 
 @asynccontextmanager
-async def box_lifespan_oauth(server: FastMCP) -> AsyncIterator[BoxContext]:
-    """Manage Box client lifecycle with CCG handling"""
+async def box_lifespan_oauth(server: FastMCP, config: "BoxApiConfig") -> AsyncIterator[BoxContext]:
+    """
+    Manage Box client lifecycle with OAuth handling.
+
+    Args:
+        server: FastMCP server instance
+        config: BoxApiConfig containing OAuth credentials
+
+    Yields:
+        BoxContext with initialized OAuth client
+    """
     try:
-        client = get_oauth_client()
+        client = get_oauth_client(config)
         yield BoxContext(client=client)
     finally:
         # Cleanup (if needed)
@@ -83,10 +95,19 @@ async def box_lifespan_oauth(server: FastMCP) -> AsyncIterator[BoxContext]:
 
 
 @asynccontextmanager
-async def box_lifespan_ccg(server: FastMCP) -> AsyncIterator[BoxContext]:
-    """Manage Box client lifecycle with CCG handling"""
+async def box_lifespan_ccg(server: FastMCP, config: "BoxApiConfig") -> AsyncIterator[BoxContext]:
+    """
+    Manage Box client lifecycle with CCG handling.
+
+    Args:
+        server: FastMCP server instance
+        config: BoxApiConfig containing CCG credentials
+
+    Yields:
+        BoxContext with initialized CCG client
+    """
     try:
-        client = get_ccg_client()
+        client = get_ccg_client(config)
         yield BoxContext(client=client)
     finally:
         # Cleanup (if needed)
@@ -94,10 +115,19 @@ async def box_lifespan_ccg(server: FastMCP) -> AsyncIterator[BoxContext]:
 
 
 @asynccontextmanager
-async def box_lifespan_jwt(server: FastMCP) -> AsyncIterator[BoxContext]:
-    """Manage Box client lifecycle with CCG handling"""
+async def box_lifespan_jwt(server: FastMCP, config: "BoxApiConfig") -> AsyncIterator[BoxContext]:
+    """
+    Manage Box client lifecycle with JWT handling.
+
+    Args:
+        server: FastMCP server instance
+        config: BoxApiConfig containing JWT credentials
+
+    Yields:
+        BoxContext with initialized JWT client
+    """
     try:
-        client = get_jwt_client()
+        client = get_jwt_client(config)
         yield BoxContext(client=client)
     finally:
         # Cleanup (if needed)

@@ -1,20 +1,31 @@
 import logging
-import os
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 
 from fastapi import status
 from starlette.responses import JSONResponse
 
+if TYPE_CHECKING:
+    from config import McpAuthConfig
+
 logger = logging.getLogger(__name__)
 
 
-def auth_validate_token(scope) -> Optional[JSONResponse]:
-    """Validate if the auth token is properly configured."""
+def auth_validate_token(scope, config: "McpAuthConfig") -> Optional[JSONResponse]:
+    """
+    Validate if the auth token is properly configured.
+
+    Args:
+        scope: ASGI scope containing request information
+        config: McpAuthConfig containing the expected auth token
+
+    Returns:
+        Optional[JSONResponse]: Error response if validation fails, None if successful
+    """
 
     path = scope["path"]
     logger.debug(f"Token validation processing: {scope['method']} {path}")
 
-    expected_token = os.getenv("BOX_MCP_SERVER_AUTH_TOKEN")
+    expected_token = config.auth_token
 
     # Extract authorization header
     headers = dict(scope.get("headers", []))
