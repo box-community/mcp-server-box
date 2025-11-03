@@ -18,7 +18,7 @@
                 "--port",
                 "8005",
                 "--box-auth-type",
-                "oauth",
+                "mcp_client",
                 "--mcp-auth-type",
                 "oauth"
             ]
