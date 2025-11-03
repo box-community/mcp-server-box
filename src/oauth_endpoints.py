@@ -178,7 +178,7 @@ def create_oauth_authorization_server_handler(app_config: AppConfig):
     return oauth_authorization_server_handler
 
 
-async def oauth_register_handler(request: Request,app_config: AppConfig) -> JSONResponse:
+async def oauth_register_handler(request: Request, app_config: AppConfig) -> JSONResponse:
     """
     Handle dynamic client registration requests.
 
