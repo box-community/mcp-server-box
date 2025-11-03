@@ -69,6 +69,8 @@ class BoxApiConfig:
     jwt_config_file: Optional[str] = None
 
 
+
+
 @dataclass
 class McpAuthConfig:
     """Configuration for MCP server authentication."""

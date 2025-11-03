@@ -17,10 +17,13 @@
                 "my.host.local",
                 "--port",
                 "8005",
-                "--box-auth-type",
-                "mcp_client",
+
                 "--mcp-auth-type",
-                "oauth"
+                "oauth",
+                
+                "--box-auth-type",
+                "mcp_client"
+                
             ]
         }
     ]

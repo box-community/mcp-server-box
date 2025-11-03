@@ -57,14 +57,14 @@ class AuthMiddleware:
             return
 
         # If no authentication required, pass through
-        if self.mcp_auth_type == McpAuthType.NONE and self.app_config.box_api.auth_type != BoxAuthType.MCP_CLIENT:
+        if self.mcp_auth_type == McpAuthType.NONE and self.app_config.server.box_auth != BoxAuthType.MCP_CLIENT:
             logger.debug("MCP auth type is NONE, skipping authentication")
             await self.app(scope, receive, send)
             return
 
         error_response = None
 
-        if self.mcp_auth_type == McpAuthType.NONE and self.app_config.box_api.auth_type == BoxAuthType.MCP_CLIENT:
+        if self.mcp_auth_type == McpAuthType.NONE and self.app_config.server.box_auth == BoxAuthType.MCP_CLIENT:
             logger.debug("MCP auth type is NONE, box auth type is MCP_CLIENT, skipping expecting an authorization header")
             error_response = box_auth_validate_token(scope=scope)
 
