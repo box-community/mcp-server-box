@@ -199,7 +199,7 @@ async def oauth_register_handler(request: Request, app_config: AppConfig) -> JSO
     )
 
     # Optional: Log what the client sent
-    print(f"Registration request: {registration_request}")
+    logger.debug(f"Registration request: {registration_request}")
 
     
     registration_response = {
