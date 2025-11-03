@@ -1,17 +1,16 @@
 import logging
 from contextlib import asynccontextmanager
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, AsyncIterator
+from typing import AsyncIterator
 
 from box_sdk_gen import BoxClient, BoxDeveloperTokenAuth
 from mcp.server.fastmcp import FastMCP
 from starlette.requests import Request
 
+from config import BoxApiConfig
+
 # from box_ai_agents_toolkit import BoxClient, get_ccg_client,get_oauth_client, get_jwt_client
 from mcp_auth.auth_box_api import get_ccg_client, get_jwt_client, get_oauth_client
-
-if TYPE_CHECKING:
-    from config import BoxApiConfig
 
 logger = logging.getLogger(__name__)
 

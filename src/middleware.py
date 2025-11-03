@@ -1,20 +1,14 @@
 """Authentication middleware for MCP server."""
 
 import logging
-from typing import TYPE_CHECKING
 
-from fastapi import status
 from mcp.server.fastmcp import FastMCP
 from starlette.middleware.cors import CORSMiddleware
-from starlette.responses import JSONResponse
 
-from config import McpAuthType, ServerConfig, TransportType
+from config import AppConfig, McpAuthType, TransportType
 from mcp_auth.auth_box import box_auth_validate_token
 from mcp_auth.auth_token import auth_validate_token
 from oauth_endpoints import add_oauth_endpoints
-
-if TYPE_CHECKING:
-    from config import AppConfig
 
 logger = logging.getLogger(__name__)
 
@@ -37,7 +31,7 @@ class AuthMiddleware:
         # "/.well-known/openid-configuration",
     }
 
-    def __init__(self, app, app_config: "AppConfig"):
+    def __init__(self, app, app_config: AppConfig):
         self.app = app
         self.app_config = app_config
         self.mcp_auth_type = McpAuthType(app_config.server.mcp_auth_type)
@@ -94,7 +88,7 @@ class AuthMiddleware:
 
 def add_auth_middleware(
     mcp: FastMCP,
-    app_config: "AppConfig",
+    app_config: AppConfig,
 ) -> None:
     """
     Add authentication middleware by wrapping the app creation method.

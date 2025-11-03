@@ -4,14 +4,12 @@ import json
 import logging
 from datetime import datetime
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from fastapi import Request
 from httpx import AsyncClient
 from starlette.responses import JSONResponse
 
-if TYPE_CHECKING:
-    from config import AppConfig
+from config import AppConfig
 
 logger = logging.getLogger(__name__)
 
@@ -47,7 +45,7 @@ def load_protected_resource_metadata(config_file: str) -> dict:
         return {}
 
 
-def create_oauth_protected_resource_handler(app_config: "AppConfig"):
+def create_oauth_protected_resource_handler(app_config: AppConfig):
     """Create handler with app_config closure."""
     async def oauth_protected_resource_handler(request: Request) -> JSONResponse:
         """
@@ -134,7 +132,7 @@ async def openid_configuration_handler(request: Request) -> JSONResponse:
     )
 
 
-def create_oauth_authorization_server_handler(app_config: "AppConfig"):
+def create_oauth_authorization_server_handler(app_config: AppConfig):
     """Create handler with app_config closure."""
     async def oauth_authorization_server_handler(request: Request) -> JSONResponse:
         """
@@ -180,7 +178,7 @@ def create_oauth_authorization_server_handler(app_config: "AppConfig"):
     return oauth_authorization_server_handler
 
 
-async def oauth_register_handler(request: Request) -> JSONResponse:
+async def oauth_register_handler(request: Request,app_config: AppConfig) -> JSONResponse:
     """
     Handle dynamic client registration requests.
 
@@ -203,27 +201,16 @@ async def oauth_register_handler(request: Request) -> JSONResponse:
     # Optional: Log what the client sent
     print(f"Registration request: {registration_request}")
 
-    # Fetch Box metadata if needed
-    async with AsyncClient() as client:
-        box_response = await client.get(
-            "https://account.box.com/.well-known/oauth-authorization-server"
-        )
-    box_metadata = box_response.json()
-
-    # Build response using client's requested values
-    # TODO: In a real implementation, use client id and secret from .env
+    
     registration_response = {
-        "client_id": "utcn9zsvobqtby3e7za0qzwtebb6qbty",
-        "client_secret": "v5DKn0mkV4q4IZZafjYn6kfuUnwtdVeb",
+        "client_id": app_config.box_api.client_id,
+        "client_secret": app_config.box_api.client_secret,
         "client_id_issued_at": int(datetime.utcnow().timestamp()),
         "client_secret_expires_at": 0,  # Never expires
         "redirect_uris": redirect_uris,  # Echo back what client sent
         "grant_types": grant_types,
         "response_types": response_types,
         "token_endpoint_auth_method": token_endpoint_auth_method,
-        # "scope": " ".join(box_metadata.get("scopes_supported", [])),
-
-        # "code":"none",
     }
 
     return JSONResponse(
@@ -237,7 +224,7 @@ async def oauth_register_handler(request: Request) -> JSONResponse:
     )
 
 
-def add_oauth_endpoints(app, app_config: "AppConfig") -> None:
+def add_oauth_endpoints(app, app_config: AppConfig) -> None:
     """
     Add OAuth discovery endpoints to the FastAPI/Starlette app.
 
@@ -250,6 +237,9 @@ def add_oauth_endpoints(app, app_config: "AppConfig") -> None:
     # Create handlers with config closure
     protected_resource_handler = create_oauth_protected_resource_handler(app_config)
     authorization_server_handler = create_oauth_authorization_server_handler(app_config)
+
+    async def oauth_register_handler_with_config(request: Request) -> JSONResponse:
+        return await oauth_register_handler(request, app_config)
 
     # Add OAuth discovery routes (support both GET and OPTIONS for CORS)
     oauth_routes = [
@@ -283,15 +273,9 @@ def add_oauth_endpoints(app, app_config: "AppConfig") -> None:
             authorization_server_handler,
             methods=["GET", "OPTIONS"],
         ),
-        # Route(
-        #     "/.well-known/openid-configuration",
-        #     openid_configuration_handler,
-        #     methods=["GET", "OPTIONS"],
-        # ),
-
         Route(
             "/oauth/register",
-            oauth_register_handler,
+            oauth_register_handler_with_config,
             methods=["POST", "GET"],
         ),
     ]

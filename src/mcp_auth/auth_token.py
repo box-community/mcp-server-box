@@ -1,11 +1,10 @@
 import logging
-from typing import TYPE_CHECKING, Optional
+from typing import Optional
 
 from fastapi import status
 from starlette.responses import JSONResponse
 
-if TYPE_CHECKING:
-    from config import McpAuthConfig
+from config import McpAuthConfig
 
 logger = logging.getLogger(__name__)
 

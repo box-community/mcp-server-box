@@ -8,7 +8,6 @@ from config import (
     AppConfig,
     BoxAuthType,
     McpAuthType,
-    ServerConfig,
     TransportType,
     setup_logging,
 )
@@ -70,9 +69,6 @@ def main() -> int:
     app_config.server.port = args.port
     app_config.server.box_auth = args.box_auth_type
     app_config.server.mcp_auth_type = args.mcp_auth_type
-
-    # TODO: Add configurable server name
-    # TODO: Validate auth type combinations and raise error for invalid ones
 
     # Validate and adjust config based on transport type
     # if the transport is stdio, then the mcp auth must be none

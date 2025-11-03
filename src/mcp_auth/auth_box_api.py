@@ -1,25 +1,19 @@
 import json
 import pathlib
 from textwrap import dedent
-from typing import TYPE_CHECKING
 
 from box_sdk_gen import (
     BoxCCGAuth,
-    # Box Client
     BoxClient,
     BoxJWTAuth,
     BoxOAuth,
-    # Box CCG
     CCGConfig,
     FileWithInMemoryCacheTokenStorage,
-    # Box JWT
     JWTConfig,
-    # Box OAuth
     OAuthConfig,
 )
 
-if TYPE_CHECKING:
-    from config import BoxApiConfig
+from config import BoxApiConfig
 
 
 def get_oauth_config(config: "BoxApiConfig") -> OAuthConfig:

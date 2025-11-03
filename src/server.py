@@ -1,12 +1,11 @@
 """MCP server configuration and initialization."""
 
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 import tomli
 from mcp.server.fastmcp import FastMCP
 
-from config import ServerConfig, TransportType
+from config import AppConfig, ServerConfig, TransportType
 from middleware import add_auth_middleware
 from server_context import (
     box_lifespan_ccg,
@@ -29,9 +28,6 @@ from tool_registry.tasks_tools import register_tasks_tools
 from tool_registry.user_tools import register_user_tools
 from tool_registry.web_link_tools import register_web_link_tools
 
-if TYPE_CHECKING:
-    from config import AppConfig
-
 
 def get_version() -> str:
     """Read version from pyproject.toml."""
@@ -45,7 +41,7 @@ def get_version() -> str:
 
 
 def create_mcp_server(
-    app_config: "AppConfig",
+    app_config: AppConfig,
 ) -> FastMCP:
     """
     Create and configure the MCP server.
@@ -59,11 +55,14 @@ def create_mcp_server(
 
     # Select appropriate lifespan based on auth type
     if app_config.server.box_auth == "oauth":
-        lifespan = lambda server: box_lifespan_oauth(server, app_config.box_api)
+        def lifespan(server):
+            return box_lifespan_oauth(server, app_config.box_api)
     elif app_config.server.box_auth == "ccg":
-        lifespan = lambda server: box_lifespan_ccg(server, app_config.box_api)
+        def lifespan(server):
+            return box_lifespan_ccg(server, app_config.box_api)
     elif app_config.server.box_auth == "jwt":
-        lifespan = lambda server: box_lifespan_jwt(server, app_config.box_api)
+        def lifespan(server):
+            return box_lifespan_jwt(server, app_config.box_api)
     elif app_config.server.box_auth == "mcp_client":
         lifespan = box_lifespan_mcp_oauth
     else:
