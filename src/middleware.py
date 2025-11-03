@@ -5,7 +5,7 @@ import logging
 from mcp.server.fastmcp import FastMCP
 from starlette.middleware.cors import CORSMiddleware
 
-from config import AppConfig, McpAuthType, TransportType,BoxAuthType
+from config import AppConfig, BoxAuthType, McpAuthType, TransportType
 from mcp_auth.auth_box import box_auth_validate_token
 from mcp_auth.auth_token import auth_validate_token
 from oauth_endpoints import add_oauth_endpoints
