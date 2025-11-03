@@ -5,7 +5,7 @@ import logging
 from mcp.server.fastmcp import FastMCP
 from starlette.middleware.cors import CORSMiddleware
 
-from config import AppConfig, McpAuthType, TransportType
+from config import AppConfig, McpAuthType, TransportType,BoxAuthType
 from mcp_auth.auth_box import box_auth_validate_token
 from mcp_auth.auth_token import auth_validate_token
 from oauth_endpoints import add_oauth_endpoints
@@ -57,12 +57,16 @@ class AuthMiddleware:
             return
 
         # If no authentication required, pass through
-        if self.mcp_auth_type == McpAuthType.NONE:
+        if self.mcp_auth_type == McpAuthType.NONE and self.app_config.box_api.auth_type != BoxAuthType.MCP_CLIENT:
             logger.debug("MCP auth type is NONE, skipping authentication")
             await self.app(scope, receive, send)
             return
 
         error_response = None
+
+        if self.mcp_auth_type == McpAuthType.NONE and self.app_config.box_api.auth_type == BoxAuthType.MCP_CLIENT:
+            logger.debug("MCP auth type is NONE, box auth type is MCP_CLIENT, skipping expecting an authorization header")
+            error_response = box_auth_validate_token(scope=scope)
 
         if self.mcp_auth_type == McpAuthType.TOKEN:
             logger.debug("MCP auth type is TOKEN, performing token authentication")
