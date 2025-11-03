@@ -6,9 +6,12 @@
     "python.testing.pytestEnabled": true,
     "cSpell.words": [
         "Airbyte",
+        "ASGI",
         "docgen",
         "dotenv",
         "fastmcp",
+        "levelname",
+        "scalekit",
         "streamable"
     ]
 }

@@ -1,6 +1,8 @@
 import pytest
-from box_ai_agents_toolkit import BoxClient, get_oauth_client
+from box_ai_agents_toolkit import BoxClient
 
+from config import AppConfig
+from mcp_auth.auth_box_api import get_ccg_client, get_jwt_client, get_oauth_client
 from server_context import BoxContext
 
 
@@ -11,7 +13,19 @@ class FakeRequestContext:
     """
 
     def __init__(self):
-        self.lifespan_context = BoxContext(client=get_oauth_client())
+        # Try to use CCG or JWT authentication for tests, fallback to OAuth
+        # CCG and JWT don't require manual authorization flow
+        app_config = AppConfig.from_env()
+        try:
+            client = get_ccg_client(config=app_config.box_api)
+        except (ValueError, Exception):
+            try:
+                client = get_jwt_client(config=app_config.box_api)
+            except (ValueError, Exception):
+                # Fallback to OAuth (requires manual authorization first)
+                client = get_oauth_client(config=app_config.box_api)
+
+        self.lifespan_context = BoxContext(client=client)
 
 
 class FakeContext:
@@ -26,8 +40,18 @@ class FakeContext:
 
 @pytest.fixture(scope="module")
 def box_client() -> BoxClient:
-    # return get_ccg_client()
-    return get_oauth_client()
+    # Try to use CCG or JWT authentication for tests, fallback to OAuth
+    # CCG and JWT don't require manual authorization flow
+    app_config = AppConfig.from_env()
+
+    try:
+        return get_ccg_client(config=app_config.box_api)
+    except (ValueError, Exception):
+        try:
+            return get_jwt_client(config=app_config.box_api)
+        except (ValueError, Exception):
+            # Fallback to OAuth (requires manual authorization first)
+            return get_oauth_client(config=app_config.box_api)
 
 
 @pytest.fixture(scope="module")

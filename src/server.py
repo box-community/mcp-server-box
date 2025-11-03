@@ -5,9 +5,14 @@ from pathlib import Path
 import tomli
 from mcp.server.fastmcp import FastMCP
 
-from config import CONFIG, TransportType
+from config import AppConfig, ServerConfig, TransportType
 from middleware import add_auth_middleware
-from server_context import box_lifespan_ccg, box_lifespan_oauth
+from server_context import (
+    box_lifespan_ccg,
+    box_lifespan_jwt,
+    box_lifespan_mcp_oauth,
+    box_lifespan_oauth,
+)
 from tool_registry import register_all_tools
 from tool_registry.ai_tools import register_ai_tools
 from tool_registry.collaboration_tools import register_collaboration_tools
@@ -36,32 +41,46 @@ def get_version() -> str:
 
 
 def create_mcp_server(
-    server_name: str = CONFIG.server_name_prefix,
-    transport: str = CONFIG.transport,
-    host: str = CONFIG.host,
-    port: int = CONFIG.port,
-    box_auth: str = CONFIG.box_auth,
-    require_auth: bool = True,
+    app_config: AppConfig,
 ) -> FastMCP:
-    """Create and configure the MCP server."""
+    """
+    Create and configure the MCP server.
+
+    Args:
+        app_config: Complete application configuration
+
+    Returns:
+        FastMCP: Configured MCP server instance
+    """
 
     # Select appropriate lifespan based on auth type
-    lifespan = box_lifespan_ccg if box_auth == "ccg" else box_lifespan_oauth
+    if app_config.server.box_auth == "oauth":
+        def lifespan(server):
+            return box_lifespan_oauth(server, app_config.box_api)
+    elif app_config.server.box_auth == "ccg":
+        def lifespan(server):
+            return box_lifespan_ccg(server, app_config.box_api)
+    elif app_config.server.box_auth == "jwt":
+        def lifespan(server):
+            return box_lifespan_jwt(server, app_config.box_api)
+    elif app_config.server.box_auth == "mcp_client":
+        lifespan = box_lifespan_mcp_oauth
+    else:
+        raise ValueError(f"Unsupported Box auth type: {app_config.server.box_auth}")
 
     # Create MCP server with appropriate transport
-    if transport == TransportType.STDIO.value:
-        mcp = FastMCP(server_name, lifespan=lifespan)
+    if app_config.server.transport == TransportType.STDIO.value:
+        mcp = FastMCP(name=app_config.server.server_name, lifespan=lifespan)
     else:
         mcp = FastMCP(
-            server_name,
+            name=app_config.server.server_name,
             stateless_http=True,
-            host=host,
-            port=port,
+            host=app_config.server.host,
+            port=app_config.server.port,
             lifespan=lifespan,
         )
-        # Add authentication middleware for HTTP transports
-        if require_auth:
-            add_auth_middleware(mcp, transport)
+        # Add authentication middleware for HTTP/SSE transports
+        add_auth_middleware(mcp, app_config)
 
     return mcp
 
@@ -90,10 +109,7 @@ def register_tools(mcp: FastMCP) -> None:
 
 def create_server_info_tool(
     mcp: FastMCP,
-    transport: str,
-    box_auth: str,
-    host: str = "127.0.0.1",
-    port: int = 8001,
+    config: ServerConfig,
 ) -> None:
     """Create and register the server info tool."""
 
@@ -103,12 +119,13 @@ def create_server_info_tool(
         info = {
             "server_name": mcp.name,
             "version": get_version(),
-            "transport": transport,
-            "box auth": box_auth,
+            "transport": config.transport,
+            "mcp auth": config.mcp_auth_type,
+            "box auth": config.box_auth,
         }
 
-        if transport != TransportType.STDIO.value:
-            info["host"] = host
-            info["port"] = str(port)
+        if config.transport != TransportType.STDIO.value:
+            info["host"] = config.host
+            info["port"] = str(config.port)
 
         return info

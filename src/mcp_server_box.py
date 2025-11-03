@@ -4,13 +4,21 @@ import argparse
 import logging
 import sys
 
-from config import CONFIG, AuthType, TransportType
+from config import (
+    AppConfig,
+    BoxAuthType,
+    McpAuthType,
+    TransportType,
+    setup_logging,
+)
 from server import create_mcp_server, create_server_info_tool, register_tools
 
-# Logging configuration
-logging.basicConfig(level=logging.INFO)
-for logger_name in logging.root.manager.loggerDict:
-    logging.getLogger(logger_name).setLevel(logging.INFO)
+# Load configuration from environment once at startup
+app_config = AppConfig.from_env()
+
+# Configure logging
+setup_logging(app_config.logging.log_level)
+logger = logging.getLogger(__name__)
 
 
 def parse_arguments() -> argparse.Namespace:
@@ -19,31 +27,33 @@ def parse_arguments() -> argparse.Namespace:
     parser.add_argument(
         "--transport",
         choices=[t.value for t in TransportType],
-        default=CONFIG.transport,
-        help=f"Transport type (default: {CONFIG.transport})",
+        default=app_config.server.transport,
+        help=f"Transport type (default: {app_config.server.transport.value})",
     )
     parser.add_argument(
         "--host",
-        default=CONFIG.host,
-        help=f"Host for SSE/HTTP transport (default: {CONFIG.host})",
+        default=app_config.server.host,
+        help=f"Host for SSE/HTTP transport (default: {app_config.server.host})",
     )
     parser.add_argument(
         "--port",
         type=int,
-        default=CONFIG.port,
-        help=f"Port for SSE/HTTP transport (default: {CONFIG.port})",
-    )
-    parser.add_argument(
-        "--box-auth",
-        choices=[a.value for a in AuthType],
-        default=CONFIG.box_auth,
-        help=f"Authentication type for Box API (default: {CONFIG.box_auth})",
+        default=app_config.server.port,
+        help=f"Port for SSE/HTTP transport (default: {app_config.server.port})",
     )
 
     parser.add_argument(
-        "--no-mcp-server-auth",
-        action="store_true",
-        help="Disable authentication (for development only)",
+        "--mcp-auth-type",
+        choices=[a.value for a in McpAuthType],
+        default=app_config.server.mcp_auth_type,
+        help=f"Authentication type for MCP server (default: {app_config.server.mcp_auth_type.value})",
+    )
+
+    parser.add_argument(
+        "--box-auth-type",
+        choices=[a.value for a in BoxAuthType],
+        default=app_config.server.box_auth,
+        help=f"Authentication type for Box API (default: {app_config.server.box_auth.value})",
     )
 
     return parser.parse_args()
@@ -53,30 +63,52 @@ def main() -> int:
     """Main entry point for the Box MCP Server."""
     args = parse_arguments()
 
-    # Create MCP server
-    server_name = f"{CONFIG.server_name_prefix} {args.transport.upper()} Server"
+    # Update server config from command line arguments
+    app_config.server.transport = TransportType(args.transport)
+    app_config.server.host = args.host
+    app_config.server.port = args.port
+    app_config.server.box_auth = args.box_auth_type
+    app_config.server.mcp_auth_type = args.mcp_auth_type
+
+    # Validate and adjust config based on transport type
+    # if the transport is stdio, then the mcp auth must be none
+    if app_config.server.transport == TransportType.STDIO:
+        if app_config.server.mcp_auth_type != McpAuthType.NONE:
+            logger.warning(
+                "MCP auth type must be 'none' when using stdio transport. Overriding to 'none'."
+            )
+        app_config.server.mcp_auth_type = McpAuthType.NONE
+
+    if app_config.server.mcp_auth_type == McpAuthType.OAUTH:
+        if app_config.server.box_auth != BoxAuthType.MCP_CLIENT:
+            logger.warning(
+                "Box auth type must be 'mcp_client' when using MCP OAuth authentication. Overriding to 'mcp_client'."
+            )
+        app_config.server.box_auth = BoxAuthType.MCP_CLIENT
+
+    # Create and configure MCP server
     mcp = create_mcp_server(
-        server_name=server_name,
-        transport=args.transport,
-        host=args.host,
-        port=args.port,
-        box_auth=args.box_auth,
-        require_auth=not args.no_mcp_server_auth,
+        app_config=app_config,
     )
 
     # Register all tools
     register_tools(mcp)
 
     # Register server info tool
-    create_server_info_tool(mcp, args.transport, args.box_auth, args.host, args.port)
+    create_server_info_tool(mcp, config=app_config.server)
 
     # Run server
     try:
-        print(f"Starting {server_name} on {args.host}:{args.port}", file=sys.stderr)
-        mcp.run(transport=args.transport)
+        logger.info(f"Starting {app_config.server.server_name}")
+        if app_config.server.transport != TransportType.STDIO:
+            logger.info(f"Listening on {app_config.server.host}:{app_config.server.port}")
+        transport_value = app_config.server.transport.value
+        if transport_value == "http":
+            transport_value = "streamable-http"
+        mcp.run(transport=transport_value)
         return 0
     except Exception as e:
-        print(f"Error starting server: {e}", file=sys.stderr)
+        logger.error(f"Error starting server: {e}")
         return 1
 
 

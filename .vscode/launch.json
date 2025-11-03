@@ -12,11 +12,18 @@
             "console": "integratedTerminal",
             "args": [
                 "--transport",
-                "stdio",
+                "http",
                 "--host",
-                "0.0.0.0",
+                "my.host.local",
                 "--port",
-                "8001"
+                "8005",
+
+                "--mcp-auth-type",
+                "oauth",
+                
+                "--box-auth-type",
+                "mcp_client"
+                
             ]
         }
     ]

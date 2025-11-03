@@ -13,8 +13,11 @@ wheels/
 .env*
 .auth.*
 .oauth-*
+.jwt*
 
 # Garbage
 .DS_Store
 
 .coverage
+
+.oauth*

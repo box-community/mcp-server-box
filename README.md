@@ -38,7 +38,9 @@ uv sync
 ```
 
 ### Set environment variables:
-Set the following environment variables for Box authentication in a `.env` file or your system environment:
+Set the following environment variables for Box authentication in a `.env` file or your system environment.
+
+For comprehensive authentication configuration options, see the [Authentication Guide](docs/authentication.md).
 
 #### Using OAuth2.0 with a Box App
 ```
@@ -46,20 +48,15 @@ BOX_CLIENT_ID = YOUR_CLIENT_ID
 BOX_CLIENT_SECRET = YOUR_CLIENT_SECRET
 BOX_REDIRECT_URL = http://localhost:8000/callback
 
+# MCP Server Authentication (for HTTP transports)
 BOX_MCP_SERVER_AUTH_TOKEN = YOUR_BOX_MCP_SERVER_AUTH_TOKEN
+OAUTH_PROTECTED_RESOURCES_CONFIG_FILE = .oauth-protected-resource.json
 ```
 
-#### Using CCG with a Box App
-```
-BOX_CLIENT_ID = YOUR_CLIENT_ID
-BOX_CLIENT_SECRET = YOUR_CLIENT_SECRET
-BOX_SUBJECT_TYPE = user_or_enterprise
-BOX_SUBJECT_ID = YOUR_USER_OR_ENTERPRISE_ID
+> **Note**:
+> - The `BOX_MCP_SERVER_AUTH_TOKEN` is used to authenticate the MCP client to the MCP server when using `--mcp-auth-type=token` (independent of Box authentication)
 
-BOX_MCP_SERVER_AUTH_TOKEN = YOUR_BOX_MCP_SERVER_AUTH_TOKEN
-```
 
-> Note: The `BOX_MCP_SERVER_AUTH_TOKEN` is the token used to authenticate requests to the Box MCP server. You can generate this token.
 
 ### Run the MCP server in STDIO mode:
 ```sh
@@ -94,23 +91,27 @@ To run the MCP server with specific configurations, you can use the following co
 uv run src/mcp_server_box.py --help
 ```
 ```
-usage: mcp_server_box.py [-h] [--transport {stdio,sse,streamable-http}] [--host HOST]
-                         [--port PORT] [--box-auth {oauth,ccg}] [--no-mcp-server-auth]
+usage: mcp_server_box.py [-h] [--transport {stdio,sse,http}] [--host HOST] [--port PORT] [--mcp-auth-type {oauth,token,none}] [--box-auth-type {oauth,ccg,jwt,mcp_client}]
 
 Box Community MCP Server
 
 options:
   -h, --help            show this help message and exit
-  --transport {stdio,sse,streamable-http}
+  --transport {stdio,sse,http}
                         Transport type (default: stdio)
-  --host HOST           Host for SSE/HTTP transport (default: 0.0.0.0)
-  --port PORT           Port for SSE/HTTP transport (default: 8000)
-  --box-auth {oauth,ccg}
+  --host HOST           Host for SSE/HTTP transport (default: localhost)
+  --port PORT           Port for SSE/HTTP transport (default: 8005)
+  --mcp-auth-type {oauth,token,none}
+                        Authentication type for MCP server (default: token)
+  --box-auth-type {oauth,ccg,jwt,mcp_client}
                         Authentication type for Box API (default: oauth)
-  --no-mcp-server-auth  Disable authentication (for development only)
   ```
 
+For detailed information about authentication types, configurations, and use cases, see the [Authentication Guide](docs/authentication.md).
+
 ### Claude Desktop Configuration
+
+#### STDIO mode
 Edit your `claude_desktop_config.json`:
 
 ```code ~/Library/Application\ Support/Claude/claude_desktop_config.json```
@@ -134,33 +135,16 @@ Add the configuration:
 
 Restart Claude if it is running.
 
-### Cursor Configuration
+#### HTTP Mode
 
-Cursor supports MCP servers through its configuration file. Here's how to set it up:
+Assuming your MCP server is running on `https://mcp.myserver.com/mcp`
 
-The Cursor MCP configuration file is located at:
-- **macOS/Linux**: `~/.cursor/config.json` or `~/.config/cursor/config.json`
-- **Windows**: `%APPDATA%\Cursor\config.json`
-
-#### Add the MCP Server Configuration: STDIO Transport
-
-Edit your Cursor configuration file and add the following under the `mcpServers` section:
-```json
-{
-    "mcpServers": {
-        "mcp-server-box": {
-            "command": "uv",
-            "args": [
-                "--directory",
-                "/path/to/mcp-server-box",
-                "run",
-                "src/mcp_server_box.py"
-            ],
-            "env": {
-                "BOX_CLIENT_ID": "YOUR_CLIENT_ID",
-                "BOX_CLIENT_SECRET": "YOUR_CLIENT_SECRET",
-                "BOX_REDIRECT_URL": "http://localhost:8000/callback"
-            }
-        }
-    }
-}
+1. Go to Claude -> Settings -> Connectors
+2. Select `Add custom connector`
+3. Configurations:
+    1. Give it a name
+    2. Enter the URL e.g. `https://mcp.myserver.com/mcp`
+    3. Optionally enter the `client id` and `client secret`
+4. Click add
+5. Click connect. The OAuth flow should start. Complete the flow
+6. Back in Claude, click Configure. You should see all the tools available.

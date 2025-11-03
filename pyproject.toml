@@ -1,6 +1,6 @@
 [project]
 name = "mcp-server-box"
-version = "0.4.0"
+version = "0.5.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
@@ -9,9 +9,11 @@ license = "MIT"
 authors = [{ name = "Box DevRel", email = "dx@box.com" }]
 dependencies = [
     "box-ai-agents-toolkit>=0.1.1",
-    "fastapi>=0.119.1",
-    "mcp[cli]>=1.18.0",
-    "python-dotenv>=1.1.1",
+    "colorlog>=6.10.1",
+    "fastapi>=0.120.1",
+    "mcp[cli]>=1.19.0",
+    "python-dotenv>=1.2.1",
+    "scalekit-sdk-python>=2.4.10",
     "tomli>=2.3.0",
 ]
 
@@ -20,7 +22,7 @@ dev = [
     "pytest>=8.4.2",
     "pytest-asyncio>=1.2.0",
     "pytest-cov>=7.0.0",
-    "ruff>=0.14.1",
+    "ruff>=0.14.2",
 ]
 
 [tool.pytest.ini_options]
