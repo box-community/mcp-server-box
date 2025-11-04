@@ -1,6 +1,6 @@
 [project]
 name = "mcp-server-box"
-version = "0.5.0"
+version = "0.5.1"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"

@@ -205,7 +205,7 @@ async def oauth_register_handler(request: Request, app_config: AppConfig) -> JSO
     registration_response = {
         "client_id": app_config.box_api.client_id,
         "client_secret": app_config.box_api.client_secret,
-        "client_id_issued_at": int(datetime.now(timezone.utc)),
+        "client_id_issued_at": int(datetime.now(timezone.utc).timestamp()),
         "client_secret_expires_at": 0,  # Never expires
         "redirect_uris": redirect_uris,  # Echo back what client sent
         "grant_types": grant_types,
