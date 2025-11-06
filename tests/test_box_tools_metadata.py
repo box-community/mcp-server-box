@@ -10,6 +10,7 @@ from tools.box_tools_metadata import (
     box_metadata_template_get_by_key_tool,
     box_metadata_template_get_by_name_tool,
     box_metadata_update_instance_on_file_tool,
+    box_metadata_template_list_tool,
 )
 
 
@@ -156,7 +157,7 @@ async def test_box_metadata_template_get_by_key_tool(
     mock_get_by_key.return_value = sample_template_response
 
     result = await box_metadata_template_get_by_key_tool(
-        ctx=mock_ctx, template_name="customer_template"
+        ctx=mock_ctx, template_key="customer_template"
     )
 
     mock_get_client.assert_called_once_with(mock_ctx)
@@ -387,7 +388,7 @@ async def test_box_metadata_template_get_by_key_tool_not_found(
     mock_get_by_key.return_value = error_response
 
     result = await box_metadata_template_get_by_key_tool(
-        ctx=mock_ctx, template_name="non_existent_template"
+        ctx=mock_ctx, template_key="non_existent_template"
     )
 
     mock_get_by_key.assert_called_once_with(mock_box_client, "non_existent_template")
@@ -484,3 +485,24 @@ async def test_box_metadata_template_create_tool_complex_fields(
         template_key="complex_template",
     )
     assert result == complex_template_response
+
+
+@pytest.mark.asyncio
+@patch("tools.box_tools_metadata.get_box_client")
+@patch("tools.box_tools_metadata.box_metadata_template_list")
+async def test_box_metadata_template_list_tool(
+    mock_list,
+    mock_get_client,
+    mock_ctx,
+    mock_box_client,
+    sample_template_response,
+):
+    """Test box_metadata_template_list_tool function"""
+    mock_get_client.return_value = mock_box_client
+    mock_list.return_value = [sample_template_response]
+
+    result = await box_metadata_template_list_tool(ctx=mock_ctx)
+
+    mock_get_client.assert_called_once_with(mock_ctx)
+    mock_list.assert_called_once_with(mock_box_client)
+    assert result == [sample_template_response]
