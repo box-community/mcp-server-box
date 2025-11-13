@@ -5,7 +5,7 @@ This document describes the tools available in the `box_tools_web_link` module f
 ## Available Tools
 
 ### 1. `box_web_link_create_tool`
-Create a Box web link.
+Create a Box web link with URL, parent folder, optional name and description.
 - **Arguments:**
   - `ctx`: Request context
   - `url`: URL of the web link
@@ -20,13 +20,20 @@ Get a Box web link by its ID.
   - `web_link_id`: ID of the web link
 
 ### 3. `box_web_link_update_by_id_tool`
-Update a Box web link by its ID.
+Update a Box web link's URL, location, name, and description.
 - **Arguments:**
   - `ctx`: Request context
   - `web_link_id`: ID of the web link
-  - `url`: New URL
+  - `url`: New URL 
+  - `parent_folder_id`: New parent folder ID
+  - `name`: New name (optional)
+  - `description`: New description (optional)
 
-...and more tools for deleting web links. Refer to the source for additional functions.
+### 4. `box_web_link_delete_by_id_tool`
+Delete a Box web link by its ID.
+- **Arguments:**
+  - `ctx`: Request context
+  - `web_link_id`: ID of the web link
 
 ---
 
