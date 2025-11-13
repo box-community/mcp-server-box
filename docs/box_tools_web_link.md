@@ -24,8 +24,8 @@ Update a Box web link's URL, location, name, and description.
 - **Arguments:**
   - `ctx`: Request context
   - `web_link_id`: ID of the web link
-  - `url`: New URL (optional)
-  - `parent_folder_id`: New parent folder ID (optional)
+  - `url`: New URL 
+  - `parent_folder_id`: New parent folder ID
   - `name`: New name (optional)
   - `description`: New description (optional)
 

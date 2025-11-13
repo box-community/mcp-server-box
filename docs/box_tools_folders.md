@@ -22,28 +22,28 @@ Create a new folder in Box.
 - **Arguments:**
   - `ctx`: Request context
   - `name`: Name of the new folder
-  - `parent_id`: Parent folder ID (default: "0" for root)
+  - `parent_folder_id`: Parent folder ID (default: "0" for root)
 
 ### 4. `box_folder_rename_tool`
 Rename a folder.
 - **Arguments:**
   - `ctx`: Request context
   - `folder_id`: ID of the folder to rename
-  - `name`: New folder name
+  - `new_name`: New folder name
 
 ### 5. `box_folder_move_tool`
 Move a folder to a new location in Box.
 - **Arguments:**
   - `ctx`: Request context
   - `folder_id`: ID of the folder to move
-  - `parent_id`: ID of the new parent folder
+  - `destination_parent_folder_id`: ID of the new parent folder
 
 ### 6. `box_folder_copy_tool`
 Copy a folder to a new location in Box with optional name change.
 - **Arguments:**
   - `ctx`: Request context
   - `folder_id`: ID of the folder to copy
-  - `parent_id`: ID of the destination parent folder
+  - `destination_parent_folder_id`: ID of the destination parent folder
   - `name`: Optional new name for the copied folder
 
 ### 7. `box_folder_delete_tool`
@@ -77,14 +77,14 @@ Add a tag to a folder.
 - **Arguments:**
   - `ctx`: Request context
   - `folder_id`: ID of the folder
-  - `tag_name`: Name of the tag to add
+  - `tag`: Name of the tag to add
 
 ### 12. `box_folder_tag_remove_tool`
 Remove a tag from a folder.
 - **Arguments:**
   - `ctx`: Request context
   - `folder_id`: ID of the folder
-  - `tag_name`: Name of the tag to remove
+  - `tag`: Name of the tag to remove
 
 ### 13. `box_folder_list_tags_tool`
 List tags associated with a folder.
@@ -97,7 +97,7 @@ Set collaboration settings (invitation and visibility rules) for a folder.
 - **Arguments:**
   - `ctx`: Request context
   - `folder_id`: ID of the folder
-  - `settings`: Collaboration settings configuration
+  - `is_collaboration_restricted_to_enterprise`: Collaboration settings configuration
 
 ### 15. `box_folder_set_sync_tool`
 Set the sync state for a folder (synced, not_synced, partially_synced).
@@ -111,7 +111,7 @@ Enable or disable and configure upload email address for a folder.
 - **Arguments:**
   - `ctx`: Request context
   - `folder_id`: ID of the folder
-  - `is_enabled`: Whether to enable upload email (default: True)
+  - `folder_upload_email_access`: Whether to enable upload email (default: True)
 
 ---
 
