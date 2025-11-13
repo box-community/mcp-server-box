@@ -5,9 +5,9 @@ from box_ai_agents_toolkit import (
     box_metadata_get_instance_on_file,
     box_metadata_set_instance_on_file,
     box_metadata_template_create,
-    box_metadata_template_list,
     box_metadata_template_get_by_key,
     box_metadata_template_get_by_name,
+    box_metadata_template_list,
     box_metadata_update_instance_on_file,
 )
 from mcp.server.fastmcp import Context
