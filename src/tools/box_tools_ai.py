@@ -1,14 +1,17 @@
 from typing import Any, List, Optional
 
 from box_ai_agents_toolkit import (
-    box_ai_ask_file_multi,  # type: ignore
-    box_ai_ask_file_single,  # type: ignore
-    box_ai_ask_hub,  # type: ignore
-    box_ai_extract_freeform,  # type: ignore
-    box_ai_extract_structured_enhanced_using_fields,  # type: ignore
-    box_ai_extract_structured_enhanced_using_template,  # type: ignore
-    box_ai_extract_structured_using_fields,  # type: ignore
-    box_ai_extract_structured_using_template,  # type: ignore
+    box_ai_agent_info_by_id,
+    box_ai_agents_list,
+    box_ai_agents_search_by_name,
+    box_ai_ask_file_multi,
+    box_ai_ask_file_single,
+    box_ai_ask_hub,
+    box_ai_extract_freeform,
+    box_ai_extract_structured_enhanced_using_fields,
+    box_ai_extract_structured_enhanced_using_template,
+    box_ai_extract_structured_using_fields,
+    box_ai_extract_structured_using_template,
 )
 from mcp.server.fastmcp import Context
 
@@ -19,15 +22,14 @@ async def box_ai_ask_file_single_tool(
     ctx: Context, file_id: str, prompt: str, ai_agent_id: Optional[str] = None
 ) -> dict:
     """
-    Ask Box AI about a single file.
-    This tool allows users to query Box AI with a specific prompt, leveraging the content
-    of a single file stored in Box. The AI processes the file and generates a response
-    based on the provided prompt.
+    Ask a question about a file using AI.
     Args:
         ctx (Context): The context object containing the request and lifespan context.
-        file_id (str): The ID of the file to be analyzed by the AI.
-        prompt (str): The prompt or question to ask the AI.
-        ai_agent_id (Optional[str]): The ID of the AI agent to use for processing.
+        file_id (str): The ID of the file to ask about, example: "1234567890".
+        prompt (str): The question to ask.
+        ai_agent_id (Optional[str]): The ID of the AI agent to use for the question. If None, the default AI agent will be used.
+    Returns:
+        dict: The AI response containing the answer to the question.
     """
 
     box_client = get_box_client(ctx)
@@ -41,15 +43,14 @@ async def box_ai_ask_file_multi_tool(
     ctx: Context, file_ids: List[str], prompt: str, ai_agent_id: Optional[str] = None
 ) -> dict:
     """
-    Ask Box AI about multiple files.
-    This tool allows users to query Box AI with a specific prompt, leveraging the content
-    of multiple files stored in Box. The AI processes the files and generates a response
-    based on the provided prompt.
+    Ask a question about multiple files using AI.
     Args:
         ctx (Context): The context object containing the request and lifespan context.
-        file_ids (List[str]): A list of IDs of the files to be analyzed by the AI.
-        prompt (str): The prompt or question to ask the AI.
-        ai_agent_id (Optional[str]): The ID of the AI agent to use for processing.
+        file_ids (List[str]): A list of file IDs to ask about, example: ["1234567890", "0987654321"].
+        prompt (str): The question to ask.
+        ai_agent_id (Optional[str]): The ID of the AI agent to use for the question. If None, the default AI agent will be used.
+    Returns:
+        dict: The AI response containing the answers to the questions for each file.
     """
     box_client = get_box_client(ctx)
     response = box_ai_ask_file_multi(
@@ -59,26 +60,21 @@ async def box_ai_ask_file_multi_tool(
 
 
 async def box_ai_ask_hub_tool(
-    ctx: Context, hubs_id: str, prompt: str, ai_agent_id: Optional[str] = None
+    ctx: Context, hub_id: str, prompt: str, ai_agent_id: Optional[str] = None
 ) -> dict:
     """
-    Ask Box AI about a specific hub.
-    This tool allows users to query Box AI with a specific prompt, leveraging the content
-    of a hub in Box. The AI processes the hub and generates a response based on the provided prompt.
+    Ask a question about a hub using AI.
     Args:
         ctx (Context): The context object containing the request and lifespan context.
-        hubs_id (str): The ID of the hub to be analyzed by the AI.
-        prompt (str): The prompt or question to ask the AI.
-        ai_agent_id (Optional[str]): The ID of the AI agent to use for processing.
+        hub_id (str): The ID of the hub to ask about, example: "1234567890".
+        prompt (str): The question to ask.
+        ai_agent_id (Optional[str]): The ID of the AI agent to use for the question. If None, the default AI agent will be used.
     Returns:
-        dict: The response from the AI, containing the answer to the prompt.
+        dict: The AI response containing the answer to the question.
     """
-    if not isinstance(hubs_id, str):
-        hubs_id = str(hubs_id)
-
     box_client = get_box_client(ctx)
     response = box_ai_ask_hub(
-        box_client, hubs_id, prompt=prompt, ai_agent_id=ai_agent_id
+        box_client, hub_id, prompt=prompt, ai_agent_id=ai_agent_id
     )
     return response
 
@@ -285,11 +281,10 @@ async def box_ai_extract_structured_enhanced_using_fields_tool(
 
     Args:
         ctx (Context): The context object containing the request and lifespan context.
-        file_ids (List[str]): The IDs of the files to read.
+        file_ids (List[str]): A list of file IDs to extract information from, example: ["1234567890", "0987654321"].
         fields (List[dict[str, Any]]): The fields to extract from the files.
-        ai_agent_id (Optional[str]): The ID of the AI agent to use for processing.
     Returns:
-        dict: The extracted structured data in a json string format.
+        dict: The AI response containing the extracted information.
     """
     box_client = get_box_client(ctx)
 
@@ -329,7 +324,8 @@ async def box_ai_extract_structured_enhanced_using_template_tool(
     Args:
         ctx (Context): The context object containing the request and lifespan context.
         file_ids (List[str]): The IDs of the files to read.
-        template_key (str): The ID of the template to use for extraction.
+        template_key (str): The key of the metadata template to use for the extraction.
+                            Example: "insurance_policy_template".
     Returns:
         dict: The extracted structured data in a json string format.
     """
@@ -338,4 +334,53 @@ async def box_ai_extract_structured_enhanced_using_template_tool(
     response = box_ai_extract_structured_enhanced_using_template(
         box_client, file_ids, template_key
     )
+    return response
+
+
+async def box_ai_agent_info_by_id_tool(
+    ctx: Context, ai_agent_id: str
+) -> dict:
+    """
+    Get information about a specific AI agent by ID.
+    Args:
+        ctx (Context): The context object containing the request and lifespan context.
+        ai_agent_id (str): The ID of the AI agent to retrieve information for.
+    Returns:
+        dict: A dictionary containing the AI agent information.
+    """
+    box_client = get_box_client(ctx)
+    response = box_ai_agent_info_by_id(box_client, ai_agent_id)
+    return response
+
+
+async def box_ai_agents_list_tool(
+    ctx: Context, limit: Optional[int] = 1000
+) -> dict:
+    """
+    List available AI agents in Box.
+    Args:
+        ctx (Context): The context object containing the request and lifespan context.
+        limit (Optional[int]): Maximum number of items to return. Defaults to 1000.
+    Returns:
+        dict: A dictionary containing the list of AI agents.
+    """
+    box_client = get_box_client(ctx)
+    response = box_ai_agents_list(box_client, limit=limit)
+    return response
+
+
+async def box_ai_agents_search_by_name_tool(
+    ctx: Context, name: str, limit: Optional[int] = 1000
+) -> dict:
+    """
+    Search for AI agents in Box by name.
+    Args:
+        ctx (Context): The context object containing the request and lifespan context.
+        name (str): The name filter to search for AI agents.
+        limit (Optional[int]): Maximum number of items to return. Defaults to 1000.
+    Returns:
+        dict: A dictionary containing the list of matching AI agents.
+    """
+    box_client = get_box_client(ctx)
+    response = box_ai_agents_search_by_name(box_client, name, limit=limit)
     return response
