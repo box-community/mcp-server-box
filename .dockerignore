@@ -1,0 +1,53 @@
+# .dockerignore file for the project
+
+# Python specific
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.coverage
+
+# Development artifacts
+.idea/
+.vscode/
+*.swp
+*.swo
+dist/
+build/
+out/
+
+# Test files
+test/
+tests/
+*_test.go
+
+# Version control
+.git/
+.gitignore
+
+# Environment and secrets
+.env*
+*.env
+*.pem
+*.key
+*.crt
+config.local.*
+*.local.yml
+
+# Project-specific patterns
+docs/
+*.md
+README*
+Dockerfile*
+docker-compose*
+tmp/
+temp/
+*.tmp
+.local/
+local/
+
+# Exclude specific files to include in the image
+!src/
+!pyproject.toml
+
+# End of .dockerignore
