@@ -17,9 +17,9 @@ from tool_registry import register_all_tools
 from tool_registry.ai_tools import register_ai_tools
 from tool_registry.collaboration_tools import register_collaboration_tools
 from tool_registry.doc_gen_tools import register_doc_gen_tools
-from tool_registry.file_transfer_tools import register_file_transfer_tools
-from tool_registry.file_tools import register_file_tools
 from tool_registry.file_text_representation import register_file_representation_tools
+from tool_registry.file_tools import register_file_tools
+from tool_registry.file_transfer_tools import register_file_transfer_tools
 from tool_registry.folder_tools import register_folder_tools
 from tool_registry.generic_tools import register_generic_tools
 from tool_registry.group_tools import register_group_tools
