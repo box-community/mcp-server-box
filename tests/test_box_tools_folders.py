@@ -3,7 +3,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 from mcp.server.fastmcp import Context
 
-from tools.box_tools_folders import (
+from tools.box_tools_folder import (
     box_folder_copy_tool,
     box_folder_create_tool,
     box_folder_delete_tool,
@@ -29,12 +29,14 @@ async def test_box_folder_copy_tool():
     folder_id = "12345"
     destination_parent_folder_id = "67890"
     with (
-        patch("tools.box_tools_folders.box_folder_copy") as mock_copy,
-        patch("tools.box_tools_folders.get_box_client") as mock_get_client,
+        patch("tools.box_tools_folder.box_folder_copy") as mock_copy,
+        patch("tools.box_tools_folder.get_box_client") as mock_get_client,
     ):
         mock_get_client.return_value = "client"
         mock_copy.return_value = {"id": "999", "name": "Copied Folder"}
-        result = await box_folder_copy_tool(ctx, folder_id, destination_parent_folder_id)
+        result = await box_folder_copy_tool(
+            ctx, folder_id, destination_parent_folder_id
+        )
         assert isinstance(result, dict)
         assert result["id"] == "999"
         mock_copy.assert_called_once_with(
@@ -52,8 +54,8 @@ async def test_box_folder_copy_tool_with_name():
     destination_parent_folder_id = "67890"
     new_name = "New Folder Name"
     with (
-        patch("tools.box_tools_folders.box_folder_copy") as mock_copy,
-        patch("tools.box_tools_folders.get_box_client") as mock_get_client,
+        patch("tools.box_tools_folder.box_folder_copy") as mock_copy,
+        patch("tools.box_tools_folder.get_box_client") as mock_get_client,
     ):
         mock_get_client.return_value = "client"
         mock_copy.return_value = {"id": "999", "name": new_name}
@@ -75,8 +77,8 @@ async def test_box_folder_create_tool():
     ctx = MagicMock(spec=Context)
     folder_name = "Test Folder"
     with (
-        patch("tools.box_tools_folders.box_folder_create") as mock_create,
-        patch("tools.box_tools_folders.get_box_client") as mock_get_client,
+        patch("tools.box_tools_folder.box_folder_create") as mock_create,
+        patch("tools.box_tools_folder.get_box_client") as mock_get_client,
     ):
         mock_get_client.return_value = "client"
         mock_create.return_value = {"id": "123", "name": folder_name}
@@ -94,8 +96,8 @@ async def test_box_folder_create_tool_with_parent():
     folder_name = "Test Folder"
     parent_folder_id = "456"
     with (
-        patch("tools.box_tools_folders.box_folder_create") as mock_create,
-        patch("tools.box_tools_folders.get_box_client") as mock_get_client,
+        patch("tools.box_tools_folder.box_folder_create") as mock_create,
+        patch("tools.box_tools_folder.get_box_client") as mock_get_client,
     ):
         mock_get_client.return_value = "client"
         mock_create.return_value = {"id": "123", "name": folder_name}
@@ -111,8 +113,8 @@ async def test_box_folder_delete_tool():
     ctx = MagicMock(spec=Context)
     folder_id = "12345"
     with (
-        patch("tools.box_tools_folders.box_folder_delete") as mock_delete,
-        patch("tools.box_tools_folders.get_box_client") as mock_get_client,
+        patch("tools.box_tools_folder.box_folder_delete") as mock_delete,
+        patch("tools.box_tools_folder.get_box_client") as mock_get_client,
     ):
         mock_get_client.return_value = "client"
         mock_delete.return_value = {"message": "Folder deleted"}
@@ -128,8 +130,8 @@ async def test_box_folder_delete_tool_recursive():
     ctx = MagicMock(spec=Context)
     folder_id = "12345"
     with (
-        patch("tools.box_tools_folders.box_folder_delete") as mock_delete,
-        patch("tools.box_tools_folders.get_box_client") as mock_get_client,
+        patch("tools.box_tools_folder.box_folder_delete") as mock_delete,
+        patch("tools.box_tools_folder.get_box_client") as mock_get_client,
     ):
         mock_get_client.return_value = "client"
         mock_delete.return_value = {"message": "Folder deleted recursively"}
@@ -145,8 +147,8 @@ async def test_box_folder_favorites_add_tool():
     ctx = MagicMock(spec=Context)
     folder_id = "12345"
     with (
-        patch("tools.box_tools_folders.box_folder_favorites_add") as mock_add,
-        patch("tools.box_tools_folders.get_box_client") as mock_get_client,
+        patch("tools.box_tools_folder.box_folder_favorites_add") as mock_add,
+        patch("tools.box_tools_folder.get_box_client") as mock_get_client,
     ):
         mock_get_client.return_value = "client"
         mock_add.return_value = {"id": "12345", "is_favorite": True}
@@ -161,8 +163,8 @@ async def test_box_folder_favorites_remove_tool():
     ctx = MagicMock(spec=Context)
     folder_id = "12345"
     with (
-        patch("tools.box_tools_folders.box_folder_favorites_remove") as mock_remove,
-        patch("tools.box_tools_folders.get_box_client") as mock_get_client,
+        patch("tools.box_tools_folder.box_folder_favorites_remove") as mock_remove,
+        patch("tools.box_tools_folder.get_box_client") as mock_get_client,
     ):
         mock_get_client.return_value = "client"
         mock_remove.return_value = {"id": "12345", "is_favorite": False}
@@ -177,8 +179,8 @@ async def test_box_folder_info_tool():
     ctx = MagicMock(spec=Context)
     folder_id = "12345"
     with (
-        patch("tools.box_tools_folders.box_folder_info") as mock_info,
-        patch("tools.box_tools_folders.get_box_client") as mock_get_client,
+        patch("tools.box_tools_folder.box_folder_info") as mock_info,
+        patch("tools.box_tools_folder.get_box_client") as mock_get_client,
     ):
         mock_get_client.return_value = "client"
         mock_info.return_value = {"id": "12345", "name": "Test Folder"}
@@ -193,8 +195,8 @@ async def test_box_folder_items_list_tool():
     ctx = MagicMock(spec=Context)
     folder_id = "12345"
     with (
-        patch("tools.box_tools_folders.box_folder_items_list") as mock_list,
-        patch("tools.box_tools_folders.get_box_client") as mock_get_client,
+        patch("tools.box_tools_folder.box_folder_items_list") as mock_list,
+        patch("tools.box_tools_folder.get_box_client") as mock_get_client,
     ):
         mock_get_client.return_value = "client"
         mock_list.return_value = {"entries": []}
@@ -213,8 +215,8 @@ async def test_box_folder_items_list_tool_recursive():
     ctx = MagicMock(spec=Context)
     folder_id = "12345"
     with (
-        patch("tools.box_tools_folders.box_folder_items_list") as mock_list,
-        patch("tools.box_tools_folders.get_box_client") as mock_get_client,
+        patch("tools.box_tools_folder.box_folder_items_list") as mock_list,
+        patch("tools.box_tools_folder.get_box_client") as mock_get_client,
     ):
         mock_get_client.return_value = "client"
         mock_list.return_value = {"entries": []}
@@ -235,8 +237,8 @@ async def test_box_folder_list_tags_tool():
     ctx = MagicMock(spec=Context)
     folder_id = "12345"
     with (
-        patch("tools.box_tools_folders.box_folder_list_tags") as mock_list_tags,
-        patch("tools.box_tools_folders.get_box_client") as mock_get_client,
+        patch("tools.box_tools_folder.box_folder_tag_list") as mock_list_tags,
+        patch("tools.box_tools_folder.get_box_client") as mock_get_client,
     ):
         mock_get_client.return_value = "client"
         mock_list_tags.return_value = [{"id": "1", "tag": "important"}]
@@ -251,12 +253,14 @@ async def test_box_folder_move_tool():
     folder_id = "12345"
     destination_parent_folder_id = "67890"
     with (
-        patch("tools.box_tools_folders.box_folder_move") as mock_move,
-        patch("tools.box_tools_folders.get_box_client") as mock_get_client,
+        patch("tools.box_tools_folder.box_folder_move") as mock_move,
+        patch("tools.box_tools_folder.get_box_client") as mock_get_client,
     ):
         mock_get_client.return_value = "client"
         mock_move.return_value = {"id": "12345", "parent": {"id": "67890"}}
-        result = await box_folder_move_tool(ctx, folder_id, destination_parent_folder_id)
+        result = await box_folder_move_tool(
+            ctx, folder_id, destination_parent_folder_id
+        )
         assert isinstance(result, dict)
         mock_move.assert_called_once_with(
             client="client",
@@ -271,8 +275,8 @@ async def test_box_folder_rename_tool():
     folder_id = "12345"
     new_name = "Renamed Folder"
     with (
-        patch("tools.box_tools_folders.box_folder_rename") as mock_rename,
-        patch("tools.box_tools_folders.get_box_client") as mock_get_client,
+        patch("tools.box_tools_folder.box_folder_rename") as mock_rename,
+        patch("tools.box_tools_folder.get_box_client") as mock_get_client,
     ):
         mock_get_client.return_value = "client"
         mock_rename.return_value = {"id": "12345", "name": new_name}
@@ -289,8 +293,8 @@ async def test_box_folder_set_collaboration_tool():
     ctx = MagicMock(spec=Context)
     folder_id = "12345"
     with (
-        patch("tools.box_tools_folders.box_folder_set_collaboration") as mock_collab,
-        patch("tools.box_tools_folders.get_box_client") as mock_get_client,
+        patch("tools.box_tools_folder.box_folder_set_collaboration") as mock_collab,
+        patch("tools.box_tools_folder.get_box_client") as mock_get_client,
     ):
         mock_get_client.return_value = "client"
         mock_collab.return_value = {"id": "12345", "type": "folder"}
@@ -313,8 +317,8 @@ async def test_box_folder_set_description_tool():
     folder_id = "12345"
     description = "Test description"
     with (
-        patch("tools.box_tools_folders.box_folder_set_description") as mock_desc,
-        patch("tools.box_tools_folders.get_box_client") as mock_get_client,
+        patch("tools.box_tools_folder.box_folder_set_description") as mock_desc,
+        patch("tools.box_tools_folder.get_box_client") as mock_get_client,
     ):
         mock_get_client.return_value = "client"
         mock_desc.return_value = {"id": "12345", "description": description}
@@ -332,8 +336,8 @@ async def test_box_folder_set_sync_tool():
     folder_id = "12345"
     sync_state = "synced"
     with (
-        patch("tools.box_tools_folders.box_folder_set_sync") as mock_sync,
-        patch("tools.box_tools_folders.get_box_client") as mock_get_client,
+        patch("tools.box_tools_folder.box_folder_set_sync") as mock_sync,
+        patch("tools.box_tools_folder.get_box_client") as mock_get_client,
     ):
         mock_get_client.return_value = "client"
         mock_sync.return_value = {"id": "12345", "sync_state": sync_state}
@@ -350,11 +354,14 @@ async def test_box_folder_set_upload_email_tool():
     ctx = MagicMock(spec=Context)
     folder_id = "12345"
     with (
-        patch("tools.box_tools_folders.box_folder_set_upload_email") as mock_email,
-        patch("tools.box_tools_folders.get_box_client") as mock_get_client,
+        patch("tools.box_tools_folder.box_folder_set_upload_email") as mock_email,
+        patch("tools.box_tools_folder.get_box_client") as mock_get_client,
     ):
         mock_get_client.return_value = "client"
-        mock_email.return_value = {"id": "12345", "upload_email_access": "collaborators"}
+        mock_email.return_value = {
+            "id": "12345",
+            "upload_email_access": "collaborators",
+        }
         result = await box_folder_set_upload_email_tool(ctx, folder_id)
         assert isinstance(result, dict)
         mock_email.assert_called_once_with(
@@ -370,8 +377,8 @@ async def test_box_folder_set_upload_email_tool_custom_access():
     folder_id = "12345"
     access_level = "open"
     with (
-        patch("tools.box_tools_folders.box_folder_set_upload_email") as mock_email,
-        patch("tools.box_tools_folders.get_box_client") as mock_get_client,
+        patch("tools.box_tools_folder.box_folder_set_upload_email") as mock_email,
+        patch("tools.box_tools_folder.get_box_client") as mock_get_client,
     ):
         mock_get_client.return_value = "client"
         mock_email.return_value = {"id": "12345", "upload_email_access": access_level}
@@ -390,8 +397,8 @@ async def test_box_folder_tag_add_tool():
     folder_id = "12345"
     tag = "important"
     with (
-        patch("tools.box_tools_folders.box_folder_tag_add") as mock_tag_add,
-        patch("tools.box_tools_folders.get_box_client") as mock_get_client,
+        patch("tools.box_tools_folder.box_folder_tag_add") as mock_tag_add,
+        patch("tools.box_tools_folder.get_box_client") as mock_get_client,
     ):
         mock_get_client.return_value = "client"
         mock_tag_add.return_value = {"id": "12345", "tags": ["important"]}
@@ -408,8 +415,8 @@ async def test_box_folder_tag_remove_tool():
     folder_id = "12345"
     tag = "important"
     with (
-        patch("tools.box_tools_folders.box_folder_tag_remove") as mock_tag_remove,
-        patch("tools.box_tools_folders.get_box_client") as mock_get_client,
+        patch("tools.box_tools_folder.box_folder_tag_remove") as mock_tag_remove,
+        patch("tools.box_tools_folder.get_box_client") as mock_get_client,
     ):
         mock_get_client.return_value = "client"
         mock_tag_remove.return_value = {"id": "12345", "tags": []}

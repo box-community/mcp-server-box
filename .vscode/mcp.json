@@ -6,6 +6,10 @@
 		},
 		"my-mcp-server-2009ba70": {
 			"url": "http://my.host.local:8005/sse",
+			"type": "sse"
+		},
+		"box-community": {
+			"url": "https://mcp.barduino.net/mcp",
 			"type": "http"
 		}
 	},

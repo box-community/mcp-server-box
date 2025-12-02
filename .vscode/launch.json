@@ -19,10 +19,10 @@
                 "8005",
 
                 "--mcp-auth-type",
-                "oauth",
+                "none",
                 
                 "--box-auth-type",
-                "mcp_client"
+                "jwt"
                 
             ]
         }

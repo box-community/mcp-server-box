@@ -3,6 +3,9 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 from tools.box_tools_ai import (
+    box_ai_agent_info_by_id_tool,
+    box_ai_agents_list_tool,
+    box_ai_agents_search_by_name_tool,
     box_ai_ask_file_multi_tool,
     box_ai_ask_file_single_tool,
     box_ai_ask_hub_tool,
@@ -146,7 +149,7 @@ async def test_box_ai_ask_hub_tool(
 
     result = await box_ai_ask_hub_tool(
         ctx=mock_ctx,
-        hubs_id="hub_123",
+        hub_id="hub_123",
         prompt="What's in this hub?",
         ai_agent_id="agent_123",
     )
@@ -164,19 +167,19 @@ async def test_box_ai_ask_hub_tool(
 @pytest.mark.asyncio
 @patch("tools.box_tools_ai.get_box_client")
 @patch("tools.box_tools_ai.box_ai_ask_hub")
-async def test_box_ai_ask_hub_tool_int_id(
+async def test_box_ai_ask_hub_tool_no_agent(
     mock_ask_hub, mock_get_client, mock_ctx, mock_box_client, sample_ai_response
 ):
-    """Test box_ai_ask_hub_tool function with integer hub ID"""
+    """Test box_ai_ask_hub_tool function without ai_agent_id"""
     mock_get_client.return_value = mock_box_client
     mock_ask_hub.return_value = sample_ai_response
 
     result = await box_ai_ask_hub_tool(
-        ctx=mock_ctx, hubs_id="123", prompt="What's in this hub?"
+        ctx=mock_ctx, hub_id="hub_123", prompt="What's in this hub?"
     )
 
     mock_ask_hub.assert_called_once_with(
-        mock_box_client, "123", prompt="What's in this hub?", ai_agent_id=None
+        mock_box_client, "hub_123", prompt="What's in this hub?", ai_agent_id=None
     )
     assert result == sample_ai_response
 
@@ -367,3 +370,114 @@ async def test_box_ai_extract_structured_using_fields_tool_empty_fields(
         mock_box_client, ["123456"], [], ai_agent_id=None
     )
     assert result == extract_response
+
+
+@pytest.mark.asyncio
+@patch("tools.box_tools_ai.get_box_client")
+@patch("tools.box_tools_ai.box_ai_agent_info_by_id")
+async def test_box_ai_agent_info_by_id_tool(
+    mock_agent_info, mock_get_client, mock_ctx, mock_box_client
+):
+    """Test box_ai_agent_info_by_id_tool function"""
+    mock_get_client.return_value = mock_box_client
+    agent_response = {
+        "id": "agent_123",
+        "name": "Test Agent",
+        "description": "A test AI agent",
+    }
+    mock_agent_info.return_value = agent_response
+
+    result = await box_ai_agent_info_by_id_tool(
+        ctx=mock_ctx, ai_agent_id="agent_123"
+    )
+
+    mock_get_client.assert_called_once_with(mock_ctx)
+    mock_agent_info.assert_called_once_with(mock_box_client, "agent_123")
+    assert result == agent_response
+
+
+@pytest.mark.asyncio
+@patch("tools.box_tools_ai.get_box_client")
+@patch("tools.box_tools_ai.box_ai_agents_list")
+async def test_box_ai_agents_list_tool(
+    mock_agents_list, mock_get_client, mock_ctx, mock_box_client
+):
+    """Test box_ai_agents_list_tool function"""
+    mock_get_client.return_value = mock_box_client
+    list_response = {
+        "agents": [
+            {"id": "agent_1", "name": "Agent 1"},
+            {"id": "agent_2", "name": "Agent 2"},
+        ]
+    }
+    mock_agents_list.return_value = list_response
+
+    result = await box_ai_agents_list_tool(ctx=mock_ctx, limit=50)
+
+    mock_get_client.assert_called_once_with(mock_ctx)
+    mock_agents_list.assert_called_once_with(mock_box_client, limit=50)
+    assert result == list_response
+
+
+@pytest.mark.asyncio
+@patch("tools.box_tools_ai.get_box_client")
+@patch("tools.box_tools_ai.box_ai_agents_list")
+async def test_box_ai_agents_list_tool_default_limit(
+    mock_agents_list, mock_get_client, mock_ctx, mock_box_client
+):
+    """Test box_ai_agents_list_tool function with default limit"""
+    mock_get_client.return_value = mock_box_client
+    list_response = {"agents": []}
+    mock_agents_list.return_value = list_response
+
+    result = await box_ai_agents_list_tool(ctx=mock_ctx)
+
+    mock_agents_list.assert_called_once_with(mock_box_client, limit=1000)
+    assert result == list_response
+
+
+@pytest.mark.asyncio
+@patch("tools.box_tools_ai.get_box_client")
+@patch("tools.box_tools_ai.box_ai_agents_search_by_name")
+async def test_box_ai_agents_search_by_name_tool(
+    mock_search_agents, mock_get_client, mock_ctx, mock_box_client
+):
+    """Test box_ai_agents_search_by_name_tool function"""
+    mock_get_client.return_value = mock_box_client
+    search_response = {
+        "agents": [
+            {"id": "agent_1", "name": "Test Agent"},
+        ]
+    }
+    mock_search_agents.return_value = search_response
+
+    result = await box_ai_agents_search_by_name_tool(
+        ctx=mock_ctx, name="Test", limit=25
+    )
+
+    mock_get_client.assert_called_once_with(mock_ctx)
+    mock_search_agents.assert_called_once_with(
+        mock_box_client, "Test", limit=25
+    )
+    assert result == search_response
+
+
+@pytest.mark.asyncio
+@patch("tools.box_tools_ai.get_box_client")
+@patch("tools.box_tools_ai.box_ai_agents_search_by_name")
+async def test_box_ai_agents_search_by_name_tool_default_limit(
+    mock_search_agents, mock_get_client, mock_ctx, mock_box_client
+):
+    """Test box_ai_agents_search_by_name_tool function with default limit"""
+    mock_get_client.return_value = mock_box_client
+    search_response = {"agents": []}
+    mock_search_agents.return_value = search_response
+
+    result = await box_ai_agents_search_by_name_tool(
+        ctx=mock_ctx, name="Agent"
+    )
+
+    mock_search_agents.assert_called_once_with(
+        mock_box_client, "Agent", limit=1000
+    )
+    assert result == search_response

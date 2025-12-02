@@ -1,6 +1,6 @@
 from mcp.server.fastmcp import FastMCP
 
-from tools.box_tools_folders import (
+from tools.box_tools_folder import (
     box_folder_copy_tool,
     box_folder_create_tool,
     box_folder_delete_tool,
