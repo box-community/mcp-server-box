@@ -6,6 +6,6 @@ from tools.box_tools_file_transfer import (
 )
 
 
-def register_file_tools(mcp: FastMCP):
+def register_file_transfer_tools(mcp: FastMCP):
     mcp.tool()(box_file_download_tool)
     mcp.tool()(box_file_upload_tool)
