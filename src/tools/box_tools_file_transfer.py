@@ -65,7 +65,7 @@ async def box_file_upload_tool(
     ctx: Context,
     content: str | bytes,
     file_name: str,
-    parent_folder_id: int,
+    parent_folder_id: str,
 ) -> dict[str, Any]:
     """
     Upload content as a file to Box.
@@ -73,7 +73,7 @@ async def box_file_upload_tool(
     Args:
         content (str | bytes): The content to upload. Can be text or binary data.
         file_name (str): The name to give the file in Box.
-        folder_id (str): The ID of the destination folder. Defaults to root ("0").
+        parent_folder_id (str): The ID of the destination folder. Defaults to root ("0").
 
     Returns:
         dict[str, Any]: Information about the uploaded file including id and name.
