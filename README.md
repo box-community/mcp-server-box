@@ -148,3 +148,26 @@ Assuming your MCP server is running on `https://mcp.myserver.com/mcp`
 4. Click add
 5. Click connect. The OAuth flow should start. Complete the flow
 6. Back in Claude, click Configure. You should see all the tools available.
+
+### GitHub Copilot CLI Configuration
+
+#### STDIO mode
+Edit your `~/.copilot/mcp-config.json`:
+
+```json
+{
+    "mcpServers": {
+        "mcp-server-box": {
+            "command": "uv",
+            "args": [
+                "--directory",
+                "/path/to/mcp-server-box",
+                "run",
+                "src/mcp_server_box.py"
+            ]
+        }
+    }
+}
+```
+
+For more information, see the [GitHub Copilot CLI documentation](https://docs.github.com/en/copilot/concepts/agents/about-copilot-cli).
