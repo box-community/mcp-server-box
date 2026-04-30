@@ -1,5 +1,10 @@
 # Box MCP Server
 
+> [!WARNING]
+> **This repository is discontinued and no longer maintained.**
+> Box now provides an officially supported hosted MCP server with the best experience and full functionality.
+> Please migrate to the hosted MCP server: **[Set up the Box MCP Server →](https://developer.box.com/guides/box-mcp/setup)**
+
 ## Quick Start
 
 ### Clone the repository:
