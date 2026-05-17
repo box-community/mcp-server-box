@@ -1,4 +1,5 @@
 import base64
+import os
 from typing import Any, Optional
 
 from box_ai_agents_toolkit import (
@@ -80,3 +81,39 @@ async def box_file_upload_tool(
     """
     box_client = get_box_client(ctx)
     return box_file_upload(box_client, content, file_name, parent_folder_id)
+
+
+async def box_file_upload_from_path_tool(
+    ctx: Context,
+    file_path: str,
+    parent_folder_id: str,
+    file_name: Optional[str] = None,
+) -> dict[str, Any]:
+    """
+    Upload a local file to Box by specifying its file path.
+    Supports any file type including binary files like .pptx, .xlsx, .pdf, .zip, etc.
+
+    Args:
+        file_path (str): The absolute path to the local file to upload.
+        parent_folder_id (str): The ID of the destination folder in Box. Use "0" for root folder.
+        file_name (str, optional): The name to give the file in Box. If not provided, uses the original file name.
+
+    Returns:
+        dict[str, Any]: Information about the uploaded file including id, name, and type.
+    """
+    if not os.path.isabs(file_path):
+        return {"error": f"Please provide an absolute file path. Received: {file_path}"}
+
+    if not os.path.exists(file_path):
+        return {"error": f"File not found: {file_path}"}
+
+    if not os.path.isfile(file_path):
+        return {"error": f"Path is not a file: {file_path}"}
+
+    upload_name = file_name or os.path.basename(file_path)
+
+    with open(file_path, "rb") as f:
+        content = f.read()
+
+    box_client = get_box_client(ctx)
+    return box_file_upload(box_client, content, upload_name, parent_folder_id)
